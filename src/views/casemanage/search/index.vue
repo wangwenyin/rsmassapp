@@ -21,13 +21,13 @@
         <el-button type="primary" size="small">导出案例</el-button>
       </span>
       <span>
-        <el-button type="primary" size="small" @click="showMap">地图模式</el-button>
-        <el-button plain size="small" @click="showPro">列表模式</el-button>
+        <el-button :type="mapType" size="small" @click="showMap">地图模式</el-button>
+        <el-button :type="listType" size="small" @click="showList">列表模式</el-button>
       </span>
     </div>
     <div>
       <bd-map :center="center" v-if="isShow"></bd-map>
-      <case-list v-else></case-list>        
+      <case-list v-else></case-list>
     </div>
   </div>
 </template>
@@ -43,6 +43,8 @@
     components: { CaseSelect, BdMap, DatePicker, InputBox, CaseList },
     data() {
       return {
+        mapType: 'primary',
+        listType: 'plain',
         options: [{
           value: '选项1',
           label: '买卖'
@@ -66,9 +68,13 @@
     methods: {
       showMap() {
         this.isShow = true
+        this.mapType = 'primary'
+        this.listType = 'plain'
       },
-      showPro() {
+      showList() {
         this.isShow = false
+        this.mapType = 'plain'
+        this.listType = 'primary'
       }
     }
   }
@@ -96,10 +102,10 @@
       span {
         &:nth-child(1) {
         float: left;
-        margin-left: 10px;  
+        margin-left: 10px;
         }
         &:nth-child(2) {
-          float: right;  
+          float: right;
           margin-right: 10px;
         }
         .el-button {
