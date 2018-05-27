@@ -1,10 +1,9 @@
 <template>
-  <el-select v-model="value" :placeholder="placeholder" clearable size="medium">
+  <el-select v-model="value" :placeholder="placeholder" clearable :size="size">
     <el-option
       v-for="item in options"
-      :key="item.value"
-      :label="item.label"
-      :value="item.value">
+      :key="item"
+      :value="item">
     </el-option>
   </el-select>
 </template>
@@ -19,6 +18,10 @@
       placeholder: {
         type: String,
         default: ''
+      },
+      size: {
+        type: String,
+        default: 'medium'
       },
       value: {
         type: String,

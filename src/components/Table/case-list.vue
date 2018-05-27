@@ -13,7 +13,7 @@
       prop="name"
       label="名称"
       width="180">
-    </el-table-column> 
+    </el-table-column>
     <el-table-column
       prop="group"
       label="组别"
@@ -82,3 +82,9 @@
     }
   }
 </script>
+
+<style rel="stylesheet/scss" lang="scss" scoped>
+  .el-table {
+    margin: 0 10px;
+  }
+</style>

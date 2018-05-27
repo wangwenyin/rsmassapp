@@ -87,13 +87,25 @@
         </el-table-column>
       </el-table>
     </div>
+    <div class="map">
+      <bd-map :center="center"></bd-map>
+    </div>
   </div>
 </template>
 
 <script>
-export default {
-
-}
+  import BdMap from '@/components/BdMap'
+  
+  export default {
+    components: {
+      BdMap
+    },
+    data() {
+      return {
+        center: '深圳'
+      }
+    }
+  }
 </script>
 <style rel="stylesheet/scss" lang="scss" scoped>
   .labour-filter-container {
@@ -105,6 +117,9 @@ export default {
       th {
         width: 60px;
       }
+    }
+    .map {
+      margin-top: 10px;
     }
   }
 </style>

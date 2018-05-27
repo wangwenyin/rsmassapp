@@ -107,13 +107,12 @@
     .el-table {
       float: left;
       margin: 15px 0;
-      border: 1px solid gray;
       &.middleTable {
         margin-left: 5px;
         margin-right: 5px;
       }
-      .el-table__header, .el-table__body {
-        width: 100% !important;
+      .el-table--scrollable-x .el-table__body-wrapper {
+        overflow-x: hidden;
       }
     }
     .matchBtn {

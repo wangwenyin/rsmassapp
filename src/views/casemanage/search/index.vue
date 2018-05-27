@@ -2,7 +2,7 @@
   <div class="caseSearch">
     <el-row :gutter="10" style="margin-left: 10px">
       <el-col :span="4">
-        <case-select placeholder='请选择案列类型' :options="options"></case-select>
+        <select placeholder='请选择案列类型' :options="caseTypes"></select>
       </el-col>
       <el-col :span="10">
         <date-picker></date-picker>
@@ -33,34 +33,19 @@
 </template>
 
 <script>
-  import CaseSelect from '@/components/Select/case-select'
+  import Select from '@/components/Select/select'
   import BdMap from '@/components/BdMap'
   import DatePicker from '@/components/DateTimePicker'
   import InputBox from '@/components/Input'
   import CaseList from '@/components/Table/case-list'
 
   export default {
-    components: { CaseSelect, BdMap, DatePicker, InputBox, CaseList },
+    components: { Select, BdMap, DatePicker, InputBox, CaseList },
     data() {
       return {
         mapType: 'primary',
         listType: 'plain',
-        options: [{
-          value: '选项1',
-          label: '买卖'
-        }, {
-          value: '选项2',
-          label: '租赁'
-        }, {
-          value: '选项3',
-          label: '挂牌'
-        }, {
-          value: '选项4',
-          label: '估价'
-        }, {
-          value: '选项5',
-          label: '询价'
-        }],
+        caseTypes: ['买卖', '租赁', '挂牌', '估价', '询价'],
         center: '深圳',
         isShow: true
       }
@@ -98,7 +83,7 @@
     }
     .btn {
       overflow: hidden;
-      margin-bottom: 10px;
+      margin-bottom: 5px;
       span {
         &:nth-child(1) {
         float: left;
