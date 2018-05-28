@@ -1,10 +1,16 @@
 <template>
   <el-menu class="navbar" mode="horizontal">
     <hamburger class="hamburger-container" :toggleClick="toggleSideBar" :isActive="sidebar.opened"></hamburger>
+    <div class="logo">房地产税基批量评估系统</div>
     <breadcrumb></breadcrumb>
+    <div class="help">
+      <el-button type="text" icon="el-icon-question">帮助</el-button>
+    </div>
+    
     <el-dropdown class="avatar-container" trigger="click">
       <div class="avatar-wrapper">
-        <img class="user-avatar" :src="avatar+'?imageView2/1/w/80/h/80'">
+        <!-- <img class="user-avatar" :src="avatar+'?imageView2/1/w/80/h/80'"> -->
+        <img class="user-avatar" src="./user.png">
         <i class="el-icon-caret-bottom"></i>
       </div>
       <el-dropdown-menu class="user-dropdown" slot="dropdown">
@@ -51,21 +57,35 @@ export default {
 </script>
 
 <style rel="stylesheet/scss" lang="scss" scoped>
+
 .navbar {
   height: 50px;
   line-height: 50px;
   border-radius: 0px !important;
+  .logo {
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    font-weight:bold;
+    line-height: 50px;
+    font-size: 22px;
+    float: left;
+  }
   .hamburger-container {
-    line-height: 58px;
+    line-height: 50px;
     height: 50px;
     float: left;
-    padding: 0 10px;
+    padding: 5px 10px;
   }
   .screenfull {
     position: absolute;
     right: 90px;
     top: 16px;
     color: red;
+  }
+  .help {
+    right: 100px;
+    height: 50px;
+    position: absolute;
+    display: inline-block;
   }
   .avatar-container {
     height: 50px;

@@ -26,7 +26,14 @@
       </span>
     </div>
     <div>
-      <bd-map :center="center" v-if="isShow"></bd-map>
+      <baidu-map class="bm-view" v-if="isShow" :center="{lng:113.950554, lat:22.557861}" style="height: 700px;" :zoom="15" :map-click="false" :scroll-wheel-zoom="true" @ready="mapReady">
+        <bm-map-type :map-types="['BMAP_NORMAL_MAP', 'BMAP_HYBRID_MAP']" anchor="BMAP_ANCHOR_TOP_LEFT"></bm-map-type>
+        <prj-overlay v-for="item in communities" :key="item.id"
+         :position="{lng: item.lng, lat: item.lat}"
+         :data="item"
+         :active="active"
+        ></prj-overlay>
+      </baidu-map>
       <case-list v-else></case-list>
     </div>
   </div>
@@ -34,13 +41,14 @@
 
 <script>
   import CaseSelect from '@/components/Select/case-select'
-  import BdMap from '@/components/BdMap'
+  import BaiduMap from 'vue-baidu-map/components/Map/Map.vue'
+  import PrjOverlay from '@/components/MapOverlay/PrjOverlay'
   import DatePicker from '@/components/DateTimePicker'
   import InputBox from '@/components/Input'
   import CaseList from '@/components/Table/case-list'
 
   export default {
-    components: { CaseSelect, BdMap, DatePicker, InputBox, CaseList },
+    components: { CaseSelect, BaiduMap, PrjOverlay, DatePicker, InputBox, CaseList },
     data() {
       return {
         mapType: 'primary',
@@ -62,7 +70,8 @@
           label: '询价'
         }],
         center: '深圳',
-        isShow: true
+        isShow: true,
+        active: false
       }
     },
     methods: {
