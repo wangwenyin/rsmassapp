@@ -31,7 +31,33 @@
 .el-table {
   border: 1px solid #808080;
   th.is-leaf, td {
-    border-right: 1px solid #808080;
-    border-bottom: 1px solid #808080;
+    text-align: center;
+    /*border-right: 1px solid #808080;
+    border-bottom: 1px solid #808080;*/
+  }
+  th.is-leaf{
+    padding: 7px 0;
+    color: #fff;
+    background-color: #585858;
   }
 }
+
+ .el-dialog {
+   .el-dialog__header {
+     padding: 10px 10px 0;
+   }
+   .el-dialog__body {
+     padding: 10px;
+     .el-table {
+       font-size: 12px;
+     }
+   }
+   .el-pagination {
+     margin-top: 5px;
+     text-align: center;
+   }
+   .el-dialog__headerbtn {
+     top: 12px;
+     right: 12px;
+   }
+ }

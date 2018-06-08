@@ -7,13 +7,79 @@
     @mouseover.native="active=true"
     @mouseout.native="active=false">
     <div v-text="getText" @click="handleClick"></div>
+    <el-dialog title="案例列表:" width="70%" :modal-append-to-body="false" :append-to-body="true" top="25vh" :visible.sync="dialogTableVisible" @close="keepHighLight">
+      <el-table
+        :data="tableData"
+        border
+        >
+        <el-table-column
+          property="number"
+          label="编号"
+          width="50"
+        >
+        </el-table-column>
+        <el-table-column
+          property="name"
+          label="项目名称">
+        </el-table-column>
+        <el-table-column
+          property="building"
+          label="楼栋名称">
+        </el-table-column>
+        <el-table-column
+          property="house"
+          label="户名称">
+        </el-table-column>
+        <el-table-column
+          property="tradingTime"
+          label="交易时间">
+        </el-table-column>
+        <el-table-column
+          property="region"
+          label="行政区">
+        </el-table-column>
+        <el-table-column
+          property="district"
+          label="片区">
+        </el-table-column>
+        <el-table-column
+          property="area"
+          label="建筑面积">
+        </el-table-column>
+        <el-table-column
+          property="houseType"
+          label="户型">
+        </el-table-column>
+        <el-table-column
+          property="price"
+          label="单价">
+        </el-table-column>
+        <el-table-column
+          property="totalPrice"
+          label="总价">
+        </el-table-column>
+      </el-table>
+      <el-pagination
+        size="medium"
+        background
+        layout="prev, pager, next"
+        :total="total">
+      </el-pagination>
+    </el-dialog>
   </bm-overlay>
 </template>
 
 <script>
+  
   export default {
-    props: ['data', 'position', 'active'],
-    
+    props: ['data', 'position', 'tableData'],
+    data() {
+      return {
+        active: false,
+        dialogTableVisible: false,
+        total: 100,
+      }
+    },
     watch: {
       position: {
         handler() {
@@ -29,7 +95,7 @@
     },
     methods: {
       handleClick() {
-        global.alert(this.data.id)
+        this.dialogTableVisible = true
       },
       draw({ el, BMap, map }) {
         const { lng, lat } = this.position
@@ -37,7 +103,17 @@
         const pixel = map.pointToOverlayPixel(point)
         el.style.left = pixel.x - 60 + 'px'
         el.style.top = pixel.y - 20 + 'px'
-      }
+      },
+      change(value) {
+        this.data.name.indexOf(value) > -1 ? this.active = true : this.active = false
+      },
+      keepHighLight() {
+        this.active =true
+        // 原因是触发了marker的mouseout事件
+        /*setTimeout(() => {
+          this.active =true
+        }, 400)*/
+      },
     }
   }
 </script>
@@ -60,5 +136,4 @@
     background: #B00000;
     color: #fff;
   }
-
 </style>

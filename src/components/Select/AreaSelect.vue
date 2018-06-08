@@ -1,5 +1,5 @@
 <template>
-  <el-select v-model="value" placeholder="请选择区域">
+  <el-select v-model="value" placeholder="请选择区域" >
     <el-option
       v-for="item in options"
       :key="item.value"

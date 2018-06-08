@@ -4,7 +4,7 @@
         background
         layout="prev, pager, next"
         :total="total">
-      </el-pagination>
+  </el-pagination>
 </template>
 
 <script>

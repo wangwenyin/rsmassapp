@@ -17,11 +17,10 @@
       size: {
         type: String,
         default: 'medium'
-      }
-    },
-    data() {
-      return {
-        value: ''
+      },
+      value: {
+        type: String,
+        default: ''
       }
     }
   }

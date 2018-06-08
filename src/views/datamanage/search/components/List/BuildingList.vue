@@ -1,0 +1,80 @@
+<template>
+<div>
+  <el-table
+    :data="buildinglist.slice((currentpage-1)*pagesize,currentpage*pagesize)"
+    style="width: 100%"  border
+    :row-class-name="tableRowClassName">
+    <el-table-column width="50"
+      type="index"
+    :index="typeIndex"
+      label="序号"
+      align="center"
+     >
+    </el-table-column>
+    <el-table-column 
+      prop="building"
+      label="名称"
+     >
+    </el-table-column>
+    <el-table-column 
+      prop="project"
+      label="项目名称"
+     >
+     </el-table-column>
+     <el-table-column 
+      prop="structure"
+      label="建筑结构"
+     >
+    </el-table-column>
+    <el-table-column 
+      prop="age"
+      label="建筑年代"
+     >
+    </el-table-column>
+  </el-table>
+   <el-pagination layout="prev, pager, next" :page-size="pagesize" :current-page="currentpage" :total="buildinglist.length" @current-change="handleCurrentChange"></el-pagination>
+   </div>
+</template>
+
+<style>
+  
+</style>
+
+<script>
+  export default {
+    props: {
+      buildinglist: {
+        type: Array,
+        default: null
+      },
+      query: {
+        type: String,
+        default: null
+      },
+      pagesize: {
+        type: Number,
+        default: 10
+      }},
+    methods: {
+      tableRowClassName({ row, rowIndex }) {
+        if (rowIndex === 1) {
+          return 'warning-row'
+        } else if (rowIndex === 3) {
+          return 'success-row'
+        }
+        return ''
+      },
+      handleCurrentChange(val) {
+        this.currentpage = { val }.val
+      },
+      typeIndex(index) {
+        return index + (this.currentpage - 1) * this.pagesize + 1
+      }
+    },
+    data() {
+      return {
+        currentpage: 1
+      }
+    }
+  }
+</script>

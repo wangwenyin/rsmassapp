@@ -1,22 +1,20 @@
 <template>
   <el-row :gutter="10" style="margin-left: 10px">
     <el-col :span="3">
-      <el-select v-model="value" placeholder="请选择案列类型" clearable size="medium">
+      <el-select v-model="value1" placeholder="请选择案列类型" clearable size="medium">
         <el-option
-          v-for="item in options1"
-          :key="item.value"
-          :label="item.label"
-          :value="item.value">
+          v-for="item in caseTypes"
+          :key="item"
+          :value="item">
         </el-option>
       </el-select>
     </el-col>
     <el-col :span="3">
-      <el-select v-model="value" placeholder="请选择匹配粒度" clearable size="medium">
+      <el-select v-model="value2" placeholder="请选择匹配粒度" clearable size="medium">
         <el-option
-          v-for="item in options2"
-          :key="item.value"
-          :label="item.label"
-          :value="item.value">
+          v-for="item in matchLevels"
+          :key="item"
+          :value="item">
         </el-option>
       </el-select>
     </el-col>
@@ -37,33 +35,10 @@
     components: {},
     data() {
       return {
-        options1: [{
-          value: '选项1',
-          label: '买卖'
-        }, {
-          value: '选项2',
-          label: '租赁'
-        }, {
-          value: '选项3',
-          label: '挂牌'
-        }, {
-          value: '选项4',
-          label: '估价'
-        }, {
-          value: '选项5',
-          label: '询价'
-        }],
-        options2: [{
-          value: '选项1',
-          label: '到项目'
-        }, {
-          value: '选项2',
-          label: '到楼栋'
-        }, {
-          value: '选项3',
-          label: '到户'
-        }],
-        value: ''
+        caseTypes: ['买卖', '租赁', '挂牌', '估价', '询价'],
+        matchLevels: ['到项目', '到楼栋', '到户'],
+        value1: '',
+        value2: ''
       }
     },
     methods: {

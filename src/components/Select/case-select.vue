@@ -1,5 +1,5 @@
 <template>
-  <el-select v-model="value" :placeholder="placeholder" clearable size="medium">
+  <el-select v-model="value" :placeholder="placeholder" clearable :size="size">
     <el-option
       v-for="item in options"
       :key="item.value"
@@ -21,6 +21,10 @@
         default: ''
       },
       value: {
+        type: String,
+        default: ''
+      },
+      size: {
         type: String,
         default: ''
       }

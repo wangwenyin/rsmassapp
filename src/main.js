@@ -15,7 +15,7 @@ import store from './store'
 import '@/icons' // icon
 import '@/permission' // permission control
 import BaiduMap from 'vue-baidu-map'
-Vue.use(ElementUI, { locale })
+Vue.use(ElementUI)
 Vue.use(BaiduMap, {
   ak: 'IeX6XuQlGoYt3kfH4uQNxGGHochpBIlr'
 })

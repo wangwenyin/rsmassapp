@@ -1,6 +1,8 @@
 <template>
   <div>
-    <project-detail-list></project-detail-list>
+    <div class="match">
+      <project-detail-list></project-detail-list>
+    </div>
     <div class="match">
       <search-action></search-action>
       <search-result></search-result>
