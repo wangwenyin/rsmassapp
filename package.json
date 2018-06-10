@@ -16,6 +16,7 @@
     "ajv": "^6.5.0",
     "ajv@": "^6.0.0",
     "axios": "0.17.1",
+    "echarts": "^4.1.0",
     "echarts-stat": "^1.1.1",
     "element-ui": "2.3.4",
     "js-cookie": "2.2.0",

@@ -36,8 +36,8 @@
         <el-button plain size="small" @click="regain">大图</el-button>
       </bm-control>-->
       <bm-control anchor="BMAP_ANCHOR_TOP_RIGHT">
-        <el-button  size="small" type="primary">买卖</el-button>
-        <el-button  size="small" type="primary">租赁</el-button>
+        <el-button  size="small" type="primary" @click="handleSale">买卖</el-button>
+        <el-button  size="small" type="primary" @click="handleRent">租赁</el-button>
         <el-button  size="small" type="primary">挂牌</el-button>
         <el-button  size="small" type="primary">抵押</el-button>
         <el-button  size="small" type="primary">评估</el-button>
@@ -62,7 +62,7 @@
       <prj-overlay v-for="item in communities" :key="item.id"
                    :position="{lng: item.lng, lat: item.lat}"
                    :data="item"
-                   :tableData="caseList"
+                   :tableData="searchedCaseList"
                    ref="prjOverlay"
       ></prj-overlay>
     </baidu-map>
@@ -1300,9 +1300,9 @@
       },
       searchCase() {
         let searchValue = this.searchValue.trim()
-        if (!searchValue) {
+        /*if (!searchValue) {
           return
-        }
+        }*/
         if (this.caseType === 0) {
           this.communities = this.saleCase.caseList
           this.searchedCaseList = this.communities.filter(item => {
@@ -1323,6 +1323,14 @@
         }
         
         this.$refs.caseList.getTableData(this.searchedCaseList)
+      },
+      handleSale() {
+        this.caseType = 0
+        this.searchCase()
+      },
+      handleRent() {
+        this.caseType = 1
+        this.searchCase()
       },
       mapReady() {
         this.center = { lng: 113.940575, lat: 22.504367 }

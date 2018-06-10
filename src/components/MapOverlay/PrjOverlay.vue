@@ -105,7 +105,7 @@
         el.style.top = pixel.y - 20 + 'px'
       },
       change(value) {
-        this.data.name.indexOf(value) > -1 ? this.active = true : this.active = false
+        value && this.data.name.indexOf(value) > -1 ? this.active = true : this.active = false
       },
       keepHighLight() {
         this.active =true
