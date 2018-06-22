@@ -279,7 +279,7 @@
           },
           tooltip: {},
           legend: {
-            data:['3月价格']
+            data: ['3月价格']
           },
           xAxis: {
             type: 'category',
@@ -294,8 +294,8 @@
             type: 'line',
             smooth: true
           }]
-        };
-  
+        }
+
         myChart.setOption(option)
       }
     }

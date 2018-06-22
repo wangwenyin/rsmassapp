@@ -1,8 +1,10 @@
 <template>
   <el-carousel indicator-position="outside">
     <el-carousel-item v-for="item in img" :key="item">
-      <!-- <h3>{{ item }}</h3> -->
-       <img :src= "item" class="image1">
+      <!-- <h3>{{ item.zydm }}</h3>
+        <h3>{{ item }}</h3>
+           <h3>路径{{ item.url }}</h3> -->
+       <img :src= "item.url" class="image1">
     </el-carousel-item>
   </el-carousel>
 </template>
@@ -31,7 +33,7 @@
 export default {
   props: {
     img: {
-      type: Object,
+      type: Array,
       default: null
     },
     data() {

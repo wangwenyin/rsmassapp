@@ -1,38 +1,39 @@
 <template>
 <div>
 <el-row :gutter="10" style="margin-left:20px;margin-right:20px">
-  <el-col :span="3"><AreaSelect :value="area"></AreaSelect></el-col>
-  <el-col :span="3"><PurposeSelect v-model="purpose"></PurposeSelect></el-col>
-  <el-col :span="3"><el-input v-model="parcel"  placeholder="宗地号" ></el-input></el-col>
-  <el-col :span="3"><el-input v-model="project"  placeholder="项目名称"></el-input></el-col>
-  <el-col :span="3"><el-input v-model="building" placeholder="楼栋名称"></el-input></el-col>
-  <el-col :span="3"><el-input v-model="house"  placeholder="户名称"></el-input></el-col>
-  <el-col :span="3"><el-input v-model="property" placeholder="产权证号"></el-input></el-col>
+  <el-col :span="2"><AreaSelect :value="xzq" @update="change" ></AreaSelect></el-col>
+  <el-col :span="2"><PurposeSelect :value="yt1" @update="change1"></PurposeSelect></el-col>
+   <el-col :span="3"><el-input v-model="zbdm"  placeholder="组别" ></el-input></el-col>
+  <el-col :span="3"><el-input v-model="zddm"  placeholder="宗地号" ></el-input></el-col>
+  <el-col :span="3"><el-input v-model="xmmc"  placeholder="项目名称"></el-input></el-col>
+  <el-col :span="3"><el-input v-model="ldmc" placeholder="楼栋名称"></el-input></el-col>
+  <el-col :span="2"><el-input v-model="hh"  placeholder="户名称"></el-input></el-col>
+  <el-col :span="3"><el-input v-model="cqzh" placeholder="产权证号"></el-input></el-col>
   <el-col :span="1.2"><el-button type="primary" v-on:click="search">查询</el-button></el-col>
   <el-col :span="1"><el-button v-on:click="clear">清空</el-button></el-col>
 </el-row>
 <el-row :gutter="10">
   <el-col :xs="16" :sm="16" :md="16" :lg="16" :xl="16">
-      <PriceMap :searchValue="project" :center="center"></PriceMap>
+      <PriceMap :searchValue="xmmc" :center="center"></PriceMap>
   </el-col>
   <el-col :xs="8" :sm="8" :md="8" :lg="8" :xl="8">
     <el-tabs type="border-card" v-if="type === 'house'">
       <el-tab-pane label="卡片模式" >
-        <HouseCard :houselist="list2" :query="house"></HouseCard>
+        <HouseCard :houselist="listH"></HouseCard>
        </el-tab-pane>
-      <el-tab-pane label="列表模式"><HouseList :houselist="list2" :query="house"></HouseList></el-tab-pane>
+      <el-tab-pane label="列表模式"><HouseList :houselist="listH" ></HouseList></el-tab-pane>
     </el-tabs>
     <el-tabs type="border-card" v-if="type === 'building'">
       <el-tab-pane label="卡片模式" >
-       <BuildingCard :buildinglist="list1" :query="building"></BuildingCard>
+       <BuildingCard :buildinglist="listB"></BuildingCard>
       </el-tab-pane>
-      <el-tab-pane label="列表模式" ><BuildingList :buildinglist="list1" :query="building"></BuildingList></el-tab-pane>
+      <el-tab-pane label="列表模式" ><BuildingList :buildinglist="listB"></BuildingList></el-tab-pane>
     </el-tabs>
     <el-tabs type="border-card" v-if="type === 'project'">
       <el-tab-pane label="卡片模式"> 
-         <ProjectCard :projectlist="list" :query="project"></ProjectCard>
+         <ProjectCard :projectlist="listP"></ProjectCard>
      </el-tab-pane>
-    <el-tab-pane label="列表模式"><ProjectList :projectlist="list" :query="project"></ProjectList></el-tab-pane>
+    <el-tab-pane label="列表模式"><ProjectList :projectlist="listP"></ProjectList></el-tab-pane>
     </el-tabs>
   </el-col>
 </el-row>
@@ -48,6 +49,9 @@ import BuildingList from '@/views/datamanage/search/components/List/BuildingList
 import HouseCard from '@/views/datamanage/search/components/Card/HouseCard'
 import HouseList from '@/views/datamanage/search/components/List/HouseList'
 import PriceMap from '@/views/datamanage/search/components/Map/PriceMap'
+import { projects } from '@/api/project'
+import { buildings } from '@/api/building'
+import { units } from '@/api/house'
 export default {
   components: {
     PurposeSelect,
@@ -64,30 +68,45 @@ export default {
     return {
       center: { lng: 113.946829, lat: 22.495973 },
       type: 'project',
-      area: '',
-      parcel: '',
-      purpose: '',
-      project: '',
-      building: '',
-      house: '',
-      property: '',
-      list1: null,
-      list2: null,
-      list: null
+      xzq: '',
+      yt1: '',
+      zbdm: '',
+      zddm: '',
+      xmmc: '',
+      ldmc: '',
+      hh: '',
+      cqzh: '',
+      listB: null,
+      listH: null,
+      listP: null
     }
   },
   mounted() {
     this.getProject()
   },
   methods: {
+    change(value) {
+      this.xzq = value
+    },
+    change1(value) {
+      this.yt1 = value
+    },
     search: function() {
       this.center = { lng: 113.946281, lat: 22.498561 }
-      if (this.house !== '') {
-        this.type = 'house'
-        this.getHouse()
-      } else if (this.building !== '') {
-        this.type = 'building'
-        this.getBuilding()
+      if (this.hh !== '') {
+        if (this.xmmc === '' || this.ldmc === '') {
+          alert('为了能精确的查询户相关信息，请填写项目名称和楼栋名称')
+        } else {
+          this.type = 'house'
+          this.getHouse()
+        }
+      } else if (this.ldmc !== '') {
+        if (this.xmmc === '') {
+          alert('为了能精确的查询楼栋相关信息，请填写项目名称')
+        } else {
+          this.type = 'building'
+          this.getBuilding()
+        }
       } else {
         this.type = 'project'
         this.getProject()
@@ -95,59 +114,38 @@ export default {
     },
     clear: function() {
       this.type = 'project'
-      this.area = ''
-      this.purpose = ''
-      this.parcel = ''
-      this.project = ''
-      this.building = ''
-      this.house = ''
-      this.property = ''
-    },
-    getData() {
-      this.$http.get('src/mock/data.json').then(response => {
-        this.list = response.data.data
-      }, response => {
-        console.log('项目数据加载失败')
-      })
+      this.xzq = ''
+      this.yt1 = ''
+      this.zbdm = ''
+      this.zddm = ''
+      this.xmmc = ''
+      this.ldmc = ''
+      this.hh = ''
+      this.cqzh = ''
     },
     getProject() {
-      var listall = []
-      var list1 = []
-      this.$http.get('src/mock/project.json').then(response => {
-        listall = response.data.data
-        listall.forEach(element => {
-          if (element.project.indexOf(this.project) !== -1) { list1.push(element) }
-        })
-      }, response => {
-        console.log('项目数据加载失败')
+      var param = { xmmc: this.xmmc, xzq: this.xzq, yt1: this.yt1, zbdm: this.zbdm, zddm: this.zddm }
+      projects(param).then(response => {
+        this.listP = response.data
+        console.log('projects')
+        console.log(this.listP)
       })
-      this.list = list1
     },
     getBuilding() {
-      var listall = []
-      var list1 = []
-      this.$http.get('src/mock/building.json').then(response => {
-        listall = response.data.data
-        listall.forEach(element => {
-          if (element.project.indexOf(this.project) !== -1 && element.building.indexOf(this.building) !== -1) { list1.push(element) }
-        })
-      }, response => {
-        console.log('楼栋数据加载失败')
+      var param = { xmmc: this.xmmc, ldmc: this.ldmc, xzq: this.xzq, yt1: this.yt1, zbdm: this.zbdm, zddm: this.zbdm }
+      buildings(param).then(response => {
+        this.listB = response.data
+        console.log('buildings')
+        console.log(this.listB)
       })
-      this.list1 = list1
     },
     getHouse() {
-      var listall = []
-      var list1 = []
-      this.$http.get('src/mock/house.json').then(response => {
-        listall = response.data.data
-        listall.forEach(element => {
-          if (element.project.indexOf(this.project) !== -1 && element.building.indexOf(this.building) !== -1 && element.house.indexOf(this.house) !== -1) { list1.push(element) }
-        })
-      }, response => {
-        console.log('户数据加载失败')
+      var param = { xmmc: this.xmmc, ldmc: this.ldmc, hh: this.hh, xzq: this.xzq, yt1: this.yt1, zbdm: this.zbdm }
+      units(param).then(response => {
+        this.listH = response.data
+        console.log('units')
+        console.log(this.listH)
       })
-      this.list2 = list1
     }
   }
 }

@@ -11,17 +11,17 @@
 </template>
 
 <script>
-import MatchAction from "@/components/AutoMatch/match-action";
-import MatchResult from "@/components/AutoMatch/match-result";
-import MatchTask from "@/components/AutoMatch/match-task";
+import MatchAction from '@/components/AutoMatch/match-action'
+import MatchResult from '@/components/AutoMatch/match-result'
+import MatchTask from '@/components/AutoMatch/match-task'
 
 export default {
   components: {
     MatchAction,
     MatchResult,
     MatchTask
-  },
-};
+  }
+}
 </script>
 
 <style rel="stylesheet/scss" lang="scss" scoped>

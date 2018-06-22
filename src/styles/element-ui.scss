@@ -30,6 +30,9 @@
 
 .el-table {
   border: 1px solid #808080;
+  .cell {
+    padding: 0 5px;
+  }
   th.is-leaf, td {
     text-align: center;
     /*border-right: 1px solid #808080;
@@ -45,6 +48,9 @@
  .el-dialog {
    .el-dialog__header {
      padding: 10px 10px 0;
+     span {
+       font-size: 16px;
+     }
    }
    .el-dialog__body {
      padding: 10px;

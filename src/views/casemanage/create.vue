@@ -20,6 +20,7 @@
         <el-select v-model="value1" size="small" placeholder="请选择" @change="handleUsageChange">
           <el-option
             v-for="value in usageList"
+             :key="value"
             :value="value">
           </el-option>
         </el-select>
@@ -34,6 +35,7 @@
         >
           <el-option
             v-for="value in regionList"
+             :key="value"
             :value="value">
           </el-option>
         </el-select>
@@ -45,7 +47,9 @@
         <el-select v-model="value3" size="small" placeholder="请选择">
           <el-option
             v-for="value in operatorList"
-            :value="value">
+            :value="value"
+            :key="value"
+            >
           </el-option>
         </el-select>
       </el-col>
@@ -137,7 +141,7 @@
         total: 400
       }
     },
-    created()  {
+    created() {
       // 是否需要保存在vuex里
       this.tableData = this.filteredTableData = [{
         number: 1,
@@ -196,33 +200,33 @@
         usage: '住宅',
         caseNum: 5
       },
-        {
-          number: 1,
-          project: '现代城梦想家园',
-          building: 'A座',
-          house: '',
-          region: '盐田区',
-          usage: '工业',
-          caseNum: 3
-        },
-        {
-          number: 1,
-          project: '现代城梦想家园',
-          building: 'A座',
-          house: '',
-          region: '盐田区',
-          usage: '工业',
-          caseNum: 3
-        },
-        {
-          number: 1,
-          project: '现代城梦想家园',
-          building: 'A座',
-          house: '',
-          region: '盐田区',
-          usage: '工业',
-          caseNum: 3
-        }]
+      {
+        number: 1,
+        project: '现代城梦想家园',
+        building: 'A座',
+        house: '',
+        region: '盐田区',
+        usage: '工业',
+        caseNum: 3
+      },
+      {
+        number: 1,
+        project: '现代城梦想家园',
+        building: 'A座',
+        house: '',
+        region: '盐田区',
+        usage: '工业',
+        caseNum: 3
+      },
+      {
+        number: 1,
+        project: '现代城梦想家园',
+        building: 'A座',
+        house: '',
+        region: '盐田区',
+        usage: '工业',
+        caseNum: 3
+      }]
     },
     methods: {
       handleUsageChange(value) {

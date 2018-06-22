@@ -1,6 +1,6 @@
 import { login, logout, getInfo } from '@/api/login'
 import { getToken, setToken, removeToken } from '@/utils/auth'
-
+import md5 from 'md5'
 const user = {
   state: {
     token: getToken(),
@@ -28,13 +28,16 @@ const user = {
     // 登录
     Login({ commit }, userInfo) {
       const username = userInfo.username.trim()
+      const password = md5(userInfo.password)
+      // const password = userInfo.password
       return new Promise((resolve, reject) => {
-        login(username, userInfo.password).then(response => {
+        login(username, password).then(response => {
           const data = response.data
           setToken(data.token)
           commit('SET_TOKEN', data.token)
           resolve()
         }).catch(error => {
+          console.log(error)
           reject(error)
         })
       })

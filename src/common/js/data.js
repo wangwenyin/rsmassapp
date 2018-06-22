@@ -1,4 +1,7 @@
 export function formatDate(date, fmt) {
+  // if (date.tostring.indexOf('T') !== -1) {
+  //   date = datecutT(date)
+  // }
   if (/(y+)/.test(fmt)) {
     fmt = fmt.replace(RegExp.$1, (date.getFullYear() + '').substr(4 - RegExp.$1.length))
   }
@@ -21,3 +24,8 @@ export function formatDate(date, fmt) {
 function padLeftZero(str) {
   return ('00' + str).substr(str.length)
 }
+// function datecutT(date) {
+//   var str = date.tostring()
+//   str = str.replace(/T/, ' ').replace('.000Z', '')
+//   return new Date(str)
+// }

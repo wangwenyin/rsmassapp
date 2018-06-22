@@ -63,6 +63,7 @@ a:hover {
 .el-row {
   margin-bottom: 20px;
   margin-top: 10px;
+  height:100%;
 }
 .el-col {
   border-radius: 4px;
@@ -204,6 +205,11 @@ a:hover {
   color:#7b7676;
   font-weight:bold;
   font-size: 15px;
+}
+.scroll{
+  height: 540px;
+  overflow-y: auto;
+  overflow-x: auto
 }
 
 

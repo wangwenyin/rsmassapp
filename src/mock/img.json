@@ -1,0 +1,89 @@
+{
+    "code":"0",
+    "msg":"成功",
+    "data":[
+      { "stdm": "xm001",
+        "stlx": "xm",
+        "url": "src/assets/images/深圳湾1号001.jpg",
+        "tplx": "户型图"
+      },{
+        "stdm": "xm001",
+        "stlx": "xm",
+        "url": "src/assets/images/深圳湾1号002.jpg",
+        "tplx": "户型图"
+      },{
+        "stdm": "xm001",
+        "stlx": "xm",
+        "url": "src/assets/images/深圳湾1号003.jpg",
+        "tplx": "户型图"
+      },{
+        "stdm": "xm001",
+        "stlx": "xm",
+        "url": "src/assets/images/深圳湾1号004.jpg",
+        "tplx": "户型图"
+      },{
+        "stdm": "xm001",
+        "stlx": "xm",
+        "url": "src/assets/images/深圳湾1号005.jpg",
+        "tplx": "户型图"
+      },{
+        "stdm": "xm001",
+        "stlx": "xm",
+        "url": "src/assets/images/深圳湾1号006.jpg",
+        "tplx": "户型图"
+      },{ "stdm": "ld001",
+        "stlx": "xm",
+        "url": "src/assets/images/深圳湾1号001.jpg",
+        "tplx": "户型图"
+      },{
+        "stdm": "ld001",
+        "stlx": "xm",
+        "url": "src/assets/images/深圳湾1号002.jpg",
+        "tplx": "户型图"
+      },{
+        "stdm": "ld001",
+        "stlx": "xm",
+        "url": "src/assets/images/深圳湾1号003.jpg",
+        "tplx": "户型图"
+      },{
+        "stdm": "ld001",
+        "stlx": "xm",
+        "url": "src/assets/images/深圳湾1号004.jpg",
+        "tplx": "户型图"
+      },{
+        "stdm": "ld001",
+        "stlx": "xm",
+        "url": "src/assets/images/深圳湾1号005.jpg",
+        "tplx": "户型图"
+      },{
+        "stdm": "ld001",
+        "stlx": "xm",
+        "url": "src/assets/images/深圳湾1号006.jpg",
+        "tplx": "户型图"
+      },{ "stdm": "601",
+        "stlx": "xm",
+        "url": "src/assets/images/绿海湾花园001.jpg",
+        "tplx": "户型图"
+      },{
+        "stdm": "601",
+        "stlx": "xm",
+        "url": "src/assets/images/绿海湾花园002.jpg",
+        "tplx": "户型图"
+      },{
+        "stdm": "601",
+        "stlx": "xm",
+        "url": "src/assets/images/绿海湾花园003.jpg",
+        "tplx": "户型图"
+      },{
+        "stdm": "601",
+        "stlx": "xm",
+        "url": "src/assets/images/绿海湾花园004.jpg",
+        "tplx": "户型图"
+      }
+      
+    ] }
+             
+            
+  
+  
+              

@@ -11,17 +11,17 @@
 </template>
 
 <script>
-  import ProjectDetailList from "@/components/LabourMatch/project-detail-list";
-  import SearchAction from "@/components/LabourMatch/search-action";
-  import SearchResult from "@/components/LabourMatch/search-result";
-  
-  export default {
+  import ProjectDetailList from '@/components/LabourMatch/project-detail-list'
+import SearchAction from '@/components/LabourMatch/search-action'
+import SearchResult from '@/components/LabourMatch/search-result'
+
+export default {
     components: {
       ProjectDetailList,
       SearchAction,
       SearchResult
     }
-  };
+  }
 </script>
 
 <style rel="stylesheet/scss" lang="scss" scoped>

@@ -52,27 +52,27 @@
           compNum: '7',
           progress: '50%'
         },
-          {
-            person: '王二',
-            caseType: '租赁',
-            taskNum: '14',
-            compNum: '7',
-            progress: '50%'
-          },
-          {
-            person: '王二',
-            caseType: '租赁',
-            taskNum: '14',
-            compNum: '7',
-            progress: '50%'
-          },
-          {
-            person: '王二',
-            caseType: '租赁',
-            taskNum: '14',
-            compNum: '7',
-            progress: '50%'
-          }],
+        {
+          person: '王二',
+          caseType: '租赁',
+          taskNum: '14',
+          compNum: '7',
+          progress: '50%'
+        },
+        {
+          person: '王二',
+          caseType: '租赁',
+          taskNum: '14',
+          compNum: '7',
+          progress: '50%'
+        },
+        {
+          person: '王二',
+          caseType: '租赁',
+          taskNum: '14',
+          compNum: '7',
+          progress: '50%'
+        }],
         value: '',
         options: []
       }

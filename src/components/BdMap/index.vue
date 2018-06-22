@@ -34,7 +34,7 @@
    },
    props: {
      center: {
-       type: String,
+       type: Object,
        default: ''
      },
      scrollWheelZoom: {
@@ -44,8 +44,8 @@
    },
    data() {
      return {
-      flag: false,
-      keyword: ''
+       flag: false,
+       keyword: ''
      }
    },
    methods: {

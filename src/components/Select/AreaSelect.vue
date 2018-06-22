@@ -1,5 +1,5 @@
 <template>
-  <el-select v-model="value" placeholder="请选择区域" >
+  <el-select v-model="value"  placeholder="行政区"   >
     <el-option
       v-for="item in options"
       :key="item.value"
@@ -11,34 +11,45 @@
 
 <script>
   export default {
+    props: {
+      value: {
+        type: String,
+        default: ''
+      }
+    },
+    watch: {
+      value(val) {
+        this.$emit('update', val)
+      }
+    },
     data() {
       return {
+        value: '',
         options: [{
-          value: '选项1',
+          value: '福田区',
           label: '福田区'
         }, {
-          value: '选项2',
+          value: '罗湖区',
           label: '罗湖区'
         }, {
-          value: '选项3',
+          value: '南山区',
           label: '南山区'
         }, {
-          value: '选项4',
+          value: '盐田区',
           label: '盐田区'
         }, {
-          value: '选项5',
+          value: '宝安区',
           label: '宝安区'
         }, {
-          value: '选项6',
+          value: '龙岗区',
           label: '龙岗区'
         }, {
-          value: '选项7',
+          value: '龙华区',
           label: '龙华区'
         }, {
-          value: '选项8',
+          value: '坪山区',
           label: '坪山区'
-        }],
-        value: ''
+        }]
       }
     }
   }

@@ -1,76 +1,188 @@
 <template>
   <div class="caseSearch">
-    <el-row :gutter="10" style="margin-left: 10px">
-      <el-col :span="4">
-        <SelectBox placeholder='请选择案列类型' :options="caseTypes" @caseTypeChange="change"></SelectBox>
-      </el-col>
-      <el-col :span="10">
-        <date-picker></date-picker>
-      </el-col>
-      <el-col :span="6">
-        <el-input
-          placeholder="请输入项目名称"
-          size="medium"
-          v-model="searchValue"
-          clearable>
-        </el-input>
-      </el-col>
-      <el-col :span="4">
-        <el-button type="primary" size="medium" @click="searchCase">查询</el-button>
-      </el-col>
-    </el-row>
-    <div class="line"></div>
-    <div class="btn">
+    <div class="search-top" ref="searchTop">
+      <el-row :gutter="10" style="margin-left: 10px">
+        <el-col :span="4">
+          <el-select v-model="caseValue" placeholder="请选择案列类型" clearable size="medium">
+            <el-option
+              v-for="item in caseTypes"
+              :key="item"
+              :value="item">
+            </el-option>
+          </el-select>
+        </el-col>
+        <el-col :span="4">
+          <el-select v-model="usageValue" placeholder="请选择物业用途" clearable size="medium">
+            <el-option
+              v-for="item in usages"
+              :key="item"
+              :value="item">
+            </el-option>
+          </el-select>
+        </el-col>
+        <el-col :span="8">
+          <date-picker></date-picker>
+        </el-col>
+        <el-col :span="6">
+          <el-input
+            placeholder="请输入项目名称"
+            size="medium"
+            v-model="searchValue"
+            clearable>
+          </el-input>
+        </el-col>
+        <el-col :span="2">
+          <el-button type="primary" size="medium" @click="searchCase">查询</el-button>
+        </el-col>
+      </el-row>
+      <div class="line"></div>
+      <div class="btn">
       <span>
         <el-button type="primary" size="small">添加案例</el-button>
         <el-button type="primary" size="small">导出案例</el-button>
       </span>
-      <span>
+        <span>
         <el-button :type="mapType" size="small" @click="showMap">地图模式</el-button>
         <el-button :type="listType" size="small" @click="showList">列表模式</el-button>
       </span>
+      </div>
     </div>
-    <baidu-map class="bm-view" ref="baiduMap" v-show="isShow" :center="center" :zoom="16" :map-click="false" :scroll-wheel-zoom="true" @ready="mapReady">
+    <baidu-map class="bm-view" :style="{width: `${mapWidth}px`}" ref="baiduMap" v-if="isShow" :center="center" :zoom="zoom" @zoomend="zoomChange" :map-click="false" :scroll-wheel-zoom="true" @ready="mapReady">
       <bm-map-type :map-types="['BMAP_NORMAL_MAP', 'BMAP_HYBRID_MAP', 'BMAP_PERSPECTIVE_MAP']" anchor="BMAP_ANCHOR_TOP_LEFT"></bm-map-type>
+      <bm-panorama anchor="BMAP_ANCHOR_BOTTOM_RIGHT"></bm-panorama>
       <!--<bm-control anchor="BMAP_ANCHOR_TOP_RIGHT" :offset="{width: 10, height: 10}">
         <el-button plain size="small" @click="regain">大图</el-button>
       </bm-control>-->
-      <bm-control anchor="BMAP_ANCHOR_TOP_RIGHT">
-        <el-button  size="small" type="primary" @click="handleSale">买卖</el-button>
-        <el-button  size="small" type="primary" @click="handleRent">租赁</el-button>
-        <el-button  size="small" type="primary">挂牌</el-button>
-        <el-button  size="small" type="primary">抵押</el-button>
-        <el-button  size="small" type="primary">评估</el-button>
-      </bm-control>
       <bm-control anchor="BMAP_ANCHOR_TOP_RIGHT" :offset="{width: 10, height: 50}">
         <el-popover
           title="请选择图层："
           width="200"
           trigger="click">
-          <el-button plain size="small">行政区划</el-button>
-          <el-button plain size="small">评估分区</el-button>
-          <el-button plain size="small" style="margin-left: 0;margin-top: 5px">生活配套</el-button>
-          <el-button plain size="small" style="margin-top: 5px">教育配套</el-button>
-          <el-button plain size="small" style="margin-left: 0;margin-top: 5px">交通配套</el-button>
-          <el-button plain size="small" slot="reference">图层</el-button>
+          <el-button plain size="small" @click="showAll">行政区划</el-button>
+          <el-button plain size="small" @click="isShowMating=!isShowMating">配套设施</el-button>
+          <el-button plain size="small" style="margin-left: 0;margin-top: 5px">初中学区</el-button>
+          <el-button plain size="small" style="margin-top: 5px">评估分区</el-button>
+          <el-button plain size="small" style="margin-left: 0;margin-top: 5px">小学学区</el-button>
+          <el-button plain size="small">街道</el-button>
+          <el-button plain size="small" slot="reference" @click="isShowMating=false">图层</el-button>
         </el-popover>
+      </bm-control>
+      <bm-control v-if="isShowMating" anchor="BMAP_ANCHOR_TOP_RIGHT" :offset="{width: 210, height: 40}">
+        <el-tabs type="border-card">
+          <el-tab-pane label="交通">
+            <el-tabs>
+              <el-tab-pane label="地铁">
+                <div v-for="item in subway" class="itemBox">
+                  <span><svg-icon :icon-class="item.icon"></svg-icon></span>
+                  <span>{{item.name}}</span>
+                  <span></span>
+                  <span>{{item.distance}}米</span>
+                  <span>{{item.line}}号线</span>
+                </div>
+              </el-tab-pane>
+              <el-tab-pane label="公交">
+                <div v-for="item in bus" class="itemBox">
+                  <span><svg-icon :icon-class="item.icon"></svg-icon></span>
+                  <span>{{item.name}}</span>
+                  <span></span>
+                  <span>{{item.distance}}米</span>
+                  <span>{{item.site}}</span>
+                </div>
+              </el-tab-pane>
+            </el-tabs>
+          </el-tab-pane>
+          <el-tab-pane label="教育">
+            <el-tabs>
+              <el-tab-pane label="幼儿园">
+                <div v-for="item in kindergarten" class="itemBox">
+                  <span><svg-icon :icon-class="item.icon"></svg-icon></span>
+                  <span>{{item.name}}</span>
+                  <span></span>
+                  <span>{{item.distance}}米</span>
+                  <span>{{item.site}}</span>
+                </div>
+              </el-tab-pane>
+              <el-tab-pane label="小学">
+                <div v-for="item in primarySchool" class="itemBox">
+                  <span><svg-icon :icon-class="item.icon"></svg-icon></span>
+                  <span>{{item.name}}</span>
+                  <span></span>
+                  <span>{{item.distance}}米</span>
+                  <span>{{item.site}}</span>
+                </div>
+              </el-tab-pane>
+              <el-tab-pane label="中学">
+                <div v-for="item in highSchool" class="itemBox">
+                  <span><svg-icon :icon-class="item.icon"></svg-icon></span>
+                  <span>{{item.name}}</span>
+                  <span></span>
+                  <span>{{item.distance}}米</span>
+                  <span>{{item.site}}</span>
+                </div>
+              </el-tab-pane>
+              <el-tab-pane label="大学">
+                <div v-for="item in university" class="itemBox">
+                  <span><svg-icon :icon-class="item.icon"></svg-icon></span>
+                  <span>{{item.name}}</span>
+                  <span></span>
+                  <span>{{item.distance}}米</span>
+                  <span>{{item.site}}</span>
+                </div>
+              </el-tab-pane>
+            </el-tabs>
+          </el-tab-pane>
+          <el-tab-pane label="医疗">
+            <el-tabs>
+              <el-tab-pane label="医院">
+                <div v-for="item in hospital" class="itemBox">
+                  <span><svg-icon :icon-class="item.icon"></svg-icon></span>
+                  <span>{{item.name}}</span>
+                  <span></span>
+                  <span>{{item.distance}}米</span>
+                  <span>{{item.site}}</span>
+                </div>
+              </el-tab-pane>
+              <el-tab-pane label="药店">
+                <div v-for="item in chemistShop" class="itemBox">
+                  <span><svg-icon :icon-class="item.icon"></svg-icon></span>
+                  <span>{{item.name}}</span>
+                  <span></span>
+                  <span>{{item.distance}}米</span>
+                  <span>{{item.site}}</span>
+                </div>
+              </el-tab-pane>
+            </el-tabs>
+          </el-tab-pane>
+          <el-tab-pane label="购物"></el-tab-pane>
+          <el-tab-pane label="生活"></el-tab-pane>
+          <el-tab-pane label="娱乐"></el-tab-pane>
+        </el-tabs>
       </bm-control>
       <bm-control anchor="BMAP_ANCHOR_TOP_LEFT" :offset="{width: 10, height: 40}">
         <el-input v-model="keyword" size="mini" clearable placeholder="请输入关键词"></el-input>
       </bm-control>
       <bm-local-search :keyword="keyword" :auto-viewport="true"></bm-local-search>
-      <prj-overlay v-for="item in communities" :key="item.id"
-                   :position="{lng: item.lng, lat: item.lat}"
+      <div v-if="isShowBoundary" v-for="regionName in regionList">
+        <bm-boundary :name="regionName" :strokeWeight="2" strokeColor="#409EFF" :strokeOpacity="0.9" :fillOpacity="0.1" fillColor="#409EFF"></bm-boundary>
+      </div>
+      <!--<bm-polygon :path="pathList" stroke-color="blue" :stroke-opacity="0.5" :stroke-weight="2"/>-->
+      <prj-overlay v-for="item in communities" :key="item.aldm"
+                   :position="{lng: item.x, lat: item.y}"
                    :data="item"
+                   :caseList="caseList"
+                   :zoom="zoom"
                    :tableData="searchedCaseList"
+                   @over="showBoundary"
+                   @out="hideBoundary"
                    ref="prjOverlay"
       ></prj-overlay>
     </baidu-map>
-    <case-list v-show="!isShow" ref="caseList"></case-list>
+    <case-list v-else :tableData="searchedCaseList" ref="caseList"></case-list>
   </div>
 </template>
 
 <script>
+  import { getCases } from '@/api/caseSearch'
   import SelectBox from '@/components/Select/select'
   import BaiduMap from 'vue-baidu-map/components/Map/Map'
   import PrjOverlay from '@/components/MapOverlay/PrjOverlay'
@@ -82,1205 +194,137 @@
     components: { SelectBox, BaiduMap, PrjOverlay, DatePicker, InputBox, CaseList },
     data() {
       return {
-        center: { lng: 0, lat:0},
+        center: null,
+        zoom: 17,
+        mapWidth: document.body.clientWidth - 180,
         mapType: 'primary',
         listType: 'plain',
-        caseType: 0,
-        caseTypes: ['买卖', '租赁', '挂牌', '估价', '询价'],
+        caseValue: '',
+        usageValue: '',
+        caseTypes: ['买卖', '租赁', '挂牌', '估价', '评估', '询价'],
+        usages: ['住宅', '商业', '办公', '工业'],
         isShow: true,
+        isShowMating: false,
+        isShowBoundary: false,
+        regionList: [],
         flag: false,
         keyword: '',
         searchValue: '',
-        saleCase: null,
-        rentCase: null,
+        caseList: [],
         searchedCaseList: [],
-        communities: []
+        communities: [],
+        // 需要后台给对应评估分区的pathList,处理成pathLists
+        pathList: [
+          {lng: 113.933404, lat: 22.526177},
+          {lng: 113.946052, lat: 22.514959},
+          {lng: 113.960425, lat: 22.527913},
+          {lng: 113.94059, lat: 22.533254}
+          ],
+        subway: [
+          {icon: 'subway',name: '南山', distance: 370, line: 11},
+          {icon: 'subway',name: '桃园', distance: 1057, line: 1},
+          {icon: 'subway',name: '大新', distance: 670, line: 1},
+          {icon: 'subway',name: '后海', distance: 470, line: '2/11'}
+        ],
+        bus: [{icon: 'bus',name: '北环科苑立交', distance: 300, site: '清华信息港'}],
+        kindergarten: [
+          {icon: '幼儿园',name: '深圳市南山区教育幼儿园', distance: 400, site: '深圳市南山区桂庙路海文花园'},
+          {icon: '幼儿园',name: '深圳市南山区教育幼儿园', distance: 400, site: '深圳市南山区桂庙路海文花园'},
+          {icon: '幼儿园',name: '深圳市南山区教育幼儿园', distance: 400, site: '深圳市南山区桂庙路海文花园'},
+          {icon: '幼儿园',name: '深圳市南山区教育幼儿园', distance: 400, site: '深圳市南山区桂庙路海文花园'}
+        ],
+        primarySchool: [
+          {icon: '小学',name: '南油小学(新校区)', distance: 607, site: '深圳市南山区南光路106号'},
+          {icon: '小学',name: '南油小学(新校区)', distance: 607, site: '深圳市南山区南光路106号'},
+          {icon: '小学',name: '南油小学(新校区)', distance: 607, site: '深圳市南山区南光路106号'},
+          {icon: '小学',name: '南油小学(新校区)', distance: 607, site: '深圳市南山区南光路106号'}
+        ],
+        highSchool: [
+          {icon: '中学',name: '学府中学', distance: 1343, site: '深圳市南山区商业文化中心区海德一道113号'},
+          {icon: '中学',name: '学府中学', distance: 1343, site: '深圳市南山区商业文化中心区海德一道113号'},
+          {icon: '中学',name: '学府中学', distance: 1343, site: '深圳市南山区商业文化中心区海德一道113号'},
+          {icon: '中学',name: '学府中学', distance: 1343, site: '深圳市南山区商业文化中心区海德一道113号'}
+        ],
+        university: [
+          {icon: '大学',name: '深圳大学', distance: 1420, site: '广东省深圳市南山区南海大道3688号'},
+          {icon: '大学',name: '深圳大学', distance: 1420, site: '广东省深圳市南山区南海大道3688号'},
+          {icon: '大学',name: '深圳大学', distance: 1420, site: '广东省深圳市南山区南海大道3688号'},
+          {icon: '大学',name: '深圳大学', distance: 1420, site: '广东省深圳市南山区南海大道3688号'}
+        ],
+        hospital: [
+          {icon: '医院',name: '深圳市第六人民医院', distance: 910, site: '深圳市南山区桃园路89号'},
+          {icon: '医院',name: '深圳市第六人民医院', distance: 910, site: '深圳市南山区桃园路89号'},
+          {icon: '医院',name: '深圳市第六人民医院', distance: 910, site: '深圳市南山区桃园路89号'},
+          {icon: '医院',name: '深圳市第六人民医院', distance: 910, site: '深圳市南山区桃园路89号'}
+        ],
+        chemistShop: [
+          {icon: '药店',name: '医佳康大药房(创业路店)', distance: 1227, site: '深圳市南山区创业路社区西海湾公寓6-7号'},
+          {icon: '药店',name: '医佳康大药房(创业路店)', distance: 1227, site: '深圳市南山区创业路社区西海湾公寓6-7号'},
+          {icon: '药店',name: '医佳康大药房(创业路店)', distance: 1227, site: '深圳市南山区创业路社区西海湾公寓6-7号'},
+          {icon: '药店',name: '医佳康大药房(创业路店)', distance: 1227, site: '深圳市南山区创业路社区西海湾公寓6-7号'}
+        ],
       }
     },
     created() {
-      this.communities = [
-        {
-          id: '1',
-          number: '1',
-          lng: 113.939897,
-          lat: 22.519751,
-          name: '海洋之心',
-          building: 'A',
-          house: '4G',
-          tradingTime: '2017-01-06',
-          region: '南山',
-          district: '后海',
-          area: '62.12',
-          houseType: '2室2厅',
-          price: '69220.86',
-          totalPrice: '4300000',
-          caseNum: 3
-        }, {
-          id: '2',
-          number: '1',
-          lng: 113.944151,
-          lat: 22.497102,
-          name: '后海公馆',
-          building: '1栋',
-          house: '1603',
-          tradingTime: '2017-01-11',
-          region: '南山',
-          district: '后海',
-          area: '128.2',
-          houseType: '4室2厅',
-          price: '82683.31',
-          totalPrice: '10600000',
-          caseNum: 4
-        }, {
-          id: '3',
-          number: '2',
-          lng: 113.944151,
-          lat: 22.497102,
-          name: '后海公馆',
-          building: '4栋',
-          house: '701',
-          tradingTime: '2017-02-25',
-          region: '南山',
-          district: '后海',
-          area: '103',
-          houseType: '3室2厅',
-          price: '90873.79',
-          totalPrice: '9360000',
-          caseNum: 4
-        }, {
-          id: '4',
-          number: '3',
-          lng: 113.944151,
-          lat: 22.497102,
-          name: '后海公馆',
-          building: '3栋',
-          house: '904',
-          tradingTime: '2017-03-21',
-          region: '南山',
-          district: '后海',
-          area: '66.24',
-          houseType: '2室1厅',
-          price: '89070.05',
-          totalPrice: '5900000',
-          caseNum: 4
-        }, {
-          id: '5',
-          number: '4',
-          lng: 113.944151,
-          lat: 22.497102,
-          name: '后海公馆',
-          building: '4栋',
-          house: '2802',
-          tradingTime: '2017/3/11',
-          region: '南山',
-          district: '后海',
-          area: '103',
-          houseType: '3室2厅',
-          price: '97087.38',
-          totalPrice: '10000000',
-          caseNum: 4
-        }, {
-          id: '6',
-          number: '5',
-          lng: 113.944151,
-          lat: 22.497102,
-          name: '后海公馆',
-          building: '1栋',
-          house: '205',
-          tradingTime: '2017-03-15',
-          region: '南山',
-          district: '后海',
-          area: '131.26',
-          houseType: '4室2厅',
-          price: '89136.07',
-          totalPrice: '11700000',
-          caseNum: 4
-        }, {
-          id: '7',
-          number: '6',
-          lng: 113.944151,
-          lat: 22.497102,
-          name: '后海公馆',
-          building: '3栋',
-          house: '1704',
-          tradingTime: '2017-09-13',
-          region: '南山',
-          district: '后海',
-          area: '66.34',
-          houseType: '2室1厅',
-          price: '90443.17',
-          totalPrice: '6000000',
-          caseNum: 4
-        }, {
-          id: '8',
-          number: '7',
-          lng: 113.944151,
-          lat: 22.497102,
-          name: '后海公馆',
-          building: '2栋',
-          house: '1904',
-          tradingTime: '2017-10-22',
-          region: '南山',
-          district: '后海',
-          area: '66.34',
-          houseType: '4室2厅',
-          price: '90865.24',
-          totalPrice: '6028000',
-          caseNum: 4
-        }, {
-          id: '9',
-          number: '3',
-          lng: 113.939995,
-          lat: 22.516735,
-          name: '育德佳园',
-          building: '4栋A单元',
-          house: '702',
-          tradingTime: '2017-01-11',
-          region: '南山',
-          district: '后海',
-          area: '72.63',
-          houseType: '2室2厅',
-          price: '72284.18',
-          totalPrice: '5250000',
-          caseNum: 5
-        }, {
-          id: '10',
-          number: '4',
-          lng: 113.942688,
-          lat: 22.505098,
-          name: '天骄华庭',
-          building: '1栋A单元',
-          house: '402',
-          tradingTime: '2017-01-08',
-          region: '南山',
-          district: '后海',
-          area: '39.26',
-          houseType: '1室0厅',
-          price: '84055.02',
-          totalPrice: '3300000',
-          caseNum: 1
-        }, {
-          id: '11',
-          number: '5',
-          lng: 113.939589,
-          lat: 22.518062,
-          name: '瑞铧苑',
-          building: '2栋',
-          house: '26A',
-          tradingTime: '2017-01-08',
-          region: '南山',
-          district: '后海',
-          area: '116.55',
-          houseType: '2室2厅',
-          price: '61776.06',
-          totalPrice: '7200000',
-          caseNum: 7
-        }, {
-          id: '12',
-          number: '6',
-          lng: 113.948524,
-          lat: 22.497403,
-          name: '皇庭港湾',
-          building: 'G栋',
-          house: '3AB',
-          tradingTime: '2017-01-03',
-          region: '南山',
-          district: '后海',
-          area: '87.91',
-          houseType: '2室2厅',
-          price: '72232.97',
-          totalPrice: '6350000',
-          caseNum: 9
-        }, {
-          id: '13',
-          number: '1',
-          lng: 113.940575,
-          lat: 22.504367,
-          name: '半岛花园A区',
-          building: '10栋(海康阁)',
-          house: '201',
-          tradingTime: '2017-02-07',
-          region: '南山',
-          district: '后海',
-          area: '90.63',
-          houseType: '3室2厅',
-          price: '54728.02',
-          totalPrice: '4960000',
-          caseNum: 4
-        }, {
-          id: '14',
-          number: '2',
-          lng: 113.940575,
-          lat: 22.504367,
-          name: '半岛花园A区',
-          building: '3栋',
-          house: '410',
-          tradingTime: '2017-04-12',
-          region: '南山',
-          district: '后海',
-          area: '91.39',
-          houseType: '3室2厅',
-          price: '55968.92',
-          totalPrice: '5115000',
-          caseNum: 4
-        }, {
-          id: '15',
-          number: '3',
-          lng: 113.940575,
-          lat: 22.504367,
-          name: '半岛花园A区',
-          building: '10栋(海麟阁)',
-          house: '802',
-          tradingTime: '2017-06-16',
-          region: '南山',
-          district: '后海',
-          area: '100.24',
-          houseType: '4室2厅',
-          price: '55167.6',
-          totalPrice: '5530000',
-          caseNum: 4
-        }, {
-          id: '16',
-          number: '4',
-          lng: 113.940575,
-          lat: 22.504367,
-          name: '半岛花园A区',
-          building: '3栋',
-          house: '409',
-          tradingTime: '2017-08-17',
-          region: '南山',
-          district: '后海',
-          area: '61.75',
-          houseType: '3室2厅',
-          price: '113765.18',
-          totalPrice: '7025000',
-          caseNum: 4
-        }, {
-          id: '17',
-          number: '8',
-          lng: 113.94339,
-          lat: 22.51736,
-          name: '蔚蓝海岸三期',
-          building: '30栋',
-          house: '3H',
-          tradingTime: '2017-02-22',
-          region: '南山',
-          district: '后海',
-          area: '122.55',
-          houseType: '3室2厅',
-          price: '79804.16',
-          totalPrice: '9780000',
-          caseNum: 8
-        }, {
-          id: '18',
-          number: '9',
-          lng: 113.946829,
-          lat: 22.495973,
-          name: '阳光海滨花园',
-          building: 'H栋',
-          house: '308',
-          tradingTime: '2017-03-28',
-          region: '南山',
-          district: '后海',
-          area: '75.54',
-          houseType: '3室1厅',
-          price: '94890.12',
-          totalPrice: '7168000',
-          caseNum: 5
-        }, {
-          id: '19',
-          number: '10',
-          lng: 113.945282,
-          lat: 22.493235,
-          name: '澳城花园',
-          building: 'b栋2单元',
-          house: '4A',
-          tradingTime: '2017-03-11',
-          region: '南山',
-          district: '后海',
-          area: '136.88',
-          houseType: '5室2厅',
-          price: '88398.6',
-          totalPrice: '12100000',
-          caseNum: 3
-        },{
-          id: '20',
-          number: '11',
-          lng: 113.945851,
-          lat: 22.509343,
-          name: '君汇新天花园',
-          building: 'b栋',
-          house: '4A',
-          tradingTime: '2017-03-11',
-          region: '南山',
-          district: '后海',
-          area: '136.88',
-          houseType: '3室2厅',
-          price: '87882.82',
-          totalPrice: '12100000',
-          caseNum: 5
-        },{
-          id: '21',
-          number: '11',
-          lng: 113.948092,
-          lat: 22.503225,
-          name: '卓越维港',
-          building: 'b栋',
-          house: '4A',
-          tradingTime: '2017-03-11',
-          region: '南山',
-          district: '后海',
-          area: '136.88',
-          houseType: '3室2厅',
-          price: '108932.46',
-          totalPrice: '12100000',
-          caseNum: 3
-        } ,{
-          id: '22',
-          number: '11',
-          lng: 113.946281,
-          lat: 22.498561,
-          name: '绿海湾花园',
-          building: 'b栋',
-          house: '4A',
-          tradingTime: '2017-03-11',
-          region: '南山',
-          district: '后海',
-          area: '136.88',
-          houseType: '3室2厅',
-          price: '105858.17',
-          totalPrice: '12100000',
-          caseNum: 6
-        },{
-          id: '23',
-          number: '11',
-          lng: 113.937918,
-          lat: 22.514552,
-          name: '后海名苑居',
-          building: 'b栋',
-          house: '4A',
-          tradingTime: '2017-03-11',
-          region: '南山',
-          district: '后海',
-          area: '136.88',
-          houseType: '3室2厅',
-          price: '57007',
-          totalPrice: '12100000',
-          caseNum: 8
-        },{
-          id: '24',
-          number: '11',
-          lng: 113.934616,
-          lat: 22.504396,
-          name: '翠薇园',
-          building: 'b栋',
-          house: '4A',
-          tradingTime: '2017-03-11',
-          region: '南山',
-          district: '后海',
-          area: '136.88',
-          houseType: '3室2厅',
-          price: '68125',
-          totalPrice: '12100000',
-          caseNum: 2
-        },{
-          id: '25',
-          number: '11',
-          lng: 113.936674,
-          lat: 22.50903,
-          name: '榆桂小区',
-          building: 'b栋',
-          house: '4A',
-          tradingTime: '2017-03-11',
-          region: '南山',
-          district: '后海',
-          area: '136.88',
-          houseType: '3室2厅',
-          price: '101375',
-          totalPrice: '12100000',
-          caseNum: 3
-        },{
-          id: '26',
-          number: '11',
-          lng: 113.949271,
-          lat: 22.511945,
-          name: '深圳湾1号',
-          building: 'b栋',
-          house: '4A',
-          tradingTime: '2017-03-11',
-          region: '南山',
-          district: '后海',
-          area: '136.88',
-          houseType: '3室2厅',
-          price: '117058',
-          totalPrice: '12100000',
-          caseNum: 7
-        },{
-          id: '27',
-          number: '11',
-          lng: 113.945174,
-          lat: 22.525352,
-          name: '漾日湾畔',
-          building: 'b栋',
-          house: '4A',
-          tradingTime: '2017-03-11',
-          region: '南山',
-          district: '后海',
-          area: '136.88',
-          houseType: '3室2厅',
-          price: '117058',
-          totalPrice: '102101.68',
-          caseNum: 5
-        }]
-      this.saleCase = {
-        type: 0,
-        caseList: [
-          {
-            id: '1',
-            number: '1',
-            lng: 113.939897,
-            lat: 22.519751,
-            name: '海洋之心',
-            building: 'A',
-            house: '4G',
-            tradingTime: '2017-01-06',
-            region: '南山',
-            district: '后海',
-            area: '62.12',
-            houseType: '2室2厅',
-            price: '69220.86',
-            totalPrice: '4300000',
-            caseNum: 3
-          }, {
-            id: '2',
-            number: '1',
-            lng: 113.944151,
-            lat: 22.497102,
-            name: '后海公馆',
-            building: '1栋',
-            house: '1603',
-            tradingTime: '2017-01-11',
-            region: '南山',
-            district: '后海',
-            area: '128.2',
-            houseType: '4室2厅',
-            price: '82683.31',
-            totalPrice: '10600000',
-            caseNum: 4
-          }, {
-            id: '3',
-            number: '2',
-            lng: 113.944151,
-            lat: 22.497102,
-            name: '后海公馆',
-            building: '4栋',
-            house: '701',
-            tradingTime: '2017-02-25',
-            region: '南山',
-            district: '后海',
-            area: '103',
-            houseType: '3室2厅',
-            price: '90873.79',
-            totalPrice: '9360000',
-            caseNum: 4
-          }, {
-            id: '4',
-            number: '3',
-            lng: 113.944151,
-            lat: 22.497102,
-            name: '后海公馆',
-            building: '3栋',
-            house: '904',
-            tradingTime: '2017-03-21',
-            region: '南山',
-            district: '后海',
-            area: '66.24',
-            houseType: '2室1厅',
-            price: '89070.05',
-            totalPrice: '5900000',
-            caseNum: 4
-          }, {
-            id: '5',
-            number: '4',
-            lng: 113.944151,
-            lat: 22.497102,
-            name: '后海公馆',
-            building: '4栋',
-            house: '2802',
-            tradingTime: '2017/3/11',
-            region: '南山',
-            district: '后海',
-            area: '103',
-            houseType: '3室2厅',
-            price: '97087.38',
-            totalPrice: '10000000',
-            caseNum: 4
-          }, {
-            id: '6',
-            number: '5',
-            lng: 113.944151,
-            lat: 22.497102,
-            name: '后海公馆',
-            building: '1栋',
-            house: '205',
-            tradingTime: '2017-03-15',
-            region: '南山',
-            district: '后海',
-            area: '131.26',
-            houseType: '4室2厅',
-            price: '89136.07',
-            totalPrice: '11700000',
-            caseNum: 4
-          }, {
-            id: '7',
-            number: '6',
-            lng: 113.944151,
-            lat: 22.497102,
-            name: '后海公馆',
-            building: '3栋',
-            house: '1704',
-            tradingTime: '2017-09-13',
-            region: '南山',
-            district: '后海',
-            area: '66.34',
-            houseType: '2室1厅',
-            price: '90443.17',
-            totalPrice: '6000000',
-            caseNum: 4
-          }, {
-            id: '8',
-            number: '7',
-            lng: 113.944151,
-            lat: 22.497102,
-            name: '后海公馆',
-            building: '2栋',
-            house: '1904',
-            tradingTime: '2017-10-22',
-            region: '南山',
-            district: '后海',
-            area: '66.34',
-            houseType: '4室2厅',
-            price: '90865.24',
-            totalPrice: '6028000',
-            caseNum: 4
-          }, {
-            id: '9',
-            number: '3',
-            lng: 113.939995,
-            lat: 22.516735,
-            name: '育德佳园',
-            building: '4栋A单元',
-            house: '702',
-            tradingTime: '2017-01-11',
-            region: '南山',
-            district: '后海',
-            area: '72.63',
-            houseType: '2室2厅',
-            price: '72284.18',
-            totalPrice: '5250000',
-            caseNum: 5
-          }, {
-            id: '10',
-            number: '4',
-            lng: 113.942688,
-            lat: 22.505098,
-            name: '天骄华庭',
-            building: '1栋A单元',
-            house: '402',
-            tradingTime: '2017-01-08',
-            region: '南山',
-            district: '后海',
-            area: '39.26',
-            houseType: '1室0厅',
-            price: '84055.02',
-            totalPrice: '3300000',
-            caseNum: 1
-          }, {
-            id: '11',
-            number: '5',
-            lng: 113.939589,
-            lat: 22.518062,
-            name: '瑞铧苑',
-            building: '2栋',
-            house: '26A',
-            tradingTime: '2017-01-08',
-            region: '南山',
-            district: '后海',
-            area: '116.55',
-            houseType: '2室2厅',
-            price: '61776.06',
-            totalPrice: '7200000',
-            caseNum: 7
-          }, {
-            id: '12',
-            number: '6',
-            lng: 113.948524,
-            lat: 22.497403,
-            name: '皇庭港湾',
-            building: 'G栋',
-            house: '3AB',
-            tradingTime: '2017-01-03',
-            region: '南山',
-            district: '后海',
-            area: '87.91',
-            houseType: '2室2厅',
-            price: '72232.97',
-            totalPrice: '6350000',
-            caseNum: 9
-          }, {
-            id: '13',
-            number: '1',
-            lng: 113.940575,
-            lat: 22.504367,
-            name: '半岛花园A区',
-            building: '10栋(海康阁)',
-            house: '201',
-            tradingTime: '2017-02-07',
-            region: '南山',
-            district: '后海',
-            area: '90.63',
-            houseType: '3室2厅',
-            price: '54728.02',
-            totalPrice: '4960000',
-            caseNum: 4
-          }, {
-            id: '14',
-            number: '2',
-            lng: 113.940575,
-            lat: 22.504367,
-            name: '半岛花园A区',
-            building: '3栋',
-            house: '410',
-            tradingTime: '2017-04-12',
-            region: '南山',
-            district: '后海',
-            area: '91.39',
-            houseType: '3室2厅',
-            price: '55968.92',
-            totalPrice: '5115000',
-            caseNum: 4
-          }, {
-            id: '15',
-            number: '3',
-            lng: 113.940575,
-            lat: 22.504367,
-            name: '半岛花园A区',
-            building: '10栋（海麟阁）',
-            house: '802',
-            tradingTime: '2017-06-16',
-            region: '南山',
-            district: '后海',
-            area: '100.24',
-            houseType: '4室2厅',
-            price: '55167.6',
-            totalPrice: '5530000',
-            caseNum: 4
-          }, {
-            id: '16',
-            number: '4',
-            lng: 113.940575,
-            lat: 22.504367,
-            name: '半岛花园A区',
-            building: '3栋',
-            house: '409',
-            tradingTime: '2017-08-17',
-            region: '南山',
-            district: '后海',
-            area: '61.75',
-            houseType: '3室2厅',
-            price: '113765.18',
-            totalPrice: '7025000',
-            caseNum: 4
-          }, {
-            id: '17',
-            number: '8',
-            lng: 113.94339,
-            lat: 22.51736,
-            name: '蔚蓝海岸三期',
-            building: '30栋',
-            house: '3H',
-            tradingTime: '2017-02-22',
-            region: '南山',
-            district: '后海',
-            area: '122.55',
-            houseType: '3室2厅',
-            price: '79804.16',
-            totalPrice: '9780000',
-            caseNum: 8
-          }, {
-            id: '18',
-            number: '9',
-            lng: 113.946829,
-            lat: 22.495973,
-            name: '阳光海滨花园',
-            building: 'H栋',
-            house: '308',
-            tradingTime: '2017-03-28',
-            region: '南山',
-            district: '后海',
-            area: '75.54',
-            houseType: '3室1厅',
-            price: '94890.12',
-            totalPrice: '7168000',
-            caseNum: 5
-          }, {
-            id: '19',
-            number: '10',
-            lng: 113.945282,
-            lat: 22.493235,
-            name: '澳城花园',
-            building: 'b栋2单元',
-            house: '4A',
-            tradingTime: '2017-03-11',
-            region: '南山',
-            district: '后海',
-            area: '136.88',
-            houseType: '5室2厅',
-            price: '88398.6',
-            totalPrice: '12100000',
-            caseNum: 3
-          },{
-            id: '20',
-            number: '11',
-            lng: 113.945851,
-            lat: 22.509343,
-            name: '君汇新天花园',
-            building: 'b栋',
-            house: '4A',
-            tradingTime: '2017-03-11',
-            region: '南山',
-            district: '后海',
-            area: '136.88',
-            houseType: '3室2厅',
-            price: '88398.6',
-            totalPrice: '12100000',
-            caseNum: 3
-          },{
-            id: '20',
-            number: '11',
-            lng: 113.948092,
-            lat: 22.503225,
-            name: '卓越维港',
-            building: 'b栋',
-            house: '4A',
-            tradingTime: '2017-03-11',
-            region: '南山',
-            district: '后海',
-            area: '136.88',
-            houseType: '3室2厅',
-            price: '88398.6',
-            totalPrice: '12100000',
-            caseNum: 3
-          },{
-            id: '20',
-            number: '11',
-            lng: 113.94735,
-            lat: 22.494152,
-            name: '翡翠海岸',
-            building: 'b栋',
-            house: '4A',
-            tradingTime: '2017-03-11',
-            region: '南山',
-            district: '后海',
-            area: '136.88',
-            houseType: '3室2厅',
-            price: '88398.6',
-            totalPrice: '12100000',
-            caseNum: 3
-          },{
-            id: '20',
-            number: '11',
-            lng: 113.946281,
-            lat: 22.498561,
-            name: '绿海湾花园',
-            building: 'b栋',
-            house: '4A',
-            tradingTime: '2017-03-11',
-            region: '南山',
-            district: '后海',
-            area: '136.88',
-            houseType: '3室2厅',
-            price: '88398.6',
-            totalPrice: '12100000',
-            caseNum: 3
-          }]
-      }
-      this.rentCase = {
-        type: 1,
-        caseList: [
-          {
-            id: '1',
-            number: '1',
-            lng: 113.939897,
-            lat: 22.519751,
-            name: '海洋之心',
-            building: 'A',
-            house: '4G',
-            tradingTime: '2017-01-06',
-            region: '南山',
-            district: '后海',
-            area: '62.12',
-            houseType: '2室2厅',
-            price: (Math.random()*10000).toFixed(0),
-            totalPrice: '4300000',
-            caseNum: 3
-          }, {
-            id: '2',
-            number: '1',
-            lng: 113.944151,
-            lat: 22.497102,
-            name: '后海公馆',
-            building: '1栋',
-            house: '1603',
-            tradingTime: '2017-01-11',
-            region: '南山',
-            district: '后海',
-            area: '128.2',
-            houseType: '4室2厅',
-            price: (Math.random()*10000).toFixed(0),
-            totalPrice: '10600000',
-            caseNum: 4
-          }, {
-            id: '3',
-            number: '2',
-            lng: 113.944151,
-            lat: 22.497102,
-            name: '后海公馆',
-            building: '4栋',
-            house: '701',
-            tradingTime: '2017-02-25',
-            region: '南山',
-            district: '后海',
-            area: '103',
-            houseType: '3室2厅',
-            price: (Math.random()*10000).toFixed(0),
-            totalPrice: '9360000',
-            caseNum: 4
-          }, {
-            id: '4',
-            number: '3',
-            lng: 113.944151,
-            lat: 22.497102,
-            name: '后海公馆',
-            building: '3栋',
-            house: '904',
-            tradingTime: '2017-03-21',
-            region: '南山',
-            district: '后海',
-            area: '66.24',
-            houseType: '2室1厅',
-            price: (Math.random()*10000).toFixed(0),
-            totalPrice: '5900000',
-            caseNum: 4
-          }, {
-            id: '5',
-            number: '4',
-            lng: 113.944151,
-            lat: 22.497102,
-            name: '后海公馆',
-            building: '4栋',
-            house: '2802',
-            tradingTime: '2017/3/11',
-            region: '南山',
-            district: '后海',
-            area: '103',
-            houseType: '3室2厅',
-            price: (Math.random()*10000).toFixed(0),
-            totalPrice: '10000000',
-            caseNum: 4
-          }, {
-            id: '6',
-            number: '5',
-            lng: 113.944151,
-            lat: 22.497102,
-            name: '后海公馆',
-            building: '1栋',
-            house: '205',
-            tradingTime: '2017-03-15',
-            region: '南山',
-            district: '后海',
-            area: '131.26',
-            houseType: '4室2厅',
-            price: (Math.random()*10000).toFixed(0),
-            totalPrice: '11700000',
-            caseNum: 4
-          }, {
-            id: '7',
-            number: '6',
-            lng: 113.944151,
-            lat: 22.497102,
-            name: '后海公馆',
-            building: '3栋',
-            house: '1704',
-            tradingTime: '2017-09-13',
-            region: '南山',
-            district: '后海',
-            area: '66.34',
-            houseType: '2室1厅',
-            price: (Math.random()*10000).toFixed(0),
-            totalPrice: '6000000',
-            caseNum: 4
-          }, {
-            id: '8',
-            number: '7',
-            lng: 113.944151,
-            lat: 22.497102,
-            name: '后海公馆',
-            building: '2栋',
-            house: '1904',
-            tradingTime: '2017-10-22',
-            region: '南山',
-            district: '后海',
-            area: '66.34',
-            houseType: '4室2厅',
-            price: (Math.random()*10000).toFixed(0),
-            totalPrice: '6028000',
-            caseNum: 4
-          }, {
-            id: '9',
-            number: '3',
-            lng: 113.939995,
-            lat: 22.516735,
-            name: '育德佳园',
-            building: '4栋A单元',
-            house: '702',
-            tradingTime: '2017-01-11',
-            region: '南山',
-            district: '后海',
-            area: '72.63',
-            houseType: '2室2厅',
-            price: (Math.random()*10000).toFixed(0),
-            totalPrice: '5250000',
-            caseNum: 5
-          }, {
-            id: '10',
-            number: '4',
-            lng: 113.942688,
-            lat: 22.505098,
-            name: '天骄华庭',
-            building: '1栋A单元',
-            house: '402',
-            tradingTime: '2017-01-08',
-            region: '南山',
-            district: '后海',
-            area: '39.26',
-            houseType: '1室0厅',
-            price: (Math.random()*10000).toFixed(0),
-            totalPrice: '3300000',
-            caseNum: 1
-          }, {
-            id: '11',
-            number: '5',
-            lng: 113.939589,
-            lat: 22.518062,
-            name: '瑞铧苑',
-            building: '2栋',
-            house: '26A',
-            tradingTime: '2017-01-08',
-            region: '南山',
-            district: '后海',
-            area: '116.55',
-            houseType: '2室2厅',
-            price: (Math.random()*10000).toFixed(0),
-            totalPrice: '7200000',
-            caseNum: 7
-          }, {
-            id: '12',
-            number: '6',
-            lng: 113.948524,
-            lat: 22.497403,
-            name: '皇庭港湾',
-            building: 'G栋',
-            house: '3AB',
-            tradingTime: '2017-01-03',
-            region: '南山',
-            district: '后海',
-            area: '87.91',
-            houseType: '2室2厅',
-            price: (Math.random()*10000).toFixed(0),
-            totalPrice: '6350000',
-            caseNum: 9
-          }, {
-            id: '13',
-            number: '1',
-            lng: 113.940575,
-            lat: 22.504367,
-            name: '半岛花园A区',
-            building: '10栋(海康阁)',
-            house: '201',
-            tradingTime: '2017-02-07',
-            region: '南山',
-            district: '后海',
-            area: '90.63',
-            houseType: '3室2厅',
-            price: (Math.random()*10000).toFixed(0),
-            totalPrice: '4960000',
-            caseNum: 4
-          }, {
-            id: '14',
-            number: '2',
-            lng: 113.940575,
-            lat: 22.504367,
-            name: '半岛花园A区',
-            building: '3栋',
-            house: '410',
-            tradingTime: '2017-04-12',
-            region: '南山',
-            district: '后海',
-            area: '91.39',
-            houseType: '3室2厅',
-            price: (Math.random()*10000).toFixed(0),
-            totalPrice: '5115000',
-            caseNum: 4
-          }, {
-            id: '15',
-            number: '3',
-            lng: 113.940575,
-            lat: 22.504367,
-            name: '半岛花园A区',
-            building: '10栋（海麟阁）',
-            house: '802',
-            tradingTime: '2017-06-16',
-            region: '南山',
-            district: '后海',
-            area: '100.24',
-            houseType: '4室2厅',
-            price:(Math.random()*10000).toFixed(0),
-            totalPrice: '5530000',
-            caseNum: 4
-          }, {
-            id: '16',
-            number: '4',
-            lng: 113.940575,
-            lat: 22.504367,
-            name: '半岛花园A区',
-            building: '3栋',
-            house: '409',
-            tradingTime: '2017-08-17',
-            region: '南山',
-            district: '后海',
-            area: '61.75',
-            houseType: '3室2厅',
-            price: (Math.random()*10000).toFixed(0),
-            totalPrice: '7025000',
-            caseNum: 4
-          }, {
-            id: '17',
-            number: '8',
-            lng: 113.94339,
-            lat: 22.51736,
-            name: '蔚蓝海岸三期',
-            building: '30栋',
-            house: '3H',
-            tradingTime: '2017-02-22',
-            region: '南山',
-            district: '后海',
-            area: '122.55',
-            houseType: '3室2厅',
-            price: (Math.random()*10000).toFixed(0),
-            totalPrice: '9780000',
-            caseNum: 8
-          }, {
-            id: '18',
-            number: '9',
-            lng: 113.946829,
-            lat: 22.495973,
-            name: '阳光海滨花园',
-            building: 'H栋',
-            house: '308',
-            tradingTime: '2017-03-28',
-            region: '南山',
-            district: '后海',
-            area: '75.54',
-            houseType: '3室1厅',
-            price: (Math.random()*10000).toFixed(0),
-            totalPrice: '7168000',
-            caseNum: 5
-          }, {
-            id: '19',
-            number: '10',
-            lng: 113.945282,
-            lat: 22.493235,
-            name: '澳城花园',
-            building: 'b栋2单元',
-            house: '4A',
-            tradingTime: '2017-03-11',
-            region: '南山',
-            district: '后海',
-            area: '136.88',
-            houseType: '5室2厅',
-            price: (Math.random()*10000).toFixed(0),
-            totalPrice: '12100000',
-            caseNum: 3
-          },{
-            id: '20',
-            number: '11',
-            lng: 113.945851,
-            lat: 22.509343,
-            name: '君汇新天花园',
-            building: 'b栋',
-            house: '4A',
-            tradingTime: '2017-03-11',
-            region: '南山',
-            district: '后海',
-            area: '136.88',
-            houseType: '3室2厅',
-            price: (Math.random()*10000).toFixed(0),
-            totalPrice: '12100000',
-            caseNum: 3
-          },{
-            id: '20',
-            number: '11',
-            lng: 113.948092,
-            lat: 22.503225,
-            name: '卓越维港',
-            building: 'b栋',
-            house: '4A',
-            tradingTime: '2017-03-11',
-            region: '南山',
-            district: '后海',
-            area: '136.88',
-            houseType: '3室2厅',
-            price: (Math.random()*10000).toFixed(0),
-            totalPrice: '12100000',
-            caseNum: 3
-          },{
-            id: '20',
-            number: '11',
-            lng: 113.94735,
-            lat: 22.494152,
-            name: '翡翠海岸',
-            building: 'b栋',
-            house: '4A',
-            tradingTime: '2017-03-11',
-            region: '南山',
-            district: '后海',
-            area: '136.88',
-            houseType: '3室2厅',
-            price: (Math.random()*10000).toFixed(0),
-            totalPrice: '12100000',
-            caseNum: 3
-          },{
-            id: '20',
-            number: '11',
-            lng: 113.946281,
-            lat: 22.498561,
-            name: '绿海湾花园',
-            building: 'b栋',
-            house: '4A',
-            tradingTime: '2017-03-11',
-            region: '南山',
-            district: '后海',
-            area: '136.88',
-            houseType: '3室2厅',
-            price: (Math.random()*10000).toFixed(0),
-            totalPrice: '12100000',
-            caseNum: 3
-          }]
+      this.caseValue = this.caseTypes[0]
+      this.usageValue = this.usages[0]
+      this.getCases()
+    },
+    mounted() {
+      this.setMapHeight()
+      // 地图大小自适应
+      window.onresize = () => {
+        this.setMapHeight()
+        this.mapWidth = document.body.clientWidth - 180
       }
     },
     methods: {
-      change(val) {
+      addId(list) {
+        list = list.map((item, index) => {
+          // map本身不改变原数组, 但由于item是引用类型,下面的操作会改变原来的item
+          item.id = index + 1
+          return item
+        })
+      },
+      getCases() {
+        let params = {
+          allx: this.caseValue,
+          yt: this.usageValue
+        }
+  
+        getCases(params).then(response => {
+          console.log(response)
+          this.caseList = response.data
+          this.communities = this.caseList
+          
+          if (!this.searchedCaseList.length) {
+            this.searchedCaseList = this.caseList
+          }
+          // 在异步回调里操作异步数据(尽量不要想靠vue生命周期来操作异步数据)
+          this.addId(this.caseList)
+          this.setMapCenter()
+        }).catch(error => {
+          console.log(error)
+        })
+      },
+      showAll() {
+        this.zoom = 12
+        if (this.regionList.length < 2) {
+          this.isShowBoundary = true
+          this.regionList = ['宝安区', '南山区', '福田区', '罗湖区', '深圳市龙华区', '深圳市龙岗区']
+        } else {
+          this.isShowBoundary = false
+          this.regionList = []
+        }
+      },
+      showBoundary(name) {
+        this.isShowBoundary = true
+        this.regionList = new Array(name)
+      },
+      hideBoundary() {
+        this.isShowBoundary = false
+      },
+      /*change(val) {
         switch(val) {
           case '租赁':
             this.caseType = 1
@@ -1297,52 +341,78 @@
           default:
             this.caseType = 0
         }
-      },
+      },*/
       searchCase() {
-        let searchValue = this.searchValue.trim()
-        /*if (!searchValue) {
-          return
-        }*/
-        if (this.caseType === 0) {
-          this.communities = this.saleCase.caseList
-          this.searchedCaseList = this.communities.filter(item => {
-            return item.name.indexOf(searchValue) > -1
-          })
-        } else {
-          this.communities = this.rentCase.caseList
-          this.searchedCaseList = this.communities.filter(item => {
-            return item.name.indexOf(searchValue) > -1
-          })
-        }
-  
-        this.searchedCaseList.length ? (this.center = { lng: this.searchedCaseList[0].lng, lat: this.searchedCaseList[0].lat }) : this.$message('很遗憾, 未能查询到案例！')
         
-        let prjOverlayList = this.$refs.prjOverlay
+        const searchValue = this.searchValue.trim()
+        if (!this.caseValue || !this.usageValue) {
+          this.$message('请选择案例类型和用途！')
+          return
+        }
+        // 改变类型后异步获取有问题（先在原caseList里查询了）
+        this.getCases()
+        if (!searchValue) {
+          return
+        }
+        this.searchedCaseList = this.caseList.filter(item => {
+          return item.xmmc.indexOf(searchValue) > -1
+        })
+        this.addId(this.searchedCaseList)
+  
+        // 点击搜索后让对应marker高亮
+        const prjOverlayList = this.$refs.prjOverlay
         for (let i = 0; i < prjOverlayList.length; i++) {
           prjOverlayList[i].change(searchValue)
         }
         
-        this.$refs.caseList.getTableData(this.searchedCaseList)
-      },
-      handleSale() {
-        this.caseType = 0
-        this.searchCase()
-      },
-      handleRent() {
-        this.caseType = 1
-        this.searchCase()
+        /*this.searchedCaseList.length ? (this.center = { lng: this.searchedCaseList[0].x, lat: this.searchedCaseList[0].y }) : this.$message('很遗憾, 未能查询到案例！')*/
+        if (!this.searchedCaseList.length) {
+          this.$message('很遗憾, 未能查询到案例！')
+        }
       },
       mapReady() {
-        this.center = { lng: 113.940575, lat: 22.504367 }
+        this.setMapCenter()
+        if (!this.searchValue.trim()) {
+          return
+        }
+        const prjOverlayList = this.$refs.prjOverlay
+        for (let i = 0; i < prjOverlayList.length; i++) {
+          prjOverlayList[i].change(this.searchValue.trim())
+        }
+      },
+      zoomChange(type) {
+        this.zoom = type.target.Oa
+        console.log(this.zoom)
+        if (this.zoom > 15) {
+          this.communities = this.caseList
+        } else if (this.zoom > 13 && this.zoom < 16) {
+          this.communities = [
+            {id: 1, region: '前海', averagePrice: 67000, num: 3326, x: 113.891176, y: 22.530257},
+            {id: 2, region: '南山中心', averagePrice: 83000, num: 4396, x: 113.944234, y: 22.526073},
+            {id: 3, region: '后海', averagePrice: 77000, num: 3167, x: 113.947799, y: 22.523707},
+            {id: 4, region: '深圳湾', averagePrice: 62000, num: 3234, x: 113.95595, y: 22.508675},
+            {id: 5, region: '南头', averagePrice: 61000, num: 1380, x: 113.925291, y: 22.542096},
+            {id: 6, region: '科技园', averagePrice: 51000, num: 6392, x: 113.953195, y: 22.562101}
+          ]
+        } else {
+          this.communities = [
+            {id: 1, region: '宝安区', averagePrice: 57000, num: 2326, x: 113.839257, y: 22.657189},
+            {id: 2, region: '南山区', averagePrice: 73000, num: 3396, x: 113.937118, y: 22.539569},
+            {id: 3, region: '福田区', averagePrice: 67000, num: 4167, x: 114.052344, y: 22.555703},
+            {id: 4, region: '罗湖区', averagePrice: 52000, num: 4234, x: 114.146056, y: 22.569587},
+            {id: 5, region: '深圳市龙华区', averagePrice: 51000, num: 2380, x: 114.036822, y: 22.684342},
+            {id: 6, region: '深圳市龙岗区', averagePrice: 41000, num: 7392, x: 114.173651, y: 22.654995}
+          ]
+        }
       },
       showMap() {
         this.isShow = true
         this.mapType = 'primary'
         this.listType = 'plain'
-        // map的display为none带来center为0，marker偏离
-        setTimeout(() => {
-          this.center = { lng: 113.940575, lat: 22.504367 }
-        }, 1000)
+        // 解决从列表模式切换过来,地图没有高度的问题
+        this.$nextTick(() => {
+          this.setMapHeight()
+        })
       },
       showList() {
         this.isShow = false
@@ -1356,6 +426,25 @@
           this.$refs.baiduMap.$el.style.width = '100%'
         }
         this.flag = !this.flag
+      },
+      setMapHeight() {
+        const clientHeight = document.documentElement.clientHeight
+        const topHeight = this.$refs.searchTop.offsetHeight + 50
+        if (this.$refs.baiduMap) {
+          this.$refs.baiduMap.$el.style.height = clientHeight - topHeight + 'px'
+        }
+      },
+      setMapCenter() {
+        // mapReady里无法获取caseList
+        const totalX = this.caseList.reduce((total, item) => {
+          return total + (+item.x)
+        }, 0)
+        const totalY = this.caseList.reduce((total, item) => {
+          return total + (+item.y)
+        }, 0)
+        const averageX = totalX / this.caseList.length
+        const averageY = totalY / this.caseList.length
+        this.center = { lng: averageX, lat: averageY }
       }
     }
   }
@@ -1363,42 +452,70 @@
 
 <style rel="stylesheet/scss" lang="scss" scoped>
   .caseSearch {
-    .el-row {
-      div:first-child {
-        input::-webkit-input-placeholder {
-          color: #000;
+    .search-top {
+      overflow: hidden;
+      .el-row {
+        div:first-child {
+          input::-webkit-input-placeholder {
+            color: #000;
+          }
         }
       }
-    }
-    .line {
-      width: 100%;
-      height: 1px;
-      background: #797979;
-      margin: 10px 0 5px 0;
-      
-    }
-    .btn {
-      overflow: hidden;
-      margin-bottom: 10px;
-      span {
-        &:nth-child(1) {
-        float: left;
-        margin-left: 10px;
-        }
-        &:nth-child(2) {
-          float: right;
-          margin-right: 10px;
-        }
-        .el-button {
-          border-radius: 0;
-          margin-left: 0;
+      .line {
+        width: 100%;
+        height: 1px;
+        background: #797979;
+        margin: 10px 0 5px 0;
+    
+      }
+      .btn {
+        overflow: hidden;
+        margin-bottom: 10px;
+        span {
+          &:nth-child(1) {
+            float: left;
+            margin-left: 10px;
+          }
+          &:nth-child(2) {
+            float: right;
+            margin-right: 10px;
+          }
+          .el-button {
+            border-radius: 0;
+            margin-left: 0;
+          }
         }
       }
     }
     .bm-view {
-      width: 100%;
-      height: 700px;
+      /*width: 100%;*/
       transition: .2s width;
+      .itemBox {
+        padding: 10px 0;
+        color: #394043;
+        font-size: 14px;
+        cursor: pointer;
+        &:hover {
+          background: rgb(246, 246, 246);
+        }
+        span {
+          &:nth-child(2) {
+            display: inline-block;
+            width: 170px;
+            margin-left: 10px;
+            font-weight: bold;
+          }
+          &:nth-child(4) {
+            font-weight: bold;
+          }
+          &:nth-child(5) {
+            display: block;
+            margin-left: 30px;
+            margin-top: 10px;
+            color: #9c9fa1;
+          }
+        }
+      }
     }
   }
 </style>

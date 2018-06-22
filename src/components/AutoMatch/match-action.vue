@@ -43,7 +43,7 @@
     },
     methods: {
       matchTask() {
-        this.$router.push({path: '/case/create'})
+        this.$router.push({ path: '/case/create' })
       }
     }
   }

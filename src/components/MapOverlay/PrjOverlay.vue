@@ -4,66 +4,81 @@
     :class="{sample: true, active}"
     pane="labelPane"
     @draw="draw"
-    @mouseover.native="active=true"
-    @mouseout.native="active=false">
-    <div v-text="getText" @click="handleClick"></div>
+    @mouseover.native="mouseOver"
+    @mouseout.native="mouseOut">
+    <div v-html="getText" @click="handleClick"></div>
     <el-dialog title="案例列表:" width="70%" :modal-append-to-body="false" :append-to-body="true" top="25vh" :visible.sync="dialogTableVisible" @close="keepHighLight">
       <el-table
-        :data="tableData"
+        :data="tableData.slice((currentPage-1)*pageSize,currentPage*pageSize)"
         border
-        >
+        style="width: 100%"
+        id="el-table"
+      >
         <el-table-column
-          property="number"
-          label="编号"
+          prop="id"
+          label="序号"
           width="50"
         >
         </el-table-column>
         <el-table-column
-          property="name"
+          prop="xmmc"
           label="项目名称">
         </el-table-column>
         <el-table-column
-          property="building"
+          prop="ldmc"
           label="楼栋名称">
         </el-table-column>
         <el-table-column
-          property="house"
-          label="户名称">
+          prop="hh"
+          label="户号">
         </el-table-column>
         <el-table-column
-          property="tradingTime"
+          prop="lc"
+          label="楼层">
+        </el-table-column>
+        <el-table-column
+          prop="sj"
           label="交易时间">
         </el-table-column>
         <el-table-column
-          property="region"
+          prop="xzq"
           label="行政区">
         </el-table-column>
         <el-table-column
-          property="district"
-          label="片区">
-        </el-table-column>
-        <el-table-column
-          property="area"
+          prop="jzmj"
           label="建筑面积">
         </el-table-column>
         <el-table-column
-          property="houseType"
+          prop="hx"
           label="户型">
         </el-table-column>
         <el-table-column
-          property="price"
+          prop="dj"
           label="单价">
         </el-table-column>
         <el-table-column
-          property="totalPrice"
+          prop="zj"
           label="总价">
+        </el-table-column>
+        <el-table-column
+          prop="yt"
+          label="用途">
+        </el-table-column>
+        <el-table-column
+          prop="ally"
+          label="案例来源">
         </el-table-column>
       </el-table>
       <el-pagination
         size="medium"
         background
-        layout="prev, pager, next"
-        :total="total">
+        @size-change="handleSizeChange"
+        @current-change="handleCurrentChange"
+        :current-page="currentPage"
+        :page-sizes="[5, 10, 15]"
+        :page-size="pageSize"
+        layout="total, sizes, prev, pager, next, jumper"
+        :total="tableData.length">
       </el-pagination>
     </el-dialog>
   </bm-overlay>
@@ -72,12 +87,15 @@
 <script>
   
   export default {
-    props: ['data', 'position', 'tableData'],
+    props: ['data', 'position', 'tableData', 'zoom', 'caseList'],
     data() {
       return {
         active: false,
         dialogTableVisible: false,
-        total: 100,
+        currentPage: 1,
+        pageSize: 5,
+        averagePrice: 0,
+        caseNum: 0
       }
     },
     watch: {
@@ -88,12 +106,59 @@
         deep: true
       }
     },
+    created() {
+      this.getPriceAndNum()
+    },
     computed: {
       getText() {
-        return this.data.name + ' ' + (this.data.price / 10000).toFixed(1) + '万' + ' ' + this.data.caseNum + '个'
+        if (this.zoom > 15) {
+          return this.data.xmmc + ' ' + (this.averagePrice / 10000).toFixed(1) + '万' + ' ' + this.caseNum + '个'
+        } else {
+          return this.data.region.substr(-3) + '<br>' + (this.data.averagePrice / 10000).toFixed(1) + '万' + '<br>' + this.data.num + '套'
+        }
+      }
+    },
+    mounted() {
+      if (this.zoom < 16) {
+        this.$refs.customOverlay.$el.style.width = '80px'
+        this.$refs.customOverlay.$el.style.height = '80px'
+        this.$refs.customOverlay.$el.style.borderRadius = '50%'
+        this.$refs.customOverlay.$el.style.padding = '15px'
       }
     },
     methods: {
+      handleSizeChange: function (size) {
+        this.pagesize = size
+      },
+      handleCurrentChange: function(currentPage){
+        this.currentPage = currentPage
+      },
+      // 处理caseNum和平均单价
+      getPriceAndNum() {
+        let xmCaseList = this.caseList.filter(item => {
+          return this.data.xmmc === item.xmmc
+        })
+        let totalPrice = 0
+        for (let i = 0; i < xmCaseList.length; i++) {
+          let item = xmCaseList[i]
+          totalPrice += item.dj
+        }
+  
+        this.caseNum = xmCaseList.length
+        this.averagePrice = totalPrice / this.caseNum
+      },
+      mouseOver() {
+        this.active = true
+        if (this.zoom < 14) {
+          this.data.region && this.$emit('over', this.data.region)
+        }
+      },
+      mouseOut() {
+        this.active = false
+        if (this.zoom < 14) {
+          this.data.region && this.$emit('out')
+        }
+      },
       handleClick() {
         this.dialogTableVisible = true
       },
@@ -105,15 +170,15 @@
         el.style.top = pixel.y - 20 + 'px'
       },
       change(value) {
-        value && this.data.name.indexOf(value) > -1 ? this.active = true : this.active = false
+        this.data.xmmc.indexOf(value) > -1 ? this.active = true : this.active = false
       },
       keepHighLight() {
-        this.active =true
+        this.active = true
         // 原因是触发了marker的mouseout事件
-        /*setTimeout(() => {
+        /* setTimeout(() => {
           this.active =true
         }, 400)*/
-      },
+      }
     }
   }
 </script>
@@ -130,6 +195,7 @@
     font-size: 15px;
     white-space: nowrap;
     cursor: pointer;
+    opacity: .9;
     border-radius: 3px;
   }
   .sample.active {

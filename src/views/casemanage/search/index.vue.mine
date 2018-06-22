@@ -1,0 +1,523 @@
+<template>
+  <div class="caseSearch">
+    <div class="search-top" ref="searchTop">
+      <el-row :gutter="10" style="margin-left: 10px">
+        <el-col :span="4">
+          <el-select v-model="caseValue" placeholder="请选择案列类型" clearable size="medium">
+            <el-option
+              v-for="item in caseTypes"
+              :key="item"
+              :value="item">
+            </el-option>
+          </el-select>
+        </el-col>
+        <el-col :span="4">
+          <el-select v-model="usageValue" placeholder="请选择物业用途" clearable size="medium">
+            <el-option
+              v-for="item in usages"
+              :key="item"
+              :value="item">
+            </el-option>
+          </el-select>
+        </el-col>
+        <el-col :span="8">
+          <date-picker></date-picker>
+        </el-col>
+        <el-col :span="6">
+          <el-input
+            placeholder="请输入项目名称"
+            size="medium"
+            v-model="searchValue"
+            clearable>
+          </el-input>
+        </el-col>
+        <el-col :span="2">
+          <el-button type="primary" size="medium" @click="searchCase">查询</el-button>
+        </el-col>
+      </el-row>
+      <div class="line"></div>
+      <div class="btn">
+      <span>
+        <el-button type="primary" size="small">添加案例</el-button>
+        <el-button type="primary" size="small">导出案例</el-button>
+      </span>
+        <span>
+        <el-button :type="mapType" size="small" @click="showMap">地图模式</el-button>
+        <el-button :type="listType" size="small" @click="showList">列表模式</el-button>
+      </span>
+      </div>
+    </div>
+    <baidu-map class="bm-view" :style="{width: `${mapWidth}px`}" ref="baiduMap" v-if="isShow" :center="center" :zoom="zoom" @zoomend="zoomChange" :map-click="false" :scroll-wheel-zoom="true" @ready="mapReady">
+      <bm-map-type :map-types="['BMAP_NORMAL_MAP', 'BMAP_HYBRID_MAP', 'BMAP_PERSPECTIVE_MAP']" anchor="BMAP_ANCHOR_TOP_LEFT"></bm-map-type>
+      <bm-panorama anchor="BMAP_ANCHOR_BOTTOM_RIGHT"></bm-panorama>
+      <!--<bm-control anchor="BMAP_ANCHOR_TOP_RIGHT" :offset="{width: 10, height: 10}">
+        <el-button plain size="small" @click="regain">大图</el-button>
+      </bm-control>-->
+      <bm-control anchor="BMAP_ANCHOR_TOP_RIGHT" :offset="{width: 10, height: 50}">
+        <el-popover
+          title="请选择图层："
+          width="200"
+          trigger="click">
+          <el-button plain size="small" @click="showAll">行政区划</el-button>
+          <el-button plain size="small" @click="isShowMating=!isShowMating">配套设施</el-button>
+          <el-button plain size="small" style="margin-left: 0;margin-top: 5px">初中学区</el-button>
+          <el-button plain size="small" style="margin-top: 5px">评估分区</el-button>
+          <el-button plain size="small" style="margin-left: 0;margin-top: 5px">小学学区</el-button>
+          <el-button plain size="small">街道</el-button>
+          <el-button plain size="small" slot="reference" @click="isShowMating=false">图层</el-button>
+        </el-popover>
+      </bm-control>
+      <bm-control v-if="isShowMating" anchor="BMAP_ANCHOR_TOP_RIGHT" :offset="{width: 210, height: 40}">
+        <el-tabs type="border-card">
+          <el-tab-pane label="交通">
+            <el-tabs>
+              <el-tab-pane label="地铁">
+                <div v-for="item in subway" class="itemBox">
+                  <span><svg-icon :icon-class="item.icon"></svg-icon></span>
+                  <span>{{item.name}}</span>
+                  <span></span>
+                  <span>{{item.distance}}米</span>
+                  <span>{{item.line}}号线</span>
+                </div>
+              </el-tab-pane>
+              <el-tab-pane label="公交">
+                <div v-for="item in bus" class="itemBox">
+                  <span><svg-icon :icon-class="item.icon"></svg-icon></span>
+                  <span>{{item.name}}</span>
+                  <span></span>
+                  <span>{{item.distance}}米</span>
+                  <span>{{item.site}}</span>
+                </div>
+              </el-tab-pane>
+            </el-tabs>
+          </el-tab-pane>
+          <el-tab-pane label="教育">
+            <el-tabs>
+              <el-tab-pane label="幼儿园">
+                <div v-for="item in kindergarten" class="itemBox">
+                  <span><svg-icon :icon-class="item.icon"></svg-icon></span>
+                  <span>{{item.name}}</span>
+                  <span></span>
+                  <span>{{item.distance}}米</span>
+                  <span>{{item.site}}</span>
+                </div>
+              </el-tab-pane>
+              <el-tab-pane label="小学">
+                <div v-for="item in primarySchool" class="itemBox">
+                  <span><svg-icon :icon-class="item.icon"></svg-icon></span>
+                  <span>{{item.name}}</span>
+                  <span></span>
+                  <span>{{item.distance}}米</span>
+                  <span>{{item.site}}</span>
+                </div>
+              </el-tab-pane>
+              <el-tab-pane label="中学">
+                <div v-for="item in highSchool" class="itemBox">
+                  <span><svg-icon :icon-class="item.icon"></svg-icon></span>
+                  <span>{{item.name}}</span>
+                  <span></span>
+                  <span>{{item.distance}}米</span>
+                  <span>{{item.site}}</span>
+                </div>
+              </el-tab-pane>
+              <el-tab-pane label="大学">
+                <div v-for="item in university" class="itemBox">
+                  <span><svg-icon :icon-class="item.icon"></svg-icon></span>
+                  <span>{{item.name}}</span>
+                  <span></span>
+                  <span>{{item.distance}}米</span>
+                  <span>{{item.site}}</span>
+                </div>
+              </el-tab-pane>
+            </el-tabs>
+          </el-tab-pane>
+          <el-tab-pane label="医疗">
+            <el-tabs>
+              <el-tab-pane label="医院">
+                <div v-for="item in hospital" class="itemBox">
+                  <span><svg-icon :icon-class="item.icon"></svg-icon></span>
+                  <span>{{item.name}}</span>
+                  <span></span>
+                  <span>{{item.distance}}米</span>
+                  <span>{{item.site}}</span>
+                </div>
+              </el-tab-pane>
+              <el-tab-pane label="药店">
+                <div v-for="item in chemistShop" class="itemBox">
+                  <span><svg-icon :icon-class="item.icon"></svg-icon></span>
+                  <span>{{item.name}}</span>
+                  <span></span>
+                  <span>{{item.distance}}米</span>
+                  <span>{{item.site}}</span>
+                </div>
+              </el-tab-pane>
+            </el-tabs>
+          </el-tab-pane>
+          <el-tab-pane label="购物"></el-tab-pane>
+          <el-tab-pane label="生活"></el-tab-pane>
+          <el-tab-pane label="娱乐"></el-tab-pane>
+        </el-tabs>
+      </bm-control>
+      <bm-control anchor="BMAP_ANCHOR_TOP_LEFT" :offset="{width: 10, height: 40}">
+        <el-input v-model="keyword" size="mini" clearable placeholder="请输入关键词"></el-input>
+      </bm-control>
+      <bm-local-search :keyword="keyword" :auto-viewport="true"></bm-local-search>
+      <div v-if="isShowBoundary" v-for="regionName in regionList">
+        <bm-boundary :name="regionName" :strokeWeight="2" strokeColor="#409EFF" :strokeOpacity="0.9" :fillOpacity="0.1" fillColor="#409EFF"></bm-boundary>
+      </div>
+      <!--<bm-polygon :path="pathList" stroke-color="blue" :stroke-opacity="0.5" :stroke-weight="2"/>-->
+      <prj-overlay v-for="item in communities" :key="item.aldm"
+                   :position="{lng: item.x, lat: item.y}"
+                   :data="item"
+                   :caseList="caseList"
+                   :zoom="zoom"
+                   :tableData="searchedCaseList"
+                   @over="showBoundary"
+                   @out="hideBoundary"
+                   ref="prjOverlay"
+      ></prj-overlay>
+    </baidu-map>
+    <case-list v-else :tableData="searchedCaseList" ref="caseList"></case-list>
+  </div>
+</template>
+
+<script>
+  import { getCases } from '@/api/caseSearch'
+  import SelectBox from '@/components/Select/select'
+  import BaiduMap from 'vue-baidu-map/components/Map/Map'
+  import PrjOverlay from '@/components/MapOverlay/PrjOverlay'
+  import DatePicker from '@/components/DateTimePicker'
+  import InputBox from '@/components/Input'
+  import CaseList from '@/components/Table/case-list'
+
+  export default {
+    components: { SelectBox, BaiduMap, PrjOverlay, DatePicker, InputBox, CaseList },
+    data() {
+      return {
+        center: null,
+        zoom: 17,
+        mapWidth: document.body.clientWidth - 180,
+        mapType: 'primary',
+        listType: 'plain',
+        caseValue: '',
+        usageValue: '',
+        caseTypes: ['买卖', '租赁', '挂牌', '估价', '评估', '询价'],
+        usages: ['住宅', '商业', '办公', '工业'],
+        isShow: true,
+        isShowMating: false,
+        isShowBoundary: false,
+        regionList: [],
+        flag: false,
+        keyword: '',
+        searchValue: '',
+        caseList: [],
+        searchedCaseList: [],
+        communities: [],
+        // 需要后台给对应评估分区的pathList,处理成pathLists
+        pathList: [
+          {lng: 113.933404, lat: 22.526177},
+          {lng: 113.946052, lat: 22.514959},
+          {lng: 113.960425, lat: 22.527913},
+          {lng: 113.94059, lat: 22.533254}
+          ],
+        subway: [
+          {icon: 'subway',name: '南山', distance: 370, line: 11},
+          {icon: 'subway',name: '桃园', distance: 1057, line: 1},
+          {icon: 'subway',name: '大新', distance: 670, line: 1},
+          {icon: 'subway',name: '后海', distance: 470, line: '2/11'}
+        ],
+        bus: [{icon: 'bus',name: '北环科苑立交', distance: 300, site: '清华信息港'}],
+        kindergarten: [
+          {icon: '幼儿园',name: '深圳市南山区教育幼儿园', distance: 400, site: '深圳市南山区桂庙路海文花园'},
+          {icon: '幼儿园',name: '深圳市南山区教育幼儿园', distance: 400, site: '深圳市南山区桂庙路海文花园'},
+          {icon: '幼儿园',name: '深圳市南山区教育幼儿园', distance: 400, site: '深圳市南山区桂庙路海文花园'},
+          {icon: '幼儿园',name: '深圳市南山区教育幼儿园', distance: 400, site: '深圳市南山区桂庙路海文花园'}
+        ],
+        primarySchool: [
+          {icon: '小学',name: '南油小学(新校区)', distance: 607, site: '深圳市南山区南光路106号'},
+          {icon: '小学',name: '南油小学(新校区)', distance: 607, site: '深圳市南山区南光路106号'},
+          {icon: '小学',name: '南油小学(新校区)', distance: 607, site: '深圳市南山区南光路106号'},
+          {icon: '小学',name: '南油小学(新校区)', distance: 607, site: '深圳市南山区南光路106号'}
+        ],
+        highSchool: [
+          {icon: '中学',name: '学府中学', distance: 1343, site: '深圳市南山区商业文化中心区海德一道113号'},
+          {icon: '中学',name: '学府中学', distance: 1343, site: '深圳市南山区商业文化中心区海德一道113号'},
+          {icon: '中学',name: '学府中学', distance: 1343, site: '深圳市南山区商业文化中心区海德一道113号'},
+          {icon: '中学',name: '学府中学', distance: 1343, site: '深圳市南山区商业文化中心区海德一道113号'}
+        ],
+        university: [
+          {icon: '大学',name: '深圳大学', distance: 1420, site: '广东省深圳市南山区南海大道3688号'},
+          {icon: '大学',name: '深圳大学', distance: 1420, site: '广东省深圳市南山区南海大道3688号'},
+          {icon: '大学',name: '深圳大学', distance: 1420, site: '广东省深圳市南山区南海大道3688号'},
+          {icon: '大学',name: '深圳大学', distance: 1420, site: '广东省深圳市南山区南海大道3688号'}
+        ],
+        hospital: [
+          {icon: '医院',name: '深圳市第六人民医院', distance: 910, site: '深圳市南山区桃园路89号'},
+          {icon: '医院',name: '深圳市第六人民医院', distance: 910, site: '深圳市南山区桃园路89号'},
+          {icon: '医院',name: '深圳市第六人民医院', distance: 910, site: '深圳市南山区桃园路89号'},
+          {icon: '医院',name: '深圳市第六人民医院', distance: 910, site: '深圳市南山区桃园路89号'}
+        ],
+        chemistShop: [
+          {icon: '药店',name: '医佳康大药房(创业路店)', distance: 1227, site: '深圳市南山区创业路社区西海湾公寓6-7号'},
+          {icon: '药店',name: '医佳康大药房(创业路店)', distance: 1227, site: '深圳市南山区创业路社区西海湾公寓6-7号'},
+          {icon: '药店',name: '医佳康大药房(创业路店)', distance: 1227, site: '深圳市南山区创业路社区西海湾公寓6-7号'},
+          {icon: '药店',name: '医佳康大药房(创业路店)', distance: 1227, site: '深圳市南山区创业路社区西海湾公寓6-7号'}
+        ],
+      }
+    },
+    created() {
+      this.caseValue = this.caseTypes[0]
+      this.usageValue = this.usages[0]
+      this.getCases()
+    },
+    mounted() {
+      this.setMapHeight()
+      // 地图大小自适应
+      window.onresize = () => {
+        this.setMapHeight()
+        this.mapWidth = document.body.clientWidth - 180
+      }
+    },
+    methods: {
+      addId() {
+        this.caseList = this.caseList.map((item, index) => {
+          if (!item.id) {
+            // map本身不改变原数组, 但由于item是引用类型,下面的操作会改变原来的item
+            item.id = index + 1
+            return item
+          }
+        })
+      },
+      getCases() {
+        let params = {
+          allx: this.caseValue,
+          yt: this.usageValue
+        }
+  
+        getCases(params).then(response => {
+          console.log(response)
+          this.caseList = response.data
+          this.communities = this.caseList
+          
+          if (!this.searchedCaseList.length) {
+            this.searchedCaseList = this.caseList
+          }
+          // 在异步回调里操作异步数据(尽量不要想靠vue生命周期来操作异步数据)
+          this.addId()
+          this.setMapCenter()
+        }).catch(error => {
+          console.log(error)
+        })
+      },
+      showAll() {
+        this.zoom = 12
+        if (this.regionList.length < 2) {
+          this.isShowBoundary = true
+          this.regionList = ['宝安区', '南山区', '福田区', '罗湖区', '深圳市龙华区', '深圳市龙岗区']
+        } else {
+          this.isShowBoundary = false
+          this.regionList = []
+        }
+      },
+      showBoundary(name) {
+        this.isShowBoundary = true
+        this.regionList = new Array(name)
+      },
+      hideBoundary() {
+        this.isShowBoundary = false
+      },
+      /*change(val) {
+        switch(val) {
+          case '租赁':
+            this.caseType = 1
+            break;
+          case '挂牌':
+            this.caseType = 2
+            break;
+          case '估价':
+            this.caseType = 3
+            break;
+          case '询价':
+            this.caseType = 4
+            break;
+          default:
+            this.caseType = 0
+        }
+      },*/
+      searchCase() {
+        
+        const searchValue = this.searchValue.trim()
+        if (!this.caseValue || !this.usageValue) {
+          this.$message('请选择案例类型和用途！')
+          return
+        }
+        this.getCases()
+        if (!searchValue) {
+          return
+        }
+        this.searchedCaseList = this.caseList.filter(item => {
+          return item.xmmc.indexOf(searchValue) > -1
+        })
+  
+        // 点击搜索后让对应marker高亮
+        const prjOverlayList = this.$refs.prjOverlay
+        for (let i = 0; i < prjOverlayList.length; i++) {
+          prjOverlayList[i].change(searchValue)
+        }
+        
+        this.searchedCaseList.length ? (this.center = { lng: this.searchedCaseList[0].x, lat: this.searchedCaseList[0].y }) : this.$message('很遗憾, 未能查询到案例！')
+      },
+      mapReady() {
+        this.setMapCenter()
+        if (!this.searchValue.trim()) {
+          return
+        }
+        const prjOverlayList = this.$refs.prjOverlay
+        for (let i = 0; i < prjOverlayList.length; i++) {
+          prjOverlayList[i].change(this.searchValue.trim())
+        }
+      },
+      zoomChange(type) {
+        this.zoom = type.target.Oa
+        console.log(this.zoom)
+        if (this.zoom > 15) {
+          this.communities = this.caseList
+        } else if (this.zoom > 13 && this.zoom < 16) {
+          this.communities = [
+            {id: 1, region: '前海', averagePrice: 67000, num: 3326, x: 113.891176, y: 22.530257},
+            {id: 2, region: '南山中心', averagePrice: 83000, num: 4396, x: 113.944234, y: 22.526073},
+            {id: 3, region: '后海', averagePrice: 77000, num: 3167, x: 113.947799, y: 22.523707},
+            {id: 4, region: '深圳湾', averagePrice: 62000, num: 3234, x: 113.95595, y: 22.508675},
+            {id: 5, region: '南头', averagePrice: 61000, num: 1380, x: 113.925291, y: 22.542096},
+            {id: 6, region: '科技园', averagePrice: 51000, num: 6392, x: 113.953195, y: 22.562101}
+          ]
+        } else {
+          this.communities = [
+            {id: 1, region: '宝安区', averagePrice: 57000, num: 2326, x: 113.839257, y: 22.657189},
+            {id: 2, region: '南山区', averagePrice: 73000, num: 3396, x: 113.937118, y: 22.539569},
+            {id: 3, region: '福田区', averagePrice: 67000, num: 4167, x: 114.052344, y: 22.555703},
+            {id: 4, region: '罗湖区', averagePrice: 52000, num: 4234, x: 114.146056, y: 22.569587},
+            {id: 5, region: '深圳市龙华区', averagePrice: 51000, num: 2380, x: 114.036822, y: 22.684342},
+            {id: 6, region: '深圳市龙岗区', averagePrice: 41000, num: 7392, x: 114.173651, y: 22.654995}
+          ]
+        }
+      },
+      showMap() {
+        this.isShow = true
+        this.mapType = 'primary'
+        this.listType = 'plain'
+        // 解决从列表模式切换过来,地图没有高度的问题
+        this.$nextTick(() => {
+          this.setMapHeight()
+        })
+      },
+      showList() {
+        this.isShow = false
+        this.mapType = 'plain'
+        this.listType = 'primary'
+      },
+      regain() {
+        if (!this.flag) {
+          this.$refs.baiduMap.$el.style.width = '70%'
+        } else {
+          this.$refs.baiduMap.$el.style.width = '100%'
+        }
+        this.flag = !this.flag
+      },
+      setMapHeight() {
+        const clientHeight = document.documentElement.clientHeight
+        const topHeight = this.$refs.searchTop.offsetHeight + 50
+        if (this.$refs.baiduMap) {
+          this.$refs.baiduMap.$el.style.height = clientHeight - topHeight + 'px'
+        }
+      },
+      setMapCenter() {
+        // mapReady里无法获取caseList
+        const totalX = this.caseList.reduce((total, item) => {
+          return total + (+item.x)
+        }, 0)
+        const totalY = this.caseList.reduce((total, item) => {
+          return total + (+item.y)
+        }, 0)
+        const averageX = totalX / this.caseList.length
+        const averageY = totalY / this.caseList.length
+        this.center = { lng: averageX, lat: averageY }
+      }
+    }
+  }
+</script>
+
+<style rel="stylesheet/scss" lang="scss" scoped>
+  .caseSearch {
+    .search-top {
+      overflow: hidden;
+      .el-row {
+        div:first-child {
+          input::-webkit-input-placeholder {
+            color: #000;
+          }
+        }
+      }
+      .line {
+        width: 100%;
+        height: 1px;
+        background: #797979;
+        margin: 10px 0 5px 0;
+    
+      }
+      .btn {
+        overflow: hidden;
+        margin-bottom: 10px;
+        span {
+          &:nth-child(1) {
+            float: left;
+            margin-left: 10px;
+          }
+          &:nth-child(2) {
+            float: right;
+            margin-right: 10px;
+          }
+          .el-button {
+            border-radius: 0;
+            margin-left: 0;
+          }
+        }
+      }
+    }
+    .bm-view {
+      /*width: 100%;*/
+      transition: .2s width;
+      .itemBox {
+        padding: 10px 0;
+        color: #394043;
+        font-size: 14px;
+        cursor: pointer;
+        &:hover {
+          background: rgb(246, 246, 246);
+        }
+        span {
+          &:nth-child(2) {
+            display: inline-block;
+            width: 170px;
+            margin-left: 10px;
+            font-weight: bold;
+          }
+          &:nth-child(4) {
+            font-weight: bold;
+          }
+          &:nth-child(5) {
+            display: block;
+            margin-left: 30px;
+            margin-top: 10px;
+            color: #9c9fa1;
+          }
+        }
+      }
+    }
+  }
+</style>
+
+
+
+
+

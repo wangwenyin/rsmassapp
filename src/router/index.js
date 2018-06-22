@@ -24,7 +24,7 @@ import Layout from '../views/layout/Layout'
 export const constantRouterMap = [
   { path: '/login', component: () => import('@/views/login/index'), hidden: true },
   { path: '/404', component: () => import('@/views/404'), hidden: true },
-  
+
   {
     path: '/',
     component: Layout,
@@ -36,7 +36,7 @@ export const constantRouterMap = [
       component: () => import('@/views/dashboard/index')
     }]
   },
-  
+
   {
     path: '/data',
     component: Layout,
@@ -100,6 +100,24 @@ export const constantRouterMap = [
         name: 'housegrid',
         hidden: true,
         component: () => import('@/views/datamanage/search/housegrid.vue')
+      },
+      {
+        path: '/data/projectEdit',
+        name: 'projectEdit',
+        hidden: true,
+        component: () => import('@/views/datamanage/search/projectEdit.vue')
+      },
+      {
+        path: '/data/buildingEdit',
+        name: 'buildingEdit',
+        hidden: true,
+        component: () => import('@/views/datamanage/search/buildingEdit.vue')
+      },
+      {
+        path: '/data/houseEdit',
+        name: 'houseEdit',
+        hidden: true,
+        component: () => import('@/views/datamanage/search/houseEdit.vue')
       }
     ]
   },
@@ -116,66 +134,66 @@ export const constantRouterMap = [
         import('@/views/casemanage/imp'),
       meta: { title: '案例导入', icon: 'dataimp' }
     },
-      {
-        path: 'search',
-        name: 'Search',
-        component: () =>
+    {
+      path: 'search',
+      name: 'CaseSearch',
+      component: () =>
           import('@/views/casemanage/search/index'),
-        meta: { title: '案例查询', icon: 'datasearch' }
-      },
-      {
-        path: '/case/filter',
-        name: 'Filter',
-        component: () =>
+      meta: { title: '案例查询', icon: 'datasearch' }
+    },
+    {
+      path: '/case/filter',
+      name: 'Filter',
+      component: () =>
           import('@/views/casemanage/index'),
-        redirect: '/case/filter/auto',
-        meta: { title: '案例筛选', icon: 'filter' },
-        children: [{
-          path: 'auto',
-          name: 'Auto',
-          component: () =>
+      redirect: '/case/filter/auto',
+      meta: { title: '案例筛选', icon: 'filter' },
+      children: [{
+        path: 'auto',
+        name: 'Auto',
+        component: () =>
             import('@/views/casemanage/filter/auto'),
-          meta: { title: '自动筛选', icon: 'datasearch' }
-        },
-          {
-            path: 'labour',
-            name: 'Labour',
-            component: () =>
+        meta: { title: '自动筛选', icon: 'datasearch' }
+      },
+      {
+        path: 'labour',
+        name: 'Labour',
+        component: () =>
               import('@/views/casemanage/filter/labour'),
-            meta: { title: '人工筛选', icon: 'datasearch' }
-          }
-        ]
-      },
-      {
-        path: '/case/match',
-        name: 'Match',
-        component: () =>
-          import('@/views/casemanage/index'),
-        redirect: '/case/match/auto',
-        meta: { title: '案例匹配', icon: 'filter' },
-        children: [{
-          path: 'auto',
-          name: 'Auto',
-          component: () =>
-            import('@/views/casemanage/match/auto'),
-          meta: { title: '自动匹配', icon: 'datasearch' }
-        },
-          {
-            path: 'labour',
-            name: 'Labour',
-            component: () =>
-              import('@/views/casemanage/match/labour'),
-            meta: { title: '人工匹配', icon: 'datasearch' }
-          }
-        ]
-      },
-      {
-        path: 'create',
-        name: 'Create',
-        component: () =>
-          import('@/views/casemanage/create'),
-        meta: { title: '创建任务', icon: 'dataimp' }
+        meta: { title: '人工筛选', icon: 'datasearch' }
       }
+      ]
+    },
+    {
+      path: '/case/match',
+      name: 'Match',
+      component: () =>
+          import('@/views/casemanage/index'),
+      redirect: '/case/match/auto',
+      meta: { title: '案例匹配', icon: 'filter' },
+      children: [{
+        path: 'auto',
+        name: 'Auto',
+        component: () =>
+            import('@/views/casemanage/match/auto'),
+        meta: { title: '自动匹配', icon: 'datasearch' }
+      },
+      {
+        path: 'labour',
+        name: 'Labour',
+        component: () =>
+              import('@/views/casemanage/match/labour'),
+        meta: { title: '人工匹配', icon: 'datasearch' }
+      }
+      ]
+    },
+    {
+      path: 'create',
+      name: 'Create',
+      component: () =>
+          import('@/views/casemanage/create'),
+      meta: { title: '创建任务', icon: 'dataimp' }
+    }
     ]
   },
   {
@@ -204,9 +222,9 @@ export const constantRouterMap = [
         meta: { title: '复核统计', icon: 'appealstat' }
       }
     ]
-    
+
   },
-  
+
   { path: '*', redirect: '/404', hidden: true }
 ]
 

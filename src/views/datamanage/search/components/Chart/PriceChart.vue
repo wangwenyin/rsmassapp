@@ -19,19 +19,89 @@ export default {
     width: {
       type: String,
       'default': '100%'
+    },
+    hgyt: {
+      type: String,
+      'default': null
+    },
+    tjsj: {
+      type: Array,
+      'default': null
     }
   },
   data() {
     return {
-      json: [{ 'name': '1月', 'num': 140112 }, { 'name': '2月', 'num': 126678 }, { 'name': '3月', 'num': 147495 }, { 'name': '4月', 'num': 125116 }, { 'name': '5月', 'num': 130112 }, { 'name': '6月', 'num': 140102 }, { 'name': '7月', 'num': 127495 }],
-      name: [],
-      num: []
     }
   },
   mounted() {
     this.draw()
   },
   methods: {
+    SetSerie() {
+      var serie = []
+      if (this.hgyt !== null) {
+        const yts = this.hgyt.split(';')
+        yts.forEach(element => {
+          if (element !== '') {
+            var y = []
+            this.tjsj.forEach(element1 => {
+              if (element1.wyyt === element) {
+                y.push(element1.pgdj)
+              }
+            })
+            var item = {
+              name: element,
+              type: 'line',
+              data: y,
+              markPoint: {
+                data: [
+                  { type: 'max', name: '最大值' },
+                  { type: 'min', name: '最小值' }
+                ]
+              },
+              markLine: {
+                data: [
+                  { type: 'average', name: '平均值' }
+                ]
+              }
+            }
+            serie.push(item)
+          }
+        })
+      } else {
+        console.log('ssss')
+        var y = []
+        this.tjsj.forEach(element1 => {
+          y.push(element1.pgdj)
+        })
+        var item = {
+          name: '',
+          type: 'line',
+          data: y,
+          markPoint: {
+            data: [
+              { type: 'max', name: '最大值' },
+              { type: 'min', name: '最小值' }
+            ]
+          },
+          markLine: {
+            data: [
+              { type: 'average', name: '平均值' }
+            ]
+          }
+        }
+        serie.push(item)
+      }
+
+      return serie
+    },
+    SetX() {
+      const x = []
+      this.tjsj.forEach(element => {
+        if (x.indexOf(element.jzsd) === -1) { x.push(element.jzsd) }
+      })
+      return x
+    },
     draw: function() {
       const echart = echarts.init(document.getElementById('echarts'))
       if (this.json) {
@@ -65,33 +135,16 @@ export default {
         xAxis: {
           type: 'category',
           boundaryGap: false,
-          data: this.name
+          data: this.SetX()
         },
         yAxis: {
           type: 'value',
-          min: 120000,
+          min: 80000,
           axisLabel: {
             formatter: '{value} '
           }
         },
-        series: [
-          {
-            name: '评估价格',
-            type: 'line',
-            data: this.num,
-            markPoint: {
-              data: [
-                { type: 'max', name: '最大值' },
-                { type: 'min', name: '最小值' }
-              ]
-            },
-            markLine: {
-              data: [
-                { type: 'average', name: '平均值' }
-              ]
-            }
-          }
-        ]
+        series: this.SetSerie()
       }
       echart.setOption(option)
     }

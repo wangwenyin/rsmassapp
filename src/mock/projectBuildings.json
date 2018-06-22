@@ -1,0 +1,209 @@
+{
+    "code":"0",
+    "msg":"成功",
+    "data":[
+      {
+        "xmdm":"xm001",
+        "lddm": "ld006",
+        "ldmc": "A座1单元",
+        "zcs": "30",
+        "hgyt": "住宅;商业",
+        "ldxz": "商品房",
+        "zhs":120,
+        "jzmj":360
+      },
+      {
+        "xmdm":"xm001",
+        "lddm": "ld007",
+        "ldmc": "A座2单元",
+        "zcs": "30",
+        "hgyt": "住宅;商业",
+        "ldxz": "商品房",
+        "zhs":120,
+        "jzmj":360
+      },
+      {
+        "xmdm":"xm001",
+        "lddm": "ld008",
+        "ldmc": "C座",
+        "zcs": "30",
+        "hgyt": "住宅;商业",
+        "ldxz": "商品房",
+        "zhs":120,
+        "jzmj":360
+      },
+      {
+        "xmdm":"xm001",
+        "lddm": "ld009",
+        "ldmc": "D座1单元",
+        "zcs": "30",
+        "hgyt": "住宅",
+        "ldxz": "商品房",
+        "zhs":120,
+        "jzmj":360
+      },
+      {
+        "xmdm":"xm001",
+        "lddm": "ld010",
+        "ldmc": "D座2单元",
+        "zcs": "30",
+        "hgyt": "住宅",
+        "ldxz": "商品房",
+        "zhs":120,
+        "jzmj":360
+      },
+      {
+        "xmdm":"xm002",
+        "lddm": "ld011",
+        "ldmc": "A座1单元",
+        "zcs": "30",
+        "hgyt": "住宅;商业",
+        "ldxz": "商品房",
+        "zhs":120,
+        "jzmj":360
+      },
+      {
+        "xmdm":"xm002",
+        "lddm": "ld012",
+        "ldmc": "A座2单元",
+        "zcs": "30",
+        "hgyt": "住宅;商业",
+        "ldxz": "商品房",
+        "zhs":120,
+        "jzmj":360
+      },
+      {
+        "xmdm":"xm002",
+        "lddm": "ld013",
+        "ldmc": "C座",
+        "zcs": "30",
+        "hgyt": "住宅;商业",
+        "ldxz": "商品房",
+        "zhs":120,
+        "jzmj":360
+      },
+      {
+        "xmdm":"xm002",
+        "lddm": "ld014",
+        "ldmc": "D座1单元",
+        "zcs": "30",
+        "hgyt": "住宅",
+        "ldxz": "商品房",
+        "zhs":120,
+        "jzmj":360
+      },
+      {
+        "xmdm":"xm002",
+        "lddm": "ld015",
+        "ldmc": "D座2单元",
+        "zcs": "30",
+        "hgyt": "住宅",
+        "ldxz": "商品房",
+        "zhs":120,
+        "jzmj":360
+      },{
+        "xmdm":"xm003",
+        "lddm": "ld016",
+        "ldmc": "A座1单元",
+        "zcs": "30",
+        "hgyt": "住宅;商业",
+        "ldxz": "商品房",
+        "zhs":120,
+        "jzmj":360
+      },
+      {
+        "xmdm":"xm003",
+        "lddm": "ld017",
+        "ldmc": "A座2单元",
+        "zcs": "30",
+        "hgyt": "住宅;商业",
+        "ldxz": "商品房",
+        "zhs":120,
+        "jzmj":360
+      },
+      {
+        "xmdm":"xm003",
+        "lddm": "ld018",
+        "ldmc": "C座",
+        "zcs": "30",
+        "hgyt": "住宅;商业",
+        "ldxz": "商品房",
+        "zhs":120,
+        "jzmj":360
+      },
+      {
+        "xmdm":"xm003",
+        "lddm": "ld019",
+        "ldmc": "D座1单元",
+        "zcs": "30",
+        "hgyt": "住宅",
+        "ldxz": "商品房",
+        "zhs":120,
+        "jzmj":360
+      },
+      {
+        "xmdm":"xm003",
+        "lddm": "ld020",
+        "ldmc": "D座2单元",
+        "zcs": "30",
+        "hgyt": "住宅",
+        "ldxz": "商品房",
+        "zhs":120,
+        "jzmj":360
+      },
+      {
+        "xmdm":"xm004",
+        "lddm": "ld001",
+        "ldmc": "A座1单元",
+        "zcs": "30",
+        "hgyt": "住宅;商业",
+        "ldxz": "商品房",
+        "zhs":120,
+        "jzmj":360
+      },
+      {
+        "xmdm":"xm004",
+        "lddm": "ld002",
+        "ldmc": "A座2单元",
+        "zcs": "30",
+        "hgyt": "住宅;商业",
+        "ldxz": "商品房",
+        "zhs":120,
+        "jzmj":360
+      },
+      {
+        "xmdm":"xm004",
+        "lddm": "ld003",
+        "ldmc": "C座",
+        "zcs": "30",
+        "hgyt": "住宅;商业",
+        "ldxz": "商品房",
+        "zhs":120,
+        "jzmj":360
+      },
+      {
+        "xmdm":"xm004",
+        "lddm": "ld004",
+        "ldmc": "D座1单元",
+        "zcs": "30",
+        "hgyt": "住宅",
+        "ldxz": "商品房",
+        "zhs":120,
+        "jzmj":360
+      },
+      {
+        "xmdm":"xm004",
+        "lddm": "ld005",
+        "ldmc": "D座2单元",
+        "zcs": "30",
+        "hgyt": "住宅",
+        "ldxz": "商品房",
+        "zhs":120,
+        "jzmj":360
+      }
+    ] }
+             
+            
+  
+  
+              

@@ -1,6 +1,6 @@
 <template>
 <div>
-  <el-tag v-for="t in tagslist" :key="t" :size="size" :type="setType(t)">
+  <el-tag v-for="t in tagslist" :key="t" v-if="t!==''" :size="size" :type="setType(t)">
        {{t}}
   </el-tag> 
 </div> 
@@ -44,10 +44,10 @@
         } else if (t === '工业') {
           return 'warning'
         }
-        return ''
+        return null
       },
       converData() {
-        this.tagslist = this.tags.split(',')
+        this.tagslist = this.tags.split(';')
       }
     }
   }

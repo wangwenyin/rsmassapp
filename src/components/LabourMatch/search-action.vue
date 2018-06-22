@@ -21,7 +21,7 @@
   import InputBox from '@/components/Input'
   export default{
     components: { InputBox },
-    data () {
+    data() {
       return {}
     }
   }

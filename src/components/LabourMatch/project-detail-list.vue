@@ -14,9 +14,9 @@
 </template>
 
 <script>
-  import MatchResult from "@/components/AutoMatch/match-result";
-  
-  export default {
+  import MatchResult from '@/components/AutoMatch/match-result'
+
+export default {
     components: {
       MatchResult
     },
