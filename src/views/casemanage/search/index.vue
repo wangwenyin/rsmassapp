@@ -308,11 +308,12 @@
         })
       },
       showAll() {
-        this.zoom = 12
         if (this.regionList.length < 2) {
+          this.zoom = 13
           this.isShowBoundary = true
           this.regionList = ['宝安区', '南山区', '福田区', '罗湖区', '深圳市龙华区', '深圳市龙岗区']
         } else {
+          this.zoom = 17
           this.isShowBoundary = false
           this.regionList = []
         }
