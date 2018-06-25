@@ -1,5 +1,5 @@
 <template>
-  <div class="caseSearch">
+  <div class="caseSearch" @click.stop="isShowMating=false">
     <div class="search-top" ref="searchTop">
       <el-row :gutter="10" style="margin-left: 10px">
         <el-col :span="4">
