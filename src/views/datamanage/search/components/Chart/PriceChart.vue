@@ -22,11 +22,11 @@ export default {
     },
     hgyt: {
       type: String,
-      'default': null
+      'default': ''
     },
     tjsj: {
       type: Array,
-      'default': null
+      'default': []
     }
   },
   data() {
@@ -39,7 +39,7 @@ export default {
   methods: {
     SetSerie() {
       var serie = []
-      if (this.hgyt !== null) {
+      if (this.hgyt !== null && this.tjsj !== null) {
         const yts = this.hgyt.split(';')
         yts.forEach(element => {
           if (element !== '') {
@@ -69,37 +69,40 @@ export default {
           }
         })
       } else {
-        console.log('ssss')
         var y = []
-        this.tjsj.forEach(element1 => {
-          y.push(element1.pgdj)
-        })
-        var item = {
-          name: '',
-          type: 'line',
-          data: y,
-          markPoint: {
-            data: [
-              { type: 'max', name: '最大值' },
-              { type: 'min', name: '最小值' }
-            ]
-          },
-          markLine: {
-            data: [
-              { type: 'average', name: '平均值' }
-            ]
+        if (this.tjsj !== null) {
+          this.tjsj.forEach(element1 => {
+            y.push(element1.pgdj)
+          })
+          var item = {
+            name: '',
+            type: 'line',
+            data: y,
+            markPoint: {
+              data: [
+                { type: 'max', name: '最大值' },
+                { type: 'min', name: '最小值' }
+              ]
+            },
+            markLine: {
+              data: [
+                { type: 'average', name: '平均值' }
+              ]
+            }
           }
+          serie.push(item)
         }
-        serie.push(item)
       }
 
       return serie
     },
     SetX() {
       const x = []
-      this.tjsj.forEach(element => {
-        if (x.indexOf(element.jzsd) === -1) { x.push(element.jzsd) }
-      })
+      if (this.tjsj !== null) {
+        this.tjsj.forEach(element => {
+          if (x.indexOf(element.jzsd) === -1) { x.push(element.jzsd) }
+        })
+      }
       return x
     },
     draw: function() {
@@ -139,7 +142,7 @@ export default {
         },
         yAxis: {
           type: 'value',
-          min: 80000,
+          min: 50000,
           axisLabel: {
             formatter: '{value} '
           }

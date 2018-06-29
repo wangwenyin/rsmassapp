@@ -1,5 +1,5 @@
 <template>
-  <div class="margin60">
+  <div class="margin60" v-if="project!==null">
      <div id="1f"></div>
      <el-row :gutter="10" >
          <el-col :xs="12" :sm="12" :md="12" :lg="12" :xl="12">
@@ -93,7 +93,7 @@
     <div class="title-small">配套和指标因素信息 </div>
 </el-row>
 <el-row>
- <el-tabs type="border-card"  >
+ <el-tabs type="border-card" v-if="factor!==null" >
   <el-tab-pane label="住宅" v-if="project.hgyt.indexOf('住宅') !== -1">
   <el-row :gutter="10" >
   <el-col :span="8">
@@ -150,7 +150,7 @@
 <el-row >
    <div class="title-small">评估价格 </div>
 </el-row>
-<el-row>
+<el-row >
    <PriceChart  :hgyt="project.hgyt" :tjsj="tjsj"></PriceChart>
 </el-row>
   <div id="4f"></div>
@@ -159,7 +159,7 @@
 </el-row>
 <el-row>
   <div >
- <PriceMap></PriceMap>
+ <!-- <PriceMap ></PriceMap> -->
  </div>
 </el-row>
 <div class="topmenu" ref="topmenu">
@@ -218,6 +218,7 @@ export default {
       var param = { xmdm: this.$route.query.xmdm }
       projectInfo(param).then(response => {
         this.project = response.data
+        console.log('获取项目信息')
       })
     },
     getBuilding() {
@@ -236,6 +237,8 @@ export default {
       var param = { xmdm: this.$route.query.xmdm }
       projectValue(param).then(response => {
         this.tjsj = response.data
+        console.log('获取价格信息')
+        console.log(this.tjsj)
       })
     }
   },
@@ -247,6 +250,6 @@ export default {
   }
 }
 </script>
-<style>
-  
+<style rel="stylesheet/scss" lang="scss" scoped>
+  @import 'src/views/datamanage/styles.scss' ;
 </style>

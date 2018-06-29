@@ -26,11 +26,18 @@ export function deleteimgs(zydm) {
 }
 // 上传实体图片
 // params = { fdcdm: '房地产代码' ,fdclx:'房地产类型',zylx:'资源类型' ,file:'图片'}
-export function uploadimgs(data) {
+// export function uploadimgs(data) {
+//   return request({
+//     url: '/imgs',
+//     method: 'post',
+//     data
+//   })
+// }
+export function uploadimgs() {
   return request({
     url: '/imgs',
-    method: 'post',
-    data
+    method: 'post'
+
   })
 }
 // 更新项目、楼栋或者户的缩略图

@@ -1,5 +1,5 @@
 <template>
-  <div class="margin60">
+  <div class="margin60" v-if="building!==null">
      <div id="1f"></div>
     <el-row :gutter="10">
   <el-col :xs="12" :sm="12" :md="12" :lg="12" :xl="12">
@@ -98,7 +98,7 @@
 <el-row>
    <span class="title-small">配套和指标因素信息 </span>
 </el-row>
-<el-row>
+<el-row v-if="factor!==null">
  <el-tabs type="border-card"  >
   <el-tab-pane label="住宅" v-if="building.hgyt.indexOf('住宅') !== -1">
      <el-row >
@@ -123,7 +123,7 @@
          <el-col :span="6"> <span class="title-small">价格地图 </span></el-col>
 </el-row>
 <el-row>
- <PriceMap  :hgyt="building.hgyt" :tjsj="tjsj"></PriceMap>
+ <!-- <PriceMap  :hgyt="building.hgyt" :tjsj="tjsj"></PriceMap> -->
 </el-row>
 <div class="topmenu" ref="topmenu">
 <a href="#1f"><el-button type="info">基础信息</el-button></a><a href="#2f"><el-button type="info">户列表</el-button></a><a href="#3f"><el-button type="info">指标因素</el-button></a><a href="#4f"><el-button type="info">价格地图</el-button></a>
@@ -214,6 +214,6 @@ export default {
   }
 }
 </script>
-<style>
-
+<style rel="stylesheet/scss" lang="scss" scoped>
+  @import 'src/views/datamanage/styles.scss' ;
 </style>

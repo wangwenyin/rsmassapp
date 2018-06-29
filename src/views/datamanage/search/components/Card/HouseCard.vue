@@ -1,7 +1,7 @@
 <template>
-<div class="scroll">
+<div class="scroll card">
   <el-row>
- <el-col :span="24" v-for='(o , index) in houselist ' :key="o" v-if="index>=pagesize*(currentpage-1) && index<pagesize*currentpage" class="col">
+ <el-col :span="24" v-for='(o , index) in houselist ' :key="o.id" v-if="index>=pagesize*(currentpage-1) && index<pagesize*currentpage" class="col">
      <router-link :to="{ name:'house' ,query: { hdm: o.hdm }}" target="_blank" >
     <el-card>
       <img :src= "o.img" class="image">
@@ -44,8 +44,8 @@
 </el-row>
 </div>
 </template>
-<style>
- 
+<style rel="stylesheet/scss" lang="scss" scoped>
+  @import 'src/views/datamanage/styles.scss' ;
 </style>
 
 <script>
@@ -58,7 +58,7 @@ export default {
   props: {
     houselist: {
       type: Array,
-      default: null
+      default: []
     }
   },
   data() {

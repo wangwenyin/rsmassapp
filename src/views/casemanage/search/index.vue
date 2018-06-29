@@ -1,5 +1,5 @@
 <template>
-  <div class="caseSearch" @click.stop="isShowMating=false">
+  <div class="caseSearch" @click="isShowMating=false">
     <div class="search-top" ref="searchTop">
       <el-row :gutter="10" style="margin-left: 10px">
         <el-col :span="4">
@@ -38,7 +38,7 @@
       <div class="line"></div>
       <div class="btn">
       <span>
-        <el-button type="primary" size="small">添加案例</el-button>
+        <el-button type="primary" size="small" @click="handle">添加案例</el-button>
         <el-button type="primary" size="small">导出案例</el-button>
       </span>
         <span>
@@ -67,12 +67,12 @@
           <el-button plain size="small" slot="reference" @click="isShowMating=false">图层</el-button>
         </el-popover>
       </bm-control>
-      <bm-control v-if="isShowMating" anchor="BMAP_ANCHOR_TOP_RIGHT" :offset="{width: 210, height: 40}">
+      <bm-control v-if="isShowMating" anchor="BMAP_ANCHOR_TOP_RIGHT" :offset="{width: 210, height: 40}" @click.native.stop>
         <el-tabs type="border-card">
           <el-tab-pane label="交通">
             <el-tabs>
               <el-tab-pane label="地铁">
-                <div v-for="item in subway" class="itemBox">
+                <div v-for="item in subway" class="itemBox" :key="item.id">
                   <span><svg-icon :icon-class="item.icon"></svg-icon></span>
                   <span>{{item.name}}</span>
                   <span></span>
@@ -81,7 +81,7 @@
                 </div>
               </el-tab-pane>
               <el-tab-pane label="公交">
-                <div v-for="item in bus" class="itemBox">
+                <div v-for="item in bus" class="itemBox" :key="item.id">
                   <span><svg-icon :icon-class="item.icon"></svg-icon></span>
                   <span>{{item.name}}</span>
                   <span></span>
@@ -94,7 +94,7 @@
           <el-tab-pane label="教育">
             <el-tabs>
               <el-tab-pane label="幼儿园">
-                <div v-for="item in kindergarten" class="itemBox">
+                <div v-for="item in kindergarten" class="itemBox" :key="item.id">
                   <span><svg-icon :icon-class="item.icon"></svg-icon></span>
                   <span>{{item.name}}</span>
                   <span></span>
@@ -103,7 +103,7 @@
                 </div>
               </el-tab-pane>
               <el-tab-pane label="小学">
-                <div v-for="item in primarySchool" class="itemBox">
+                <div v-for="item in primarySchool" class="itemBox" :key="item.id">
                   <span><svg-icon :icon-class="item.icon"></svg-icon></span>
                   <span>{{item.name}}</span>
                   <span></span>
@@ -112,7 +112,7 @@
                 </div>
               </el-tab-pane>
               <el-tab-pane label="中学">
-                <div v-for="item in highSchool" class="itemBox">
+                <div v-for="item in highSchool" class="itemBox" :key="item.id">
                   <span><svg-icon :icon-class="item.icon"></svg-icon></span>
                   <span>{{item.name}}</span>
                   <span></span>
@@ -121,7 +121,7 @@
                 </div>
               </el-tab-pane>
               <el-tab-pane label="大学">
-                <div v-for="item in university" class="itemBox">
+                <div v-for="item in university" class="itemBox" :key="item.id">
                   <span><svg-icon :icon-class="item.icon"></svg-icon></span>
                   <span>{{item.name}}</span>
                   <span></span>
@@ -134,7 +134,7 @@
           <el-tab-pane label="医疗">
             <el-tabs>
               <el-tab-pane label="医院">
-                <div v-for="item in hospital" class="itemBox">
+                <div v-for="item in hospital" class="itemBox" :key="item.id">
                   <span><svg-icon :icon-class="item.icon"></svg-icon></span>
                   <span>{{item.name}}</span>
                   <span></span>
@@ -143,7 +143,7 @@
                 </div>
               </el-tab-pane>
               <el-tab-pane label="药店">
-                <div v-for="item in chemistShop" class="itemBox">
+                <div v-for="item in chemistShop" class="itemBox" :key="item.id">
                   <span><svg-icon :icon-class="item.icon"></svg-icon></span>
                   <span>{{item.name}}</span>
                   <span></span>
@@ -162,20 +162,19 @@
         <el-input v-model="keyword" size="mini" clearable placeholder="请输入关键词"></el-input>
       </bm-control>
       <bm-local-search :keyword="keyword" :auto-viewport="true"></bm-local-search>
-      <div v-if="isShowBoundary" v-for="regionName in regionList">
+      <div v-if="isShowBoundary" v-for="regionName in regionList" :key="regionName.id">
         <bm-boundary :name="regionName" :strokeWeight="2" strokeColor="#409EFF" :strokeOpacity="0.9" :fillOpacity="0.1" fillColor="#409EFF"></bm-boundary>
       </div>
       <!--<bm-polygon :path="pathList" stroke-color="blue" :stroke-opacity="0.5" :stroke-weight="2"/>-->
-      <prj-overlay v-for="item in communities" :key="item.aldm"
+      <case-overlay v-for="item in communities" :key="item.aldm"
                    :position="{lng: item.x, lat: item.y}"
                    :data="item"
                    :caseList="caseList"
                    :zoom="zoom"
-                   :tableData="searchedCaseList"
                    @over="showBoundary"
                    @out="hideBoundary"
                    ref="prjOverlay"
-      ></prj-overlay>
+      ></case-overlay>
     </baidu-map>
     <case-list v-else :tableData="searchedCaseList" ref="caseList"></case-list>
   </div>
@@ -183,18 +182,16 @@
 
 <script>
   import { getCases } from '@/api/caseSearch'
-  import SelectBox from '@/components/Select/select'
   import BaiduMap from 'vue-baidu-map/components/Map/Map'
-  import PrjOverlay from '@/components/MapOverlay/PrjOverlay'
+  import CaseOverlay from '@/components/MapOverlay/caseOverlay'
   import DatePicker from '@/components/DateTimePicker'
-  import InputBox from '@/components/Input'
   import CaseList from '@/components/Table/case-list'
 
   export default {
-    components: { SelectBox, BaiduMap, PrjOverlay, DatePicker, InputBox, CaseList },
+    components: { BaiduMap, CaseOverlay, DatePicker, CaseList },
     data() {
       return {
-        center: null,
+        center: { lng: 0, lat: 0 },
         zoom: 17,
         mapWidth: document.body.clientWidth - 180,
         mapType: 'primary',
@@ -215,54 +212,54 @@
         communities: [],
         // 需要后台给对应评估分区的pathList,处理成pathLists
         pathList: [
-          {lng: 113.933404, lat: 22.526177},
-          {lng: 113.946052, lat: 22.514959},
-          {lng: 113.960425, lat: 22.527913},
-          {lng: 113.94059, lat: 22.533254}
-          ],
-        subway: [
-          {icon: 'subway',name: '南山', distance: 370, line: 11},
-          {icon: 'subway',name: '桃园', distance: 1057, line: 1},
-          {icon: 'subway',name: '大新', distance: 670, line: 1},
-          {icon: 'subway',name: '后海', distance: 470, line: '2/11'}
+          { lng: 113.933404, lat: 22.526177 },
+          { lng: 113.946052, lat: 22.514959 },
+          { lng: 113.960425, lat: 22.527913 },
+          { lng: 113.94059, lat: 22.533254 }
         ],
-        bus: [{icon: 'bus',name: '北环科苑立交', distance: 300, site: '清华信息港'}],
+        subway: [
+          { icon: 'subway', name: '南山', distance: 370, line: 11 },
+          { icon: 'subway', name: '桃园', distance: 1057, line: 1 },
+          { icon: 'subway', name: '大新', distance: 670, line: 1 },
+          { icon: 'subway', name: '后海', distance: 470, line: '2/11' }
+        ],
+        bus: [{ icon: 'bus', name: '北环科苑立交', distance: 300, site: '清华信息港' }],
         kindergarten: [
-          {icon: '幼儿园',name: '深圳市南山区教育幼儿园', distance: 400, site: '深圳市南山区桂庙路海文花园'},
-          {icon: '幼儿园',name: '深圳市南山区教育幼儿园', distance: 400, site: '深圳市南山区桂庙路海文花园'},
-          {icon: '幼儿园',name: '深圳市南山区教育幼儿园', distance: 400, site: '深圳市南山区桂庙路海文花园'},
-          {icon: '幼儿园',name: '深圳市南山区教育幼儿园', distance: 400, site: '深圳市南山区桂庙路海文花园'}
+          { icon: '幼儿园', name: '深圳市南山区教育幼儿园', distance: 400, site: '深圳市南山区桂庙路海文花园' },
+          { icon: '幼儿园', name: '深圳市南山区教育幼儿园', distance: 400, site: '深圳市南山区桂庙路海文花园' },
+          { icon: '幼儿园', name: '深圳市南山区教育幼儿园', distance: 400, site: '深圳市南山区桂庙路海文花园' },
+          { icon: '幼儿园', name: '深圳市南山区教育幼儿园', distance: 400, site: '深圳市南山区桂庙路海文花园' }
         ],
         primarySchool: [
-          {icon: '小学',name: '南油小学(新校区)', distance: 607, site: '深圳市南山区南光路106号'},
-          {icon: '小学',name: '南油小学(新校区)', distance: 607, site: '深圳市南山区南光路106号'},
-          {icon: '小学',name: '南油小学(新校区)', distance: 607, site: '深圳市南山区南光路106号'},
-          {icon: '小学',name: '南油小学(新校区)', distance: 607, site: '深圳市南山区南光路106号'}
+          { icon: '小学', name: '南油小学(新校区)', distance: 607, site: '深圳市南山区南光路106号' },
+          { icon: '小学', name: '南油小学(新校区)', distance: 607, site: '深圳市南山区南光路106号' },
+          { icon: '小学', name: '南油小学(新校区)', distance: 607, site: '深圳市南山区南光路106号' },
+          { icon: '小学', name: '南油小学(新校区)', distance: 607, site: '深圳市南山区南光路106号' }
         ],
         highSchool: [
-          {icon: '中学',name: '学府中学', distance: 1343, site: '深圳市南山区商业文化中心区海德一道113号'},
-          {icon: '中学',name: '学府中学', distance: 1343, site: '深圳市南山区商业文化中心区海德一道113号'},
-          {icon: '中学',name: '学府中学', distance: 1343, site: '深圳市南山区商业文化中心区海德一道113号'},
-          {icon: '中学',name: '学府中学', distance: 1343, site: '深圳市南山区商业文化中心区海德一道113号'}
+          { icon: '中学', name: '学府中学', distance: 1343, site: '深圳市南山区商业文化中心区海德一道113号' },
+          { icon: '中学', name: '学府中学', distance: 1343, site: '深圳市南山区商业文化中心区海德一道113号' },
+          { icon: '中学', name: '学府中学', distance: 1343, site: '深圳市南山区商业文化中心区海德一道113号' },
+          { icon: '中学', name: '学府中学', distance: 1343, site: '深圳市南山区商业文化中心区海德一道113号' }
         ],
         university: [
-          {icon: '大学',name: '深圳大学', distance: 1420, site: '广东省深圳市南山区南海大道3688号'},
-          {icon: '大学',name: '深圳大学', distance: 1420, site: '广东省深圳市南山区南海大道3688号'},
-          {icon: '大学',name: '深圳大学', distance: 1420, site: '广东省深圳市南山区南海大道3688号'},
-          {icon: '大学',name: '深圳大学', distance: 1420, site: '广东省深圳市南山区南海大道3688号'}
+          { icon: '大学', name: '深圳大学', distance: 1420, site: '广东省深圳市南山区南海大道3688号' },
+          { icon: '大学', name: '深圳大学', distance: 1420, site: '广东省深圳市南山区南海大道3688号' },
+          { icon: '大学', name: '深圳大学', distance: 1420, site: '广东省深圳市南山区南海大道3688号' },
+          { icon: '大学', name: '深圳大学', distance: 1420, site: '广东省深圳市南山区南海大道3688号' }
         ],
         hospital: [
-          {icon: '医院',name: '深圳市第六人民医院', distance: 910, site: '深圳市南山区桃园路89号'},
-          {icon: '医院',name: '深圳市第六人民医院', distance: 910, site: '深圳市南山区桃园路89号'},
-          {icon: '医院',name: '深圳市第六人民医院', distance: 910, site: '深圳市南山区桃园路89号'},
-          {icon: '医院',name: '深圳市第六人民医院', distance: 910, site: '深圳市南山区桃园路89号'}
+          { icon: '医院', name: '深圳市第六人民医院', distance: 910, site: '深圳市南山区桃园路89号' },
+          { icon: '医院', name: '深圳市第六人民医院', distance: 910, site: '深圳市南山区桃园路89号' },
+          { icon: '医院', name: '深圳市第六人民医院', distance: 910, site: '深圳市南山区桃园路89号' },
+          { icon: '医院', name: '深圳市第六人民医院', distance: 910, site: '深圳市南山区桃园路89号' }
         ],
         chemistShop: [
-          {icon: '药店',name: '医佳康大药房(创业路店)', distance: 1227, site: '深圳市南山区创业路社区西海湾公寓6-7号'},
-          {icon: '药店',name: '医佳康大药房(创业路店)', distance: 1227, site: '深圳市南山区创业路社区西海湾公寓6-7号'},
-          {icon: '药店',name: '医佳康大药房(创业路店)', distance: 1227, site: '深圳市南山区创业路社区西海湾公寓6-7号'},
-          {icon: '药店',name: '医佳康大药房(创业路店)', distance: 1227, site: '深圳市南山区创业路社区西海湾公寓6-7号'}
-        ],
+          { icon: '药店', name: '医佳康大药房(创业路店)', distance: 1227, site: '深圳市南山区创业路社区西海湾公寓6-7号' },
+          { icon: '药店', name: '医佳康大药房(创业路店)', distance: 1227, site: '深圳市南山区创业路社区西海湾公寓6-7号' },
+          { icon: '药店', name: '医佳康大药房(创业路店)', distance: 1227, site: '深圳市南山区创业路社区西海湾公寓6-7号' },
+          { icon: '药店', name: '医佳康大药房(创业路店)', distance: 1227, site: '深圳市南山区创业路社区西海湾公寓6-7号' }
+        ]
       }
     },
     created() {
@@ -277,8 +274,19 @@
         this.setMapHeight()
         this.mapWidth = document.body.clientWidth - 180
       }
+      console.log(this.$route.path)
+    },
+    beforeRouteUpdate(to, from, next) {
+      // react to route changes...
+      // don't forget to call next()
+      console.log(to)
+      console.log(from)
+      next()
     },
     methods: {
+      handle() {
+        this.$router.push({ path: '/case/create' })
+      },
       addId(list) {
         list = list.map((item, index) => {
           // map本身不改变原数组, 但由于item是引用类型,下面的操作会改变原来的item
@@ -287,7 +295,7 @@
         })
       },
       getCases() {
-        let params = {
+        const params = {
           allx: this.caseValue,
           yt: this.usageValue
         }
@@ -296,7 +304,7 @@
           console.log(response)
           this.caseList = response.data
           this.communities = this.caseList
-          
+  
           if (!this.searchedCaseList.length) {
             this.searchedCaseList = this.caseList
           }
@@ -325,7 +333,7 @@
       hideBoundary() {
         this.isShowBoundary = false
       },
-      /*change(val) {
+      /* change(val) {
         switch(val) {
           case '租赁':
             this.caseType = 1
@@ -344,7 +352,6 @@
         }
       },*/
       searchCase() {
-        
         const searchValue = this.searchValue.trim()
         if (!this.caseValue || !this.usageValue) {
           this.$message('请选择案例类型和用途！')
@@ -365,8 +372,8 @@
         for (let i = 0; i < prjOverlayList.length; i++) {
           prjOverlayList[i].change(searchValue)
         }
-        
-        /*this.searchedCaseList.length ? (this.center = { lng: this.searchedCaseList[0].x, lat: this.searchedCaseList[0].y }) : this.$message('很遗憾, 未能查询到案例！')*/
+  
+        /* this.searchedCaseList.length ? (this.center = { lng: this.searchedCaseList[0].x, lat: this.searchedCaseList[0].y }) : this.$message('很遗憾, 未能查询到案例！')*/
         if (!this.searchedCaseList.length) {
           this.$message('很遗憾, 未能查询到案例！')
         }
@@ -388,21 +395,21 @@
           this.communities = this.caseList
         } else if (this.zoom > 13 && this.zoom < 16) {
           this.communities = [
-            {id: 1, region: '前海', averagePrice: 67000, num: 3326, x: 113.891176, y: 22.530257},
-            {id: 2, region: '南山中心', averagePrice: 83000, num: 4396, x: 113.944234, y: 22.526073},
-            {id: 3, region: '后海', averagePrice: 77000, num: 3167, x: 113.947799, y: 22.523707},
-            {id: 4, region: '深圳湾', averagePrice: 62000, num: 3234, x: 113.95595, y: 22.508675},
-            {id: 5, region: '南头', averagePrice: 61000, num: 1380, x: 113.925291, y: 22.542096},
-            {id: 6, region: '科技园', averagePrice: 51000, num: 6392, x: 113.953195, y: 22.562101}
+            { id: 1, region: '前海', averagePrice: 67000, num: 3326, x: 113.891176, y: 22.530257 },
+            { id: 2, region: '南山中心', averagePrice: 83000, num: 4396, x: 113.944234, y: 22.526073 },
+            { id: 3, region: '后海', averagePrice: 77000, num: 3167, x: 113.947799, y: 22.523707 },
+            { id: 4, region: '深圳湾', averagePrice: 62000, num: 3234, x: 113.95595, y: 22.508675 },
+            { id: 5, region: '南头', averagePrice: 61000, num: 1380, x: 113.925291, y: 22.542096 },
+            { id: 6, region: '科技园', averagePrice: 51000, num: 6392, x: 113.953195, y: 22.562101 }
           ]
         } else {
           this.communities = [
-            {id: 1, region: '宝安区', averagePrice: 57000, num: 2326, x: 113.839257, y: 22.657189},
-            {id: 2, region: '南山区', averagePrice: 73000, num: 3396, x: 113.937118, y: 22.539569},
-            {id: 3, region: '福田区', averagePrice: 67000, num: 4167, x: 114.052344, y: 22.555703},
-            {id: 4, region: '罗湖区', averagePrice: 52000, num: 4234, x: 114.146056, y: 22.569587},
-            {id: 5, region: '深圳市龙华区', averagePrice: 51000, num: 2380, x: 114.036822, y: 22.684342},
-            {id: 6, region: '深圳市龙岗区', averagePrice: 41000, num: 7392, x: 114.173651, y: 22.654995}
+            { id: 1, region: '宝安区', averagePrice: 57000, num: 2326, x: 113.839257, y: 22.657189 },
+            { id: 2, region: '南山区', averagePrice: 73000, num: 3396, x: 113.937118, y: 22.539569 },
+            { id: 3, region: '福田区', averagePrice: 67000, num: 4167, x: 114.052344, y: 22.555703 },
+            { id: 4, region: '罗湖区', averagePrice: 52000, num: 4234, x: 114.146056, y: 22.569587 },
+            { id: 5, region: '深圳市龙华区', averagePrice: 51000, num: 2380, x: 114.036822, y: 22.684342 },
+            { id: 6, region: '深圳市龙岗区', averagePrice: 41000, num: 7392, x: 114.173651, y: 22.654995 }
           ]
         }
       },
@@ -443,8 +450,8 @@
         const totalY = this.caseList.reduce((total, item) => {
           return total + (+item.y)
         }, 0)
-        const averageX = totalX / this.caseList.length
-        const averageY = totalY / this.caseList.length
+        const averageX = (totalX / this.caseList.length)
+        const averageY = (totalY / this.caseList.length)
         this.center = { lng: averageX, lat: averageY }
       }
     }

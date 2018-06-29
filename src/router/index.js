@@ -210,6 +210,12 @@ export const constantRouterMap = [
         meta: { title: '房地产统计', icon: 'rsstat' }
       },
       {
+        path: 'propstat',
+        name: 'propstat',
+        component: () => import('@/views/statistic/propstat.vue'),
+        meta: { title: '估价对象统计', icon: 'statistic' }
+      },
+      {
         path: 'casestat',
         name: 'Casestat',
         component: () => import('@/views/statistic/casestat.vue'),
@@ -223,6 +229,86 @@ export const constantRouterMap = [
       }
     ]
 
+  },
+  {
+    path: '/recheck',
+    component: Layout,
+    redirect: '/recheck/task',
+    name: 'Recheck',
+    meta: { title: '价格复核', icon: 'recheck' },
+    children: [{
+      path: 'task',
+      name: 'Task',
+      component: () =>
+        import('@/views/priceRecheck/task'),
+      meta: { title: '任务列表', icon: 'task' }
+    },
+      {
+        path: 'process',
+        name: 'Process',
+        component: () =>
+          import('@/views/priceRecheck/process'),
+        meta: { title: '流程查看', icon: 'process' }
+      },
+      {
+        path: 'audit',
+        name: 'Audit',
+        component: () =>
+          import('@/views/priceRecheck/audit'),
+        meta: { title: '数据审核', icon: 'audit' },
+      }
+    ]
+  },
+  {
+    path: '/valuation',
+    component: Layout,
+    redirect: '/data/valuation',
+    name: 'Valuation',
+    meta: { title: '个案估价', icon: 'valuation' },
+    children: [
+      {
+        path: 'task',
+        name: 'task',
+        component: () => import('@/views/casevaluation/task/index'),
+        meta: { title: '评估任务', icon: 'rsstat' }
+      },
+      {
+        path: 'param',
+        name: 'param',
+        component: () => import('@/views/casevaluation/param/index'),
+        meta: { title: '参数管理', icon: 'datatools' }
+      },
+      {
+        path: '/task/addtask1',
+        name: 'addtask1',
+        hidden: true,
+        component: () => import('@/views/casevaluation/task/addtask1')
+      },
+      {
+        path: '/task/addtask2',
+        name: 'addtask2',
+        hidden: true,
+        component: () => import('@/views/casevaluation/task/addtask2')
+      },
+      {
+        path: '/task/addtask3',
+        name: 'addtask3',
+        hidden: true,
+        component: () => import('@/views/casevaluation/task/addtask3')
+      },
+      {
+        path: '/task/addtask4',
+        name: 'addtask4',
+        hidden: true,
+        component: () => import('@/views/casevaluation/task/addtask4')
+      },
+      {
+        path: '/task/addtask5',
+        name: 'addtask5',
+        hidden: true,
+        component: () => import('@/views/casevaluation/task/addtask5')
+      }
+    ]
   },
 
   { path: '*', redirect: '/404', hidden: true }

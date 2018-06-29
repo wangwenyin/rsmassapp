@@ -64,7 +64,9 @@ export default {
     },
     center: {
       type: Object,
-      default: { lng: 113.939897, lat: 22.519751 }
+      default: function() {
+        return { lng: 113.939897, lat: 22.519751 }
+      }
     }
   },
   data() {

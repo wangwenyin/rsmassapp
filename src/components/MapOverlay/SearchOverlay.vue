@@ -16,6 +16,9 @@
     props: ['data', 'position', 'tableData', 'type'],
     data() {
       return {
+        active: false,
+        dialogTableVisible: false,
+        total: 100
       }
     },
     watch: {
@@ -33,7 +36,25 @@
     },
     methods: {
       handleClick() {
-      
+        if (this.type === 'house') {
+          const routerData = this.$router.resolve({
+            name: 'house',
+            query: { hdm: this.data.id }
+          })
+          window.open(routerData.href, '_blank')
+        } else if (this.type === 'building') {
+          const routerData = this.$router.resolve({
+            name: 'building',
+            query: { lddm: this.data.id }
+          })
+          window.open(routerData.href, '_blank')
+        } else {
+          const routerData = this.$router.resolve({
+            name: 'project',
+            query: { xmdm: this.data.id }
+          })
+          window.open(routerData.href, '_blank')
+        }
       },
       draw({ el, BMap, map }) {
         const { lng, lat } = this.position
@@ -41,6 +62,16 @@
         const pixel = map.pointToOverlayPixel(point)
         el.style.left = pixel.x - 60 + 'px'
         el.style.top = pixel.y - 20 + 'px'
+      },
+      change(value) {
+        this.data.name.indexOf(value) > -1 ? this.active = true : this.active = false
+      },
+      keepHighLight() {
+        this.active = true
+        // 原因是触发了marker的mouseout事件
+        /* setTimeout(() => {
+          this.active =true
+        }, 400)*/
       }
     }
   }

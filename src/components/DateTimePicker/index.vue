@@ -48,11 +48,11 @@
       }
     },
     created() {
-      let now = new Date()
-      
-      let startDate = new Date(now.getFullYear()-1, now.getMonth(), now.getDate(), now.getHours(), now.getMinutes())
-      let endDate = new Date(now.getFullYear(), now.getMonth(), now.getDate(), now.getHours(), now.getMinutes())
-      
+      const now = new Date()
+  
+      const startDate = new Date(now.getFullYear() - 1, now.getMonth(), now.getDate(), now.getHours(), now.getMinutes())
+      const endDate = new Date(now.getFullYear(), now.getMonth(), now.getDate(), now.getHours(), now.getMinutes())
+  
       this.value.push(startDate)
       this.value.push(endDate)
     }

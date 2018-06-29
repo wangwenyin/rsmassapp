@@ -175,6 +175,6 @@ export default {
   }
 }
 </script>
-<style>
-  
+<style rel="stylesheet/scss" lang="scss" scoped>
+  @import 'src/views/datamanage/styles.scss' ;
 </style>

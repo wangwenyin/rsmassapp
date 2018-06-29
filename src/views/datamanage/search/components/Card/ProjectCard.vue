@@ -1,7 +1,7 @@
 <template>
-<div class="scroll">
+<div class="scroll card">
  <el-row >
-     <el-col :span="24" v-for="(o, index) in projectlist" :key="o" v-if="index>=pagesize*(currentpage-1) && index<pagesize*currentpage" class="col">
+     <el-col :span="24" v-for="(o, index) in projectlist" :key="o.id" v-if="index>=pagesize*(currentpage-1) && index<pagesize*currentpage" class="col">
        <router-link :to="{ name:'project' ,query: { xmdm: o.xmdm }}" target="_blank" >
             <el-card >
                 <img :src= "o.img" class="image">
@@ -31,21 +31,22 @@
    <el-row>
       <el-col :span="24" >
        <el-pagination 
-       small
-      @size-change="handleSizeChange"
-      @current-change="handleCurrentChange"
-      :current-page="currentpage"
-      :page-sizes="[10, 20, 30, 50]"
-      :page-size="pagesize"
-      layout="total, prev, pager, next"
-      :total="projectlist.length">
+        small
+        @size-change="handleSizeChange"
+        @current-change="handleCurrentChange"
+        :current-page="currentpage"
+        :page-sizes="[10, 20, 30, 50]"
+        :page-size="pagesize"
+        layout="total, prev, pager, next"
+        :total="projectlist.length">
     </el-pagination>
       </el-col>
    </el-row>
 </div>
 </template>
-<style>
-
+<style rel="stylesheet/scss" lang="scss" scoped>
+  @import 'src/views/datamanage/styles.scss' ;
+  
 </style>
 
 <script>
@@ -58,7 +59,7 @@ export default {
   props: {
     projectlist: {
       type: Array,
-      default: null
+      default: []
     }
   },
   data() {
@@ -75,7 +76,9 @@ export default {
       this.pagesize = { val }.val
     }
   },
-  created() {},
+  created() {
+
+  },
   filters: {
     formatDate(currentDate) {
       var date = new Date(currentDate)

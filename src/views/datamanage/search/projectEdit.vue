@@ -369,7 +369,8 @@
       <template>
 <div class="components-container">
 <div class="editor-container">
-<dropzone v-on:dropzone-removedFile="dropzoneR" v-on:dropzone-paste="paste"  v-on:dropzone-success="dropzoneS" id="myVueDropzone" url="https://httpbin.org/post" maxFiles= 1 :defaultImg="project.img" ></dropzone>
+<dropzone
+v-on:dropzone-success="UploadFile" id="myVueDropzone" url="http://211.154.135.29:88/v1/thumbnails" :fdcdm='project.xmdm' fdclx="项目"  maxFiles=1 :defaultImg="project.img"></dropzone>
 </div>
 </div>
 </template>
@@ -380,7 +381,8 @@
       <template>
 <div class="components-container">
 <div class="editor-container">
-<dropzone v-on:dropzone-removedFile="DelFile" v-on:dropzone-success="UploadFile" id="myVueDropzone1" url="https://httpbin.org/post" :defaultImg="img"></dropzone>
+<dropzone v-on:dropzone-removedFile="DelFile" 
+v-on:dropzone-success="UploadFile" id="myVueDropzone1" url="http://211.154.135.29:88/v1/imgs" :fdcdm='project.xmdm' fdclx="项目" zylx="户型图" :defaultImg="img"></dropzone>
 </div>
 </div>
 </template>
@@ -399,7 +401,6 @@ import { UpdateProjectInfo } from '@/api/project'
 import { UpdateFactorsResidential } from '@/api/project'
 import Dropzone from '@/components/Dropzone'
 import { imgs } from '@/api/img'
-import { uploadimgs } from '@/api/img'
 import { deleteimgs } from '@/api/img'
 
 export default {
@@ -482,28 +483,9 @@ export default {
       })
     },
     UploadFile(file) {
-      console.log(file)
       this.$message({ message: 'Upload success', type: 'success' })
-      var params = {
-        fdcdm: this.$route.query.xmdm,
-        fdclx: '项目',
-        zylx: '户型图',
-        file: file
-      }
-      console.log('submit2222!')
-      console.log(params)
-      uploadimgs(params).then(response => {
-        this.result = response
-        console.log('submit!')
-        if (response.code === 200) {
-          this.$message({ message: '上传成功', type: 'success' })
-        } else {
-          alert(response.msg)
-        }
-      })
     },
     DelFile(file) {
-      this.$message({ message: 'Delete success', type: 'success' })
       let zydm = ''
       this.imglist.forEach(element => {
         if (element.url === file.url) {
@@ -514,16 +496,17 @@ export default {
         this.result = response
         console.log('submit!')
         if (response.code === 200) {
-          alert('删除成功')
+          this.$message({ message: 'Delete success', type: 'success' })
         } else {
-          alert(response.msg)
+          this.$message({ message: response.msg, type: 'success' })
         }
       })
     }
   }
 }
 </script>
-<style>
+<style rel="stylesheet/scss" lang="scss" scoped>
+  @import 'src/views/datamanage/styles.scss' ;
 .el-row{
   margin-top: 5px;
   margin-bottom: 0px

@@ -69,8 +69,8 @@
     </el-pagination>
  </div>
 </template>
-
-<style>
+<style rel="stylesheet/scss" lang="scss" scoped>
+  @import 'src/views/datamanage/styles.scss' ;
 </style>
 
 <script>
@@ -79,7 +79,7 @@ export default {
   props: {
     houselist: {
       type: Array,
-      default: null
+      default: []
     },
     query: {
       type: String,

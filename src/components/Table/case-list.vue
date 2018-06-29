@@ -86,26 +86,26 @@
     },
     data() {
       return {
-        currentPage:1,
+        currentPage: 1,
         pageSize: 8,
       }
     },
     computed: {
       data() {
         // 分页也就是截取一页的数据
-        return this.tableData.slice((this.currentPage-1)*this.pageSize,this.currentPage*this.pageSize)
+        return this.tableData.slice((this.currentPage - 1) * this.pageSize, this.currentPage * this.pageSize)
       }
     },
     methods: {
-      handleSizeChange: function (size) {
-        this.pagesize = size
+      handleSizeChange (size) {
+        this.pageSize = size
       },
-      handleCurrentChange: function(currentPage){
+      handleCurrentChange (currentPage){
         this.currentPage = currentPage
-      },
-      /*getSearchList(list) {
-        this.tableData = list
-      }*/
+      }
+      // getSearchList(list) {
+      //   this.tableData = list
+      // }
     }
   }
 </script>

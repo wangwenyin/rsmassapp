@@ -14,7 +14,7 @@
 </el-row>
 <el-row :gutter="10">
   <el-col :xs="16" :sm="16" :md="16" :lg="16" :xl="16">
-      <PriceMap :searchValue="xmmc" :center="center"></PriceMap>
+      <SearchMap :searchValue="xmmc" :zoom="zoom" :type="type" :list="communities"></SearchMap>
   </el-col>
   <el-col :xs="8" :sm="8" :md="8" :lg="8" :xl="8">
     <el-tabs type="border-card" v-if="type === 'house'">
@@ -48,7 +48,7 @@ import BuildingCard from '@/views/datamanage/search/components/Card/BuildingCard
 import BuildingList from '@/views/datamanage/search/components/List/BuildingList'
 import HouseCard from '@/views/datamanage/search/components/Card/HouseCard'
 import HouseList from '@/views/datamanage/search/components/List/HouseList'
-import PriceMap from '@/views/datamanage/search/components/Map/PriceMap'
+import SearchMap from '@/views/datamanage/search/components/Map/SearchMap'
 import { projects } from '@/api/project'
 import { buildings } from '@/api/building'
 import { units } from '@/api/house'
@@ -62,12 +62,13 @@ export default {
     BuildingList,
     HouseCard,
     HouseList,
-    PriceMap
+    SearchMap
   },
   data() {
     return {
-      center: { lng: 113.946829, lat: 22.495973 },
+      center: { lng: 113.93965, lat: 22.518122 },
       type: 'project',
+      zoom: 18,
       xzq: '',
       yt1: '',
       zbdm: '',
@@ -76,9 +77,10 @@ export default {
       ldmc: '',
       hh: '',
       cqzh: '',
-      listB: null,
-      listH: null,
-      listP: null
+      listB: [],
+      listH: [],
+      listP: [],
+      communities: []
     }
   },
   mounted() {
@@ -92,12 +94,12 @@ export default {
       this.yt1 = value
     },
     search: function() {
-      this.center = { lng: 113.946281, lat: 22.498561 }
       if (this.hh !== '') {
         if (this.xmmc === '' || this.ldmc === '') {
           alert('为了能精确的查询户相关信息，请填写项目名称和楼栋名称')
         } else {
           this.type = 'house'
+          this.zoom = 20
           this.getHouse()
         }
       } else if (this.ldmc !== '') {
@@ -105,9 +107,11 @@ export default {
           alert('为了能精确的查询楼栋相关信息，请填写项目名称')
         } else {
           this.type = 'building'
+          this.zoom = 19
           this.getBuilding()
         }
       } else {
+        this.zoom = 18
         this.type = 'project'
         this.getProject()
       }
@@ -125,30 +129,46 @@ export default {
     },
     getProject() {
       var param = { xmmc: this.xmmc, xzq: this.xzq, yt1: this.yt1, zbdm: this.zbdm, zddm: this.zddm }
+      this.communities = []
       projects(param).then(response => {
         this.listP = response.data
         console.log('projects')
         console.log(this.listP)
+        response.data.forEach(element => {
+          this.communities.push({ 'id': element.xmdm, 'name': element.xmmc, 'price': element.pgdj, 'x': element.x, 'y': element.y })
+        })
+        this.center = { lng: this.communities[0].x, lat: this.communities[0].y }
       })
     },
     getBuilding() {
+      this.communities = []
       var param = { xmmc: this.xmmc, ldmc: this.ldmc, xzq: this.xzq, yt1: this.yt1, zbdm: this.zbdm, zddm: this.zbdm }
       buildings(param).then(response => {
         this.listB = response.data
         console.log('buildings')
         console.log(this.listB)
+        response.data.forEach(element => {
+          this.communities.push({ 'id': element.lddm, 'name': element.ldmc, 'price': element.pgdj, 'x': element.x, 'y': element.y })
+        })
+        this.center = { lng: this.communities[0].x, lat: this.communities[0].y }
       })
     },
     getHouse() {
+      this.communities = []
       var param = { xmmc: this.xmmc, ldmc: this.ldmc, hh: this.hh, xzq: this.xzq, yt1: this.yt1, zbdm: this.zbdm }
       units(param).then(response => {
         this.listH = response.data
         console.log('units')
         console.log(this.listH)
+        response.data.forEach(element => {
+          this.communities.push({ 'id': element.hdm, 'name': element.hh, 'price': element.pgdj, 'x': element.x, 'y': element.y })
+        })
+        this.center = { lng: this.communities[0].x, lat: this.communities[0].y }
       })
     }
   }
 }
 </script>
-<style>
+<style rel="stylesheet/scss" lang="scss" scoped>
+  @import '../styles.scss';
 </style>

@@ -1,6 +1,6 @@
 <template>
   <el-carousel indicator-position="outside">
-    <el-carousel-item v-for="item in img" :key="item">
+    <el-carousel-item v-for="item in img" :key="item.id">
       <!-- <h3>{{ item.zydm }}</h3>
         <h3>{{ item }}</h3>
            <h3>路径{{ item.url }}</h3> -->

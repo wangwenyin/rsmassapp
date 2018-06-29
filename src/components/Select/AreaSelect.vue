@@ -24,7 +24,6 @@
     },
     data() {
       return {
-        value: '',
         options: [{
           value: '福田区',
           label: '福田区'
