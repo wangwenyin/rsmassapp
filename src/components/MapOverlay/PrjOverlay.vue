@@ -33,7 +33,7 @@
     },
     methods: {
       handleClick() {
-      
+  
       },
       draw({ el, BMap, map }) {
         const { lng, lat } = this.position

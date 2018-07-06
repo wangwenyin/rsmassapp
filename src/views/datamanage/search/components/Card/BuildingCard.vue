@@ -23,6 +23,10 @@
               <span>共{{ o.zhs }}户</span>
           </div>   
               <useTag :tags="o.hgyt"></useTag>
+                <div class="z-index" v-if="selectable===true">
+                    <span style="margin-right: 10px">   <el-button size="mini" type="text" @click.prevent="house(o)">户</el-button></span>
+                    <span>  <el-button size="mini"  type="text" @click.prevent="select(o)">选择</el-button></span>
+                       </div>
        </div>
     </el-card>
       </router-link>
@@ -45,6 +49,28 @@
 </template>
 <style rel="stylesheet/scss" lang="scss" scoped>
   @import 'src/views/datamanage/styles.scss' ;
+  .card-text{
+    margin-top: 0%;
+    margin-bottom: -1%;
+    margin-left: 5%;
+  }
+  .card-text1{
+    margin-bottom: 1%;
+    margin-left: 5%;
+  }
+  .right{
+    margin-left: auto ;
+    margin-bottom: -2%;
+    margin-top:-12%;
+    float: right;
+   }
+    .z-index{
+    position: relative;
+    margin-top: -14%;
+    float: right;
+    margin-right: -10%;
+    z-index:20
+    }
 </style>
 
 <script>
@@ -58,6 +84,10 @@ export default {
     buildinglist: {
       type: Array,
       default: []
+    },
+    selectable: {
+      type: Boolean,
+      default: false
     }
   },
   data() {
@@ -69,6 +99,11 @@ export default {
   methods: {
     handleCurrentChange(val) {
       this.currentpage = { val }.val
+    }, select(val) {
+      this.$emit('select', val)
+    },
+    house(val) {
+      this.$emit('house', val)
     }
   },
   filters: {

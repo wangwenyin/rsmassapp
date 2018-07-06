@@ -70,10 +70,10 @@
     </el-table-column>
      <el-table-column label="操作">
      <template slot-scope="scope">
-       <router-link :to="{ name:'house' ,query: { hdm: scope.row.hdm }}" target="_blank"  >
+       <router-link :to="{ name:'detail' ,param: { rwbh: rwbh }}" >
          <el-button type="text" size="small">详情</el-button>
-             <el-button type="text" size="small">作业</el-button>
        </router-link>
+         <el-button type="text" size="small" @click="taskClick(scope.row)">作业</el-button>
       </template>
     </el-table-column>
   </el-table>
@@ -81,7 +81,7 @@
        @size-change="handleSizeChange"
       @current-change="handleCurrentChange"
       :current-page="currentpage"
-      :page-sizes="[10, 20, 50, 100]"
+      :page-sizes="[5,10, 20, 50, 100]"
       :page-size="pagesize"
        layout="total, sizes, prev, pager, next, jumper"
       :total="list.length">
@@ -89,8 +89,8 @@
  </div>
 </template>
 
-<style>
-  
+<style rel="stylesheet/scss" lang="scss" scoped>
+  @import 'src/views/datamanage/styles.scss' ;
 </style>
 
 <script>
@@ -154,7 +154,24 @@ export default {
       }, response => {
         console.log('数据加载失败')
       })
+    },
+    taskClick(val) {
+      let name = ''
+      switch (val.rwzt) {
+        case '创建任务': name = 'addtask1'; break
+        case '现场查勘': name = 'addtask2'; break
+        case '对象描述': name = 'addtask3'; break
+        case '价格评估': name = 'addtask4'; break
+        case '报告撰写': name = 'report'; break
+        case '任务完成': name = 'addtask1'; break
+      }
+      const routerData = this.$router.resolve({
+        name: name,
+        query: { rwbh: val.rwbh }
+      })
+      window.open(routerData.href, '_blank')
     }
+
   },
   filters: {
     formatDate(currentDate) {

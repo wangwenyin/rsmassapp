@@ -14,7 +14,7 @@
             label="序号"
             width="50"
           >
-            <template scope="scope">
+            <template slot-scope="scope">
               <span>{{scope.$index+1}}</span>
             </template>
           </el-table-column>
@@ -49,15 +49,6 @@
           <el-table-column
             prop="rwzt"
             label="任务状态">
-            <template slot-scope="scope">
-              <el-select v-model="scope.row.state" @change="selectRelation(scope.$index,scope.row, $event)" placeholder="请选择" size="small">
-                <el-option
-                  v-for="item in statusList"
-                  :key="item"
-                  :value="item">
-                </el-option>
-              </el-select>
-            </template>
           </el-table-column>
           <el-table-column
             prop="wcsj"
@@ -67,7 +58,7 @@
             prop="cz"
             label="操作">
             <template slot-scope="scope">
-              <el-button @click="handle(scope.row)" type="text" size="small">处理</el-button>
+              <el-button v-if="scope.row.rwzt!=='已结束'" @click="handle(scope.row)" type="text" size="small">处理</el-button>
               <el-button @click="check" type="text" size="small">查看</el-button>
             </template>
           </el-table-column>
@@ -97,7 +88,7 @@
             label="序号"
             width="50"
           >
-            <template scope="scope">
+            <template slot-scope="scope">
               <span>{{scope.$index+1}}</span>
             </template>
           </el-table-column>
@@ -131,16 +122,7 @@
           </el-table-column>
           <el-table-column
             prop="rwzt"
-            label="任务状态">
-            <template slot-scope="scope">
-              <el-select v-model="scope.row.state" placeholder="请选择" size="small">
-                <el-option
-                  v-for="item in statusList"
-                  :key="item"
-                  :value="item">
-                </el-option>
-              </el-select>
-            </template>
+            label="任务状态"> 
           </el-table-column>
           <el-table-column
             prop="wcsj"
@@ -150,7 +132,7 @@
             prop="cz"
             label="操作">
             <template slot-scope="scope">
-              <el-button @click="handle(scope.row)" type="text" size="small">处理</el-button>
+              <el-button v-if="scope.row.rwzt!=='已结束'" @click="handle(scope.row)" type="text" size="small">处理</el-button>
               <el-button @click="check" type="text" size="small">查看</el-button>
             </template>
           </el-table-column>
@@ -177,18 +159,18 @@
     data() {
       return {
         tableData: [
-          { id: 1, fcmc: '水榭花都201', wyyt: '住宅', sqsj: '2018-06-26', sqr: '张三', shry: '李四', gjry: '王五', zsry: '周二', wcsj: '2018-06-26' },
-          { id: 1, fcmc: '水榭花都201', wyyt: '住宅', sqsj: '2018-06-26', sqr: '张三', shry: '李四', gjry: '王五', zsry: '周二', wcsj: '2018-06-26' },
-          { id: 1, fcmc: '水榭花都201', wyyt: '住宅', sqsj: '2018-06-26', sqr: '张三', shry: '李四', gjry: '王五', zsry: '周二', wcsj: '2018-06-26' },
-          { id: 1, fcmc: '水榭花都201', wyyt: '住宅', sqsj: '2018-06-26', sqr: '张三', shry: '李四', gjry: '王五', zsry: '周二', wcsj: '2018-06-26' },
-          { id: 1, fcmc: '水榭花都201', wyyt: '住宅', sqsj: '2018-06-26', sqr: '张三', shry: '李四', gjry: '王五', zsry: '周二', wcsj: '2018-06-26' },
-          { id: 1, fcmc: '水榭花都201', wyyt: '住宅', sqsj: '2018-06-26', sqr: '张三', shry: '李四', gjry: '王五', zsry: '周二', wcsj: '2018-06-26' },
-          { id: 1, fcmc: '水榭花都201', wyyt: '住宅', sqsj: '2018-06-26', sqr: '张三', shry: '李四', gjry: '王五', zsry: '周二', wcsj: '2018-06-26' },
-          { id: 1, fcmc: '水榭花都201', wyyt: '住宅', sqsj: '2018-06-26', sqr: '张三', shry: '李四', gjry: '王五', zsry: '周二', wcsj: '2018-06-26' },
-          { id: 1, fcmc: '水榭花都201', wyyt: '住宅', sqsj: '2018-06-26', sqr: '张三', shry: '李四', gjry: '王五', zsry: '周二', wcsj: '2018-06-26' },
-          { id: 1, fcmc: '水榭花都201', wyyt: '住宅', sqsj: '2018-06-26', sqr: '张三', shry: '李四', gjry: '王五', zsry: '周二', wcsj: '2018-06-26' },
-          { id: 1, fcmc: '水榭花都201', wyyt: '住宅', sqsj: '2018-06-26', sqr: '张三', shry: '李四', gjry: '王五', zsry: '周二', wcsj: '2018-06-26' },
-          { id: 1, fcmc: '水榭花都201', wyyt: '住宅', sqsj: '2018-06-26', sqr: '张三', shry: '李四', gjry: '王五', zsry: '周二', wcsj: '2018-06-26' }
+          { id: 1, fcmc: '水榭花都201', wyyt: '住宅', sqsj: '2018-06-26', sqr: '张三', shry: '李四', gjry: '王五', zsry: '周二', rwzt: '待审核', wcsj: '2018-06-26' },
+          { id: 1, fcmc: '水榭花都201', wyyt: '住宅', sqsj: '2018-06-26', sqr: '张三', shry: '李四', gjry: '王五', zsry: '周二', rwzt: '待评估', wcsj: '2018-06-26' },
+          { id: 1, fcmc: '水榭花都201', wyyt: '住宅', sqsj: '2018-06-26', sqr: '张三', shry: '李四', gjry: '王五', zsry: '周二', rwzt: '待终审', wcsj: '2018-06-26' },
+          { id: 1, fcmc: '水榭花都201', wyyt: '住宅', sqsj: '2018-06-26', sqr: '张三', shry: '李四', gjry: '王五', zsry: '周二', rwzt: '已结束', wcsj: '2018-06-26' },
+          { id: 1, fcmc: '水榭花都201', wyyt: '住宅', sqsj: '2018-06-26', sqr: '张三', shry: '李四', gjry: '王五', zsry: '周二', rwzt: '待审核', wcsj: '2018-06-26' },
+          { id: 1, fcmc: '水榭花都201', wyyt: '住宅', sqsj: '2018-06-26', sqr: '张三', shry: '李四', gjry: '王五', zsry: '周二', rwzt: '待审核', wcsj: '2018-06-26' },
+          { id: 1, fcmc: '水榭花都201', wyyt: '住宅', sqsj: '2018-06-26', sqr: '张三', shry: '李四', gjry: '王五', zsry: '周二', rwzt: '待审核', wcsj: '2018-06-26' },
+          { id: 1, fcmc: '水榭花都201', wyyt: '住宅', sqsj: '2018-06-26', sqr: '张三', shry: '李四', gjry: '王五', zsry: '周二', rwzt: '待审核', wcsj: '2018-06-26' },
+          { id: 1, fcmc: '水榭花都201', wyyt: '住宅', sqsj: '2018-06-26', sqr: '张三', shry: '李四', gjry: '王五', zsry: '周二', rwzt: '待审核', wcsj: '2018-06-26' },
+          { id: 1, fcmc: '水榭花都201', wyyt: '住宅', sqsj: '2018-06-26', sqr: '张三', shry: '李四', gjry: '王五', zsry: '周二', rwzt: '待审核', wcsj: '2018-06-26' },
+          { id: 1, fcmc: '水榭花都201', wyyt: '住宅', sqsj: '2018-06-26', sqr: '张三', shry: '李四', gjry: '王五', zsry: '周二', rwzt: '待审核', wcsj: '2018-06-26' },
+          { id: 1, fcmc: '水榭花都201', wyyt: '住宅', sqsj: '2018-06-26', sqr: '张三', shry: '李四', gjry: '王五', zsry: '周二', rwzt: '待审核', wcsj: '2018-06-26' }
         ],
         currentPage: 1,
         pageSize: 10,
@@ -202,8 +184,20 @@
     },
     methods: {
       handle(row) {
-        // 需要判断角色类型，才能跳转到对应页面
         console.log(row)
+        switch (row.rwzt) {
+          case '待审核':
+            this.$router.push({ name: 'Audit' })
+            break
+          case '待评估':
+            this.$router.push({ name: 'Appraise' })
+            break
+          case '待终审':
+            this.$router.push({ name: 'Result' })
+            break
+          default:
+            this.$router.push({ name: 'Audit' })
+        }
       },
       check() {
         this.$router.push({ path: '/recheck/process' })

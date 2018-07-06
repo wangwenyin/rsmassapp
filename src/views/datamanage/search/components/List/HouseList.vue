@@ -54,7 +54,7 @@
       prop="jzsd"
       label="价格时点" min-width="100px"
      > <template slot-scope="scope">
-      <p> {{ scope.row.jzsd | formatDate}}</p>
+      <p> {{ scope.row.jzsd == '1'?'完成':'退回'}}</p>
        </template>
     </el-table-column>
   </el-table>

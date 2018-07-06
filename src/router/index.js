@@ -144,6 +144,7 @@ export const constantRouterMap = [
     {
       path: '/case/filter',
       name: 'Filter',
+      // 三级菜单对应的路由出口 router-view
       component: () =>
           import('@/views/casemanage/index'),
       redirect: '/case/filter/auto',
@@ -173,14 +174,14 @@ export const constantRouterMap = [
       meta: { title: '案例匹配', icon: 'filter' },
       children: [{
         path: 'auto',
-        name: 'Auto',
+        name: 'auto',
         component: () =>
             import('@/views/casemanage/match/auto'),
         meta: { title: '自动匹配', icon: 'datasearch' }
       },
       {
         path: 'labour',
-        name: 'Labour',
+        name: 'labour',
         component: () =>
               import('@/views/casemanage/match/labour'),
         meta: { title: '人工匹配', icon: 'datasearch' }
@@ -213,7 +214,7 @@ export const constantRouterMap = [
         path: 'propstat',
         name: 'propstat',
         component: () => import('@/views/statistic/propstat.vue'),
-        meta: { title: '估价对象统计', icon: 'statistic' }
+        meta: { title: '估价对象统计', icon: 'prop' }
       },
       {
         path: 'casestat',
@@ -240,23 +241,69 @@ export const constantRouterMap = [
       path: 'task',
       name: 'Task',
       component: () =>
-        import('@/views/priceRecheck/task'),
+        import('@/views/pricerecheck/task'),
       meta: { title: '任务列表', icon: 'task' }
     },
-      {
-        path: 'process',
-        name: 'Process',
-        component: () =>
-          import('@/views/priceRecheck/process'),
-        meta: { title: '流程查看', icon: 'process' }
-      },
-      {
-        path: 'audit',
-        name: 'Audit',
-        component: () =>
-          import('@/views/priceRecheck/audit'),
-        meta: { title: '数据审核', icon: 'audit' },
-      }
+    {
+      path: 'process',
+      name: 'Process',
+      component: () =>
+          import('@/views/pricerecheck/process'),
+      meta: { title: '流程查看', icon: 'process' }
+    },
+    {
+      path: 'detail',
+      name: 'Detail',
+      hidden: true,
+      component: () =>
+      import('@/views/pricerecheck/process/detail'),
+      meta: { title: '详细流程' }
+    },
+    {
+      path: 'log',
+      name: 'Log',
+      hidden: true,
+      component: () =>
+      import('@/views/pricerecheck/process/log'),
+      meta: { title: '操作日志' }
+    },
+    {
+      path: 'audit',
+      name: 'Audit',
+      component: () =>
+          import('@/views/pricerecheck/audit'),
+      meta: { title: '数据审核', icon: 'audit' }
+    },
+    {
+      path: 'appraise',
+      name: 'Appraise',
+      component: () =>
+          import('@/views/pricerecheck/appraise'),
+      meta: { title: '复核评估', icon: 'appraise' }
+    },
+    {
+      path: 'reason',
+      name: 'Reason',
+      hidden: true,
+      component: () =>
+          import('@/views/pricerecheck/appraise/reason'),
+      meta: { title: '不调整原因' }
+    },
+    {
+      path: 'survey',
+      name: 'Survey',
+      hidden: true,
+      component: () =>
+          import('@/views/pricerecheck/appraise/survey'),
+      meta: { title: '现场查勘' }
+    },
+    {
+      path: 'result',
+      name: 'Result',
+      component: () =>
+          import('@/views/pricerecheck/result'),
+      meta: { title: '结果终审', icon: 'result' }
+    }
     ]
   },
   {
@@ -307,6 +354,268 @@ export const constantRouterMap = [
         name: 'addtask5',
         hidden: true,
         component: () => import('@/views/casevaluation/task/addtask5')
+      },
+      {
+        path: '/task/report',
+        name: 'report',
+        hidden: true,
+        component: () => import('@/views/casevaluation/task/report')
+      },
+      {
+        path: '/task/detail',
+        name: 'detail',
+        hidden: true,
+        component: () => import('@/views/casevaluation/task/detail')
+      }
+    ]
+  },
+  {
+    path: '/survey',
+    component: Layout,
+    redirect: '/data/survey',
+    name: 'Survey',
+    meta: { title: '查勘任务', icon: 'Survey' },
+    children: [
+      {
+        path: 'task',
+        name: 'Task',
+        component: () => import('@/views/surveymanage/task/auto'),
+        meta: { title: '任务统计', icon: 'casestat' }
+      }
+    ]
+  },
+  {
+    path: '/management',
+    component: Layout,
+    redirect: '/data/survey',
+    name: 'Management',
+    meta: { title: '任务管理', icon: '任务管理' },
+    children: [
+      {
+        path: 'taskmanage',
+        name: 'Taskmanage',
+        component: () => import('@/views/taskmanage/task/auto'),
+        meta: { title: '调度中心', icon: '调度中心' }
+      },
+      {
+        path: 'cemach1',
+        name: 'Cemach1',
+        component: () => import('@/views/taskmanage/cemach/auto'),
+        meta: { title: '调查机构', icon: '机构' }
+      },
+      {
+        path: 'statistics',
+        name: 'statistics',
+        hidden: true,
+        component: () => import('@/views/taskmanage/task/statistics')
+      },
+      {
+        path: 'addtask',
+        name: 'Addtask',
+        hidden: true,
+        component: () => import('@/views/taskmanage/task/addtask')
+      },
+      {
+        path: 'respondents',
+        name: 'Respondents',
+        hidden: true,
+        component: () => import('@/views/taskmanage/task/respondents')
+      },
+      {
+        path: 'resp',
+        name: 'Resp',
+        hidden: true,
+        component: () => import('@/views/taskmanage/cemach/respondents')
+      },
+      {
+        path: 'item',
+        name: 'Item',
+        hidden: true,
+        component: () => import('@/views/taskmanage/task/item')
+      },
+      {
+        path: 'building',
+        name: 'Building',
+        hidden: true,
+        component: () => import('@/views/taskmanage/task/building')
+      },
+      {
+        path: 'family',
+        name: 'Family',
+        hidden: true,
+        component: () => import('@/views/taskmanage/task/family')
+      }
+    ]
+  },
+  {
+    path: '/personnel',
+    component: Layout,
+    redirect: '/personnel/dispatch/auto',
+    name: 'Personnel',
+    meta: { title: '人员机构管理', icon: 'person' },
+    children: [
+      {
+        path: '/personnel/dispatch',
+        name: 'Dispatch',
+        component: () => import('@/views/personnelmanage/index'),
+        meta: { title: '调度中心', icon: '调度中心' },
+        children: [
+          {
+            path: 'auto',
+            name: 'auto',
+            component: () => import('@/views/personnelmanage/dispatch/auto'),
+            meta: { title: '机构详情', icon: '调度中心' }
+          },
+          {
+            path: 'addagency',
+            name: 'addagency',
+            component: () => import('@/views/personnelmanage/dispatch/addagency'),
+            meta: { title: '新增机构', icon: '新增' }
+          }
+        ]
+      },
+      {
+        path: 'cemach',
+        name: 'Cemach',
+        component: () => import('@/views/personnelmanage/dispatch/cemach/agency'),
+        meta: { title: '调度机构', icon: '调度中心' }
+      },
+      {
+        path: 'agency',
+        name: 'agency',
+        hidden: true,
+        component: () => import('@/views/personnelmanage/dispatch/agency')
+      },
+      {
+        path: 'addagency2',
+        name: 'addagency2',
+        hidden: true,
+        component: () => import('@/views/personnelmanage/dispatch/cemach/addagency')
+      },
+      {
+        path: 'staff',
+        name: 'staff',
+        hidden: true,
+        component: () => import('@/views/personnelmanage/dispatch/staff')
+      },
+      {
+        path: 'details',
+        name: 'details',
+        hidden: true,
+        component: () => import('@/views/personnelmanage/dispatch/details')
+      },
+      {
+        path: 'details2',
+        name: 'Details2',
+        hidden: true,
+        component: () => import('@/views/personnelmanage/dispatch/cemach/details')
+      }
+    ]
+  },
+  {
+    path: '/',
+    component: Layout,
+    redirect: '/dashboard',
+    name: 'Dashboard',
+    hidden: true,
+    children: [{
+      path: 'dashboard',
+      component: () => import('@/views/dashboard/index')
+    }]
+  },
+  {
+    path: '/resultaudit',
+    component: Layout,
+    redirect: '/result/audit',
+    name: 'Resultaudit',
+    meta: { title: '检验审核', icon: 'resultaudit' },
+    children: [
+      {
+      /*  path: '/resultaudit/rateanal',
+        name: 'rateanal',
+        component: () => import('@/views/resultaudit/audittask'),
+        meta: { title: '比率分析', icon: 'rate' } */
+        path: 'rateanal',
+        name: 'rateanal',
+        component: () => import('@/views/resultaudit/audittask'),
+        meta: { title: '比率分析', icon: 'rate' }
+      /*  children: [
+          {
+            path: 'audittask',
+            name: 'audittask',
+            component: () => import('@/views/resultaudit/audittask'),
+            meta: { title: '结果审核', icon: 'allcondition' }
+          },
+          {
+            path: 'paramset1',
+            name: 'paramset1',
+            component: () => import('@/views/resultaudit/paramset'),
+            meta: { title: '参数设置', icon: 'rate' }
+          },
+          {
+            path: 'rateanal',
+            name: 'rateanal',
+            component: () => import('@/views/resultaudit/rateanal'),
+            meta: { title: '分析结果', icon: 'districtgroup' }
+          }
+        ] */
+      },
+      {
+        path: 'personaudit',
+        name: 'personaudit',
+        component: () => import('@/views/resultaudit/personaudit'),
+        meta: { title: '人工审核', icon: 'audittask' }
+      },
+      /* {
+        path: '/resultaudit/rateanal',
+        name: 'rateanal',
+        component: () => import('@/views/resultaudit/rateanal'),
+        redirect: '/primaryuse',
+        meta: { title: '比率分析', icon: 'rate' },
+        children: [
+          {
+            path: 'rateanal',
+            name: 'rateanal',
+            component: () => import('@/views/resultaudit/rateanal'),
+            meta: { title: '比率分析', icon: 'rate' }
+          },
+          {
+            path: 'allcondition',
+            name: 'allcondition',
+            component: () => import('@/views/resultaudit/allcondition'),
+            meta: { title: '总体情况', icon: 'allcondition' }
+          },
+          {
+            path: 'primaryuse',
+            name: 'primaryuse',
+            component: () => import('@/views/resultaudit/primaryuse'),
+            meta: { title: '一级用途分析', icon: 'fristuse' }
+          },
+          {
+            path: 'districtgroup',
+            name: 'districtgroup',
+            component: () => import('@/views/resultaudit/districtgroup'),
+            meta: { title: '行政区分组', icon: 'districtgroup' }
+          }
+        ]
+      }, */
+      {
+        path: '/audittask/paramset',
+        name: 'paramSet',
+        hidden: true,
+        component: () => import('@/views/resultaudit/paramset.vue')
+      },
+      {
+        path: '/audittask/rateanal',
+        name: 'rateAnal',
+        hidden: true,
+        component: () => import('@/views/resultaudit/rateanal.vue')
+      },
+      {
+        path: '/audittask/auditdetail',
+        name: 'auditdetail',
+        hidden: true,
+        component: () => import('@/views/resultaudit/auditdetail.vue')
       }
     ]
   },

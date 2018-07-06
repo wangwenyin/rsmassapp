@@ -12,7 +12,7 @@
         label="序号"
         width="50"
       >
-        <template scope="scope">
+        <template slot-scope="scope">
           <span>{{scope.$index+1}}</span>
         </template>
       </el-table-column>
@@ -40,8 +40,12 @@
         prop="cz"
         label="操作">
         <template slot-scope="scope">
-          <el-button type="text" size="small">查看流程</el-button>
-          <el-button type="text" size="small">操作日志</el-button>
+          <router-link :to="{name: 'Detail', params: {dqjd: scope.row.dqjd}}">
+            <el-button type="text" size="small">查看流程</el-button>
+          </router-link>
+          <router-link :to="{name: 'Log'}">
+            <el-button type="text" size="small">操作日志</el-button>
+          </router-link>
         </template>
       </el-table-column>
     </el-table>
@@ -65,18 +69,19 @@
     data() {
       return {
         tableData: [
-          {id: 1, fcmc: '水榭花都201', wyyt: '住宅', sqsj: '2018-06-26', sqr: '张三', dqjd: '2018-06-26'},
-          {id: 1, fcmc: '水榭花都201', wyyt: '住宅', sqsj: '2018-06-26', sqr: '张三', dqjd: '2018-06-26'},
-          {id: 1, fcmc: '水榭花都201', wyyt: '住宅', sqsj: '2018-06-26', sqr: '张三', dqjd: '2018-06-26'},
-          {id: 1, fcmc: '水榭花都201', wyyt: '住宅', sqsj: '2018-06-26', sqr: '张三', dqjd: '2018-06-26'},
-          {id: 1, fcmc: '水榭花都201', wyyt: '住宅', sqsj: '2018-06-26', sqr: '张三', dqjd: '2018-06-26'},
-          {id: 1, fcmc: '水榭花都201', wyyt: '住宅', sqsj: '2018-06-26', sqr: '张三', dqjd: '2018-06-26'},
-          {id: 1, fcmc: '水榭花都201', wyyt: '住宅', sqsj: '2018-06-26', sqr: '张三', dqjd: '2018-06-26'},
-          {id: 1, fcmc: '水榭花都201', wyyt: '住宅', sqsj: '2018-06-26', sqr: '张三', dqjd: '2018-06-26'},
-          {id: 1, fcmc: '水榭花都201', wyyt: '住宅', sqsj: '2018-06-26', sqr: '张三', dqjd: '2018-06-26'},
-          {id: 1, fcmc: '水榭花都201', wyyt: '住宅', sqsj: '2018-06-26', sqr: '张三', dqjd: '2018-06-26'},
-          {id: 1, fcmc: '水榭花都201', wyyt: '住宅', sqsj: '2018-06-26', sqr: '张三', dqjd: '2018-06-26'},
-          {id: 1, fcmc: '水榭花都201', wyyt: '住宅', sqsj: '2018-06-26', sqr: '张三', dqjd: '2018-06-26'},
+          { id: 1, fcmc: '水榭花都201', wyyt: '住宅', sqsj: '2018-06-26', sqr: '张三', dqjd: '数据审核' },
+          { id: 1, fcmc: '水榭花都201', wyyt: '住宅', sqsj: '2018-06-26', sqr: '张三', dqjd: '现场查勘' },
+          { id: 1, fcmc: '水榭花都201', wyyt: '住宅', sqsj: '2018-06-26', sqr: '张三', dqjd: '复核评估' },
+          { id: 1, fcmc: '水榭花都201', wyyt: '住宅', sqsj: '2018-06-26', sqr: '张三', dqjd: '结果终审' },
+          { id: 1, fcmc: '水榭花都201', wyyt: '住宅', sqsj: '2018-06-26', sqr: '张三', dqjd: '数据审核' },
+          { id: 1, fcmc: '水榭花都201', wyyt: '住宅', sqsj: '2018-06-26', sqr: '张三', dqjd: '现场查勘' },
+          { id: 1, fcmc: '水榭花都201', wyyt: '住宅', sqsj: '2018-06-26', sqr: '张三', dqjd: '复核评估' },
+          { id: 1, fcmc: '水榭花都201', wyyt: '住宅', sqsj: '2018-06-26', sqr: '张三', dqjd: '复核评估' },
+          { id: 1, fcmc: '水榭花都201', wyyt: '住宅', sqsj: '2018-06-26', sqr: '张三', dqjd: '复核评估' },
+          { id: 1, fcmc: '水榭花都201', wyyt: '住宅', sqsj: '2018-06-26', sqr: '张三', dqjd: '复核评估' },
+          { id: 1, fcmc: '水榭花都201', wyyt: '住宅', sqsj: '2018-06-26', sqr: '张三', dqjd: '复核评估' },
+          { id: 1, fcmc: '水榭花都201', wyyt: '住宅', sqsj: '2018-06-26', sqr: '张三', dqjd: '复核评估' },
+          { id: 1, fcmc: '水榭花都201', wyyt: '住宅', sqsj: '2018-06-26', sqr: '张三', dqjd: '复核评估' }
         ],
         currentPage: 1,
         pageSize: 10
@@ -84,16 +89,16 @@
     },
     computed: {
       data() {
-        return this.tableData.slice((this.currentPage-1)*this.pageSize, this.currentPage*this.pageSize)
+        return this.tableData.slice((this.currentPage - 1) * this.pageSize, this.currentPage * this.pageSize)
       }
     },
     methods: {
-      handleSizeChange (size) {
+      handleSizeChange(size) {
         this.pageSize = size
       },
-      handleCurrentChange (currentPage){
+      handleCurrentChange(currentPage) {
         this.currentPage = currentPage
-      },
+      }
     }
   }
 </script>

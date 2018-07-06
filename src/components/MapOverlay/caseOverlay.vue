@@ -19,7 +19,7 @@
           label="序号"
           width="50"
         >
-          <template scope="scope">
+          <template slot-scope="scope">
             <span>{{scope.$index+1}}</span>
           </template>
         </el-table-column>

@@ -3,7 +3,7 @@
 <el-row :gutter="10" style="margin-left:20px;margin-right:20px">
   <el-col :span="2"><AreaSelect :value="xzq" @update="change" ></AreaSelect></el-col>
   <el-col :span="2"><PurposeSelect :value="yt1" @update="change1"></PurposeSelect></el-col>
-   <el-col :span="3"><el-input v-model="zbdm"  placeholder="组别" ></el-input></el-col>
+  <el-col :span="3"><el-input v-model="zbdm"  placeholder="组别" ></el-input></el-col>
   <el-col :span="3"><el-input v-model="zddm"  placeholder="宗地号" ></el-input></el-col>
   <el-col :span="3"><el-input v-model="xmmc"  placeholder="项目名称"></el-input></el-col>
   <el-col :span="3"><el-input v-model="ldmc" placeholder="楼栋名称"></el-input></el-col>
@@ -13,25 +13,25 @@
   <el-col :span="1"><el-button v-on:click="clear">清空</el-button></el-col>
 </el-row>
 <el-row :gutter="10">
-  <el-col :xs="16" :sm="16" :md="16" :lg="16" :xl="16">
+  <el-col :xs="15" :sm="15" :md="15" :lg="15" :xl="15">
       <SearchMap :searchValue="xmmc" :zoom="zoom" :type="type" :list="communities"></SearchMap>
   </el-col>
-  <el-col :xs="8" :sm="8" :md="8" :lg="8" :xl="8">
+  <el-col :xs="9" :sm="9" :md="9" :lg="9" :xl="9">
     <el-tabs type="border-card" v-if="type === 'house'">
       <el-tab-pane label="卡片模式" >
-        <HouseCard :houselist="listH"></HouseCard>
+        <HouseCard :houselist="listH" :selectable="selectable" @select="select"></HouseCard>
        </el-tab-pane>
       <el-tab-pane label="列表模式"><HouseList :houselist="listH" ></HouseList></el-tab-pane>
     </el-tabs>
     <el-tabs type="border-card" v-if="type === 'building'">
       <el-tab-pane label="卡片模式" >
-       <BuildingCard :buildinglist="listB"></BuildingCard>
+       <BuildingCard :buildinglist="listB" :selectable="selectable" @select="select" @house="house"></BuildingCard>
       </el-tab-pane>
       <el-tab-pane label="列表模式" ><BuildingList :buildinglist="listB"></BuildingList></el-tab-pane>
     </el-tabs>
     <el-tabs type="border-card" v-if="type === 'project'">
       <el-tab-pane label="卡片模式"> 
-         <ProjectCard :projectlist="listP"></ProjectCard>
+         <ProjectCard :projectlist="listP" :selectable="selectable" @select="select" @building="building"></ProjectCard>
      </el-tab-pane>
     <el-tab-pane label="列表模式"><ProjectList :projectlist="listP"></ProjectList></el-tab-pane>
     </el-tabs>
@@ -52,6 +52,8 @@ import SearchMap from '@/views/datamanage/search/components/Map/SearchMap'
 import { projects } from '@/api/project'
 import { buildings } from '@/api/building'
 import { units } from '@/api/house'
+import { projectBuildings } from '@/api/project'
+import { buildingsUnits } from '@/api/building'
 export default {
   components: {
     PurposeSelect,
@@ -63,6 +65,12 @@ export default {
     HouseCard,
     HouseList,
     SearchMap
+  },
+  props: {
+    selectable: {
+      type: Boolean,
+      default: false
+    }
   },
   data() {
     return {
@@ -92,6 +100,23 @@ export default {
     },
     change1(value) {
       this.yt1 = value
+    },
+    select(val) {
+      this.$emit('select', val)
+    },
+    building(value) {
+      console.log('楼栋')
+      console.log(value)
+      this.type = 'building'
+      this.zoom = 19
+      this.getProjectBuildings(value.xmdm)
+    },
+    house(value) {
+      console.log('户')
+      console.log(value)
+      this.type = 'house'
+      this.zoom = 20
+      this.getBuildingHouse(value.lddm)
     },
     search: function() {
       if (this.hh !== '') {
@@ -157,6 +182,30 @@ export default {
       this.communities = []
       var param = { xmmc: this.xmmc, ldmc: this.ldmc, hh: this.hh, xzq: this.xzq, yt1: this.yt1, zbdm: this.zbdm }
       units(param).then(response => {
+        this.listH = response.data
+        console.log('units')
+        console.log(this.listH)
+        response.data.forEach(element => {
+          this.communities.push({ 'id': element.hdm, 'name': element.hh, 'price': element.pgdj, 'x': element.x, 'y': element.y })
+        })
+        this.center = { lng: this.communities[0].x, lat: this.communities[0].y }
+      })
+    },
+    getProjectBuildings(xmdm) {
+      var param = { xmdm: xmdm }
+      projectBuildings(param).then(response => {
+        this.listB = response.data
+        console.log('projectBuildings')
+        console.log(this.listB)
+        response.data.forEach(element => {
+          this.communities.push({ 'id': element.lddm, 'name': element.ldmc, 'price': element.pgdj, 'x': element.x, 'y': element.y })
+        })
+        this.center = { lng: this.communities[0].x, lat: this.communities[0].y }
+      })
+    },
+    getBuildingHouse(lddm) {
+      var param = { lddm: lddm }
+      buildingsUnits(param).then(response => {
         this.listH = response.data
         console.log('units')
         console.log(this.listH)

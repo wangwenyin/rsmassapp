@@ -87,7 +87,7 @@
     data() {
       return {
         currentPage: 1,
-        pageSize: 8,
+        pageSize: 8
       }
     },
     computed: {
@@ -97,10 +97,10 @@
       }
     },
     methods: {
-      handleSizeChange (size) {
+      handleSizeChange(size) {
         this.pageSize = size
       },
-      handleCurrentChange (currentPage){
+      handleCurrentChange(currentPage) {
         this.currentPage = currentPage
       }
       // getSearchList(list) {
@@ -116,3 +116,4 @@
     text-align: center;
   }
 </style>
+

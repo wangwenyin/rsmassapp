@@ -1,70 +1,92 @@
 <template>
   <div class="audit-container">
     <div class="sqr-detail">
-      <h3>申请人信息</h3>
-      <el-row>
-        <el-col :span="6">权利人名称:</el-col>
-        <el-col :span="6"></el-col>
-        <el-col :span="6">公民身份证号或组织代码:</el-col>
-        <el-col :span="6"></el-col>
-      </el-row>
-      <el-row>
-        <el-col :span="6">联系人电话:</el-col>
-        <el-col :span="6"></el-col>
-        <el-col :span="6">申请日期:</el-col>
-        <el-col :span="6"></el-col>
-      </el-row>
-    </div>
-    <div class="fc-detail">
-      <h3>房产信息</h3>
-      <el-row>
-        <el-col :span="6">房产名称:</el-col>
-        <el-col :span="6"></el-col>
-        <el-col :span="6">房产类别:</el-col>
-        <el-col :span="6"></el-col>
-      </el-row>
-      <el-row>
-        <el-col :span="4">权利人身份证或营业执照:</el-col>
-        <el-col :span="3">
-          <el-button type="plain" size="small">查看</el-button>
-        </el-col>
-      </el-row>
-      <el-row>
-        <el-col :span="4">房地产证书:</el-col>
-        <el-col :span="3">
-          <el-button type="plain" size="small">查看</el-button>
-        </el-col>
-      </el-row>
-      <el-row>
-        <el-col :span="4">授权书:</el-col>
-        <el-col :span="3">
-          <el-button type="plain" size="small">查看</el-button>
-        </el-col>
-      </el-row>
-      <el-row class="explain">说明：如果委托代理人，需要业主签名的授权书扫描件；如业主本人申请，则跳过此步。</el-row>
+      <el-form ref="form">
+        <el-row>
+            <h3>申请人信息</h3>
+        </el-row>
+        <el-row>
+            <el-col :span="5">
+                <el-form-item label="权利人名称:">
+                    <span class="data">张三</span>
+                </el-form-item>
+            </el-col>
+            <el-col :span="7">
+                <el-form-item label="联系人电话:">
+                    <span class="data">13971608536</span>
+                </el-form-item>
+            </el-col>
+            <el-col :span="8">
+                <el-form-item label="申请日期:">
+                    <span class="data">2018-7-3</span>
+                </el-form-item>
+            </el-col>
+        </el-row>
+        <el-row>
+          <el-col :span="10">
+              <el-form-item label="公民身份证号或组织代码:">
+                  <span class="data">4211261975364312</span>
+              </el-form-item>
+          </el-col>
+        </el-row>
+        <el-row>
+          <h3>房产信息 </h3>
+        </el-row>
+        <el-row>
+          <el-col :span="5">
+              <el-form-item label="房产名称:">
+                  <span class="data">水榭花都</span>
+              </el-form-item>
+          </el-col>
+          <el-col :span="7">
+              <el-form-item label="房产类别:">
+                  <span class="data">住宅</span>
+              </el-form-item>
+          </el-col>
+        </el-row>
+        <el-row>
+          <el-col :span="8">
+              <el-form-item label="权利人身份证或营业执照:">
+                  <el-button type="plain" size="small">查看</el-button>
+              </el-form-item>
+          </el-col>
+          <el-col :span="6">
+              <el-form-item label="房地产证书:">
+                  <el-button type="plain" size="small">查看</el-button>
+              </el-form-item>
+          </el-col>
+          <el-col :span="4">
+              <el-form-item label="授权书:">
+                  <el-button type="plain" size="small">查看</el-button>
+              </el-form-item>
+          </el-col>
+        </el-row>
+        <el-row class="explain">授权书说明：如果委托代理人，需要业主签名的授权书扫描件；如业主本人申请，则跳过此步。</el-row>
+      </el-form>
     </div>
     <div class="reason-state">
-      <h3>正当理由陈述</h3>
-      <div class="text">
-        首页：用户看到任务列表。
-        流程查看：用户可以查看自己参加了的流程。
-        数据审核：审核人员对申请者提交的材料、填写的内容进行初审，并分派估价人员和终审人员。
-        复核估价：估价人员跳转至个案评估系统。
-        结果终审：对估价报告和估价结果进行终审，并提交数据或退回申请人。
-        复核统计：对复核基本情况进行统计。
-      </div>
+      <el-row>
+        <h3>正当理由陈述</h3>
+      </el-row>
+      <el-row>
+        <div class="text">
+          我家的房产朝向、采光都比邻居差，为什么反而比邻居的房价高？申请复核，请受理
+        </div>
+      </el-row>
     </div>
     <div class="audit-result">
-      <h3>审核结果</h3>
       <el-row>
-        <el-col :span="3">
+        <h3>审核结果</h3>
+      </el-row>
+      <el-row>
+        <el-col :span="2">
           <el-radio v-model="radio" label="1">通过</el-radio>
         </el-col>
         <el-col :span="3">
           分配复核估价师：
         </el-col>
-        <el-col :span="4">
-          <el-select v-model="name" placeholder="请选择" size="medium">
+        <el-col :span="5">
+          <el-select v-model="name1" placeholder="请选择" size="medium">
             <el-option
               v-for="item in names"
               :key="item"
@@ -73,11 +95,23 @@
           </el-select>
         </el-col>
         <el-col :span="3">
-          <el-button type="primary" size="small">确定</el-button>
+          分配终审专家：
+        </el-col>
+        <el-col :span="5">
+          <el-select v-model="name2" placeholder="请选择" size="medium">
+            <el-option
+              v-for="item in names"
+              :key="item"
+              :value="item">
+            </el-option>
+          </el-select>
+        </el-col>
+        <el-col :span="3">
+          <el-button type="primary" size="small" :loading="loading" @click="submit">提交</el-button>
         </el-col>
       </el-row>
       <el-row>
-        <el-col :span="3">
+        <el-col :span="2">
           <el-radio v-model="radio" label="2">不通过</el-radio>
         </el-col>
         <el-col :span="9">
@@ -96,10 +130,43 @@
     components: {},
     data() {
       return {
-        name: '',
+        name1: '',
+        name2: '',
         names: ['张三', '李四', '王五'],
         radio: '1',
+        loading: false,
         noPassValue: ''
+      }
+    },
+    methods: {
+      submit() {
+        if (this.radio === '1') {
+          if (this.name1 && this.name2) {
+            // const params = {
+            //   pass: true,
+            //   name1: this.name1,
+            //   name2: this.name2
+            // }
+            this.loading = true
+            setTimeout(() => {
+              this.loading = false
+              this.$message({
+                message: '提交成功!',
+                type: 'success'
+              })
+            }, 500)
+          } else {
+            this.$message({
+              message: '请选择分配人员!',
+              type: 'warning'
+            })
+          }
+        } else {
+          this.$message({
+            message: '请选择通过!',
+            type: 'error'
+          })
+        }
       }
     }
   }
@@ -107,12 +174,23 @@
 
 <style rel="stylesheet/scss" lang="scss" scoped>
   .audit-container {
-    padding-left: 20px;
-    .sqr-detail, .fc-detail, .reason-state, .audit-result {
-      margin-top: 30px;
+    padding-left: 30px;
+      .sqr-detail, .reason-state, .audit-result {
+      margin-top: 20px;
+      h3 {
+        margin-bottom: 10px;
+        color: #585858;
+      }
       .el-row {
-        margin-top: 15px;
-        color: #606266
+        // 子元素垂直居中
+        display: flex;
+        align-items: center;
+        margin-top: 10px;
+        color: #606266;
+        .data {
+          color: #000;
+          text-decoration: underline
+        }
       }
       .explain {
         font-size: 14px;
