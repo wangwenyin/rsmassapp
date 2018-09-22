@@ -9,13 +9,13 @@ export function buildings(params) {
     params
   })
 }
+
 // 根据楼栋代码获取楼栋基本信息
 // params = { lddm: '楼栋代码'}
-export function buildingsInfo(params) {
+export function buildingsInfo(lddm) {
   return request({
-    url: `/data/buildings/${params.lddm}`,
-    method: 'get',
-    params
+    url: `/data/buildings/${lddm}`,
+    method: 'get'
   })
 }
 // 根据楼栋代码查询其内部所有户列表
@@ -28,12 +28,10 @@ export function buildingsUnits(params) {
   })
 }
 // 根据楼栋代码查询其住宅影响因素数据
-// params = { lddm: '楼栋代码'}
-export function buildingsFactorsResidential(params) {
+export function buildingsFactorsResidential(yt, lddm) {
   return request({
-    url: '/data/building/factors/residential',
-    method: 'get',
-    params
+    url: `/data/building/factorQuantification/${yt}/${lddm}`,
+    method: 'get'
   })
 }
 
@@ -57,10 +55,10 @@ export function UpdateBuildingInfo(lddm, data) {
 }
 
 // 更新楼栋住宅影响因素数据
-export function UpdateBuildingFactorsResidential(data) {
+export function UpdateBuildingFactorsResidential(yt, lddm, data) {
   return request({
-    url: '/data/building/factors/residential',
-    method: 'post',
+    url: `/data/building/factorQuantification/${yt}/${lddm}`,
+    method: 'put',
     data
   })
 }

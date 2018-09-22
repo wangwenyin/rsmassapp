@@ -1,6 +1,13 @@
 <template>
-  <div style="margin-top:40px">
-    <el-row :gutter="10" style="margin-left:60px;margin-right:20px">
+<div class="app">
+  <div class="margin10">
+    <el-row class="el-row-title"> 
+        <el-col :span="24">
+            <div class="title">导入数据</div> 
+                <div class="border"></div> 
+        </el-col>
+    </el-row>
+    <el-row :gutter="10" style="margin-left:37px;margin-right:20px">
   <el-col :xs="4" :sm="4" :md="4" :lg="4" :xl="4">
    <span>1.选择导入对象 :</span>
   </el-col>
@@ -15,12 +22,12 @@
    <el-col :span="3"><router-link to="housegrid"> <span style="color:#007eff">下载模板</span></router-link>
    </el-col>
 </el-row>
-   <el-row :gutter="10" style="margin-left:60px;margin-right:20px">
-  <el-col :xs="4" :sm="4" :md="4" :lg="4" :xl="4">
+   <el-row :gutter="10" style="margin-left:37px;margin-right:20px">
+  <el-col :xs="4" :sm="4" :md="4" :lg="4" :xl="4" style="margin-top: 7px;">
    <span>2.选择导入数据 :</span>
   </el-col>
   <el-col :xs="4" :sm="4" :md="4" :lg="4" :xl="4">
-   <el-input v-model="input" placeholder=" "></el-input>
+   <el-input size="small" v-model="input" placeholder=" "></el-input>
   </el-col>
   <el-col :xs="8" :sm="8" :md="8" :lg="8" :xl="8">
    <el-upload
@@ -38,15 +45,15 @@
 </el-upload>
   </el-col>
 </el-row>
-<el-row :gutter="10" style="margin-left:60px;margin-right:20px">
-  <el-col :xs="4" :sm="4" :md="4" :lg="4" :xl="4">
+<el-row :gutter="10" style="margin-left:37px;margin-right:20px">
+  <el-col :xs="4" :sm="4" :md="4" :lg="4" :xl="4" >
    <span>3.导入数据检查 :</span>
   </el-col>
 </el-row>
 <el-row>
 <el-table
     :data="tableData2"
-    style="width: 90%;margin-left:60px;"  border
+    style="width: 90%;margin-left:24px;"  border
     :row-class-name="tableRowClassName">
     <el-table-column 
       prop="buildingId"
@@ -65,19 +72,21 @@
     </el-table-column>
   </el-table>
 </el-row>
-<el-row :gutter="10" style="margin-left:60px;margin-right:20px;margin-top:40px;margin-bottom:40px;">
-   <el-button type="primary">开始导入</el-button>
-  <el-button >下载导入报告</el-button>
+<el-row :gutter="10" >
+<el-col :span="20">
+  
+  <span> <el-button type="primary" size="small" class="btn_l">开始导入</el-button></span>
+ </el-col>
+ <el-col :span="4">
+    <span><el-button size="small"   class="btn_l1">下载导入报告</el-button></span>
+  
+ </el-col>
 </el-row>
-
-
+  </div>
   </div>
 </template>
 <script>
-import Carousel from '@/components/Carousel/index'
-
 export default {
-  components: { Carousel },
   data() {
     return {
       building: '绿海湾花园A座',
@@ -122,59 +131,39 @@ export default {
   }
 }
 </script>
-<style>
-  .area{
-   margin-left: auto ;
-   float: right;
-  }
-  .con {
-     margin-top: 13px;
-     margin-bottom: 13px;
+<style rel="stylesheet/scss" lang="scss" scoped>
+ @import '../../../styles/app.scss';
+.title{
+     font-size: 17px;
+     font-weight:bold;
+     margin-top: 10px;
      margin-left:20px;
-     color:#7b7676;
+      margin-bottom: 10px;
+   }
+   .border{
+     border:0.5px solid #c0c4cc;
+     margin-bottom: 20px;
+   }
+    .el-row-title {
+    margin-top: 0px !important;
   }
-  .val {
-     margin-top: 13px;
-     margin-bottom: 13px;
-     margin-left:20px;
-    font-weight:bold;
+   .el-row {
+    margin-bottom:7px;
+    margin-top: 20px;
+    height:100%;
+    margin-left: 20px;
+    margin-right: 10px;
   }
-  .el-row {
-      margin-left: 0;
-      margin-right: 0;
-  }
-
-  .el-card {
-      height: 150px;
-  }
-
-  .el-card__body {
-      height: 100%;
-      padding: 10px;
-      overflow: hidden;
-  }
-
-  .el-col-offset-2 {
-      margin-left: 0;
-      margin-top: 10px
-  }
-
-  .text {
-    width: 60%;
-    height: 100%;
-    box-sizing: border-box;
-    padding: 10px;
-    float: left;
-    font-size: 12px;
-  }
-
-  .project_d {
-    font-size: 23px;
-    font-weight: bold;
-  }
-  .el-tag--mini
-  {
-    padding:0 4.8px;
-    margin-left: 3px
-  }
+   .btn_l{
+     float: right;
+     margin-top: 3px;
+     margin-right: 9%;
+     margin-bottom: 20px;
+   }
+    .btn_l1{
+     float: right;
+     margin-top: 3px;
+     margin-right: 55%;
+     margin-bottom: 20px;
+   }
 </style>

@@ -23,8 +23,10 @@
     "md5": "^2.2.1",
     "normalize.css": "7.0.0",
     "nprogress": "0.2.0",
+    "screenfull": "^3.3.3",
     "vue": "2.5.10",
     "vue-baidu-map": "^0.21.10",
+    "vue-pdf": "^3.3.1",
     "vue-resource": "^1.5.1",
     "vue-router": "3.0.1",
     "vuex": "3.0.1"
@@ -73,7 +75,7 @@
     "vue-template-compiler": "2.5.10",
     "webpack": "3.10.0",
     "webpack-bundle-analyzer": "2.9.1",
-    "webpack-dev-server": "2.9.7",
+    "webpack-dev-server": "^2.9.7",
     "webpack-merge": "4.1.1"
   },
   "engines": {

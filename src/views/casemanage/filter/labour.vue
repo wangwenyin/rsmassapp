@@ -1,103 +1,105 @@
 <template>
-  <div class="labour-filter-container">
-    <p>待筛选项目列表：</p>
-    <el-table
-      border
-      :data="tableData1"
-      style="width: 100%">
-      <el-table-column
-        prop="number"
-        label="编号"
-        width="50">
-      </el-table-column>
-      <el-table-column
-        prop="name"
-        label="项目名称">
-      </el-table-column>
-      <el-table-column
-        prop="buildingNum"
-        label="楼栋数量">
-      </el-table-column>
-      <el-table-column
-        prop="houseNum"
-        label="总户数">
-      </el-table-column>
-      <el-table-column
-        prop="tradingTime"
-        label="竣工日期">
-      </el-table-column>
-      <el-table-column
-        prop="parcel"
-        label="宗地号">
-      </el-table-column>
-      <el-table-column
-        prop="group"
-        label="组别">
-      </el-table-column>
-      <el-table-column
-        prop="processState"
-        label="处理状态">
-      </el-table-column>
-      <el-table-column
-        prop="caseNum"
-        label="待筛选案例数">
-      </el-table-column>
-    </el-table>
-    <p><span>待筛选案例列表：</span><el-button type="primary" size="small">提交成果</el-button></p>
-    <div>
-      <div class="filterList" style="width: 59%;float: left">
-        <el-table
-          border
-          :data="tableData2"
-          style="width: 100%">
-          <el-table-column
-            prop="building"
-            label="楼栋">
-          </el-table-column>
-          <el-table-column
-            prop="house"
-            label="户">
-          </el-table-column>
-          <el-table-column
-            prop="area"
-            label="建筑面积">
-          </el-table-column>
-          <el-table-column
-            prop="tradingTime"
-            label="交易日期">
-          </el-table-column>
-          <el-table-column
-            prop="layer"
-            label="所在层">
-          </el-table-column>
-          <!--<el-table-column
-            prop="source"
-            label="来源">
-          </el-table-column>-->
-          <el-table-column
-            prop="price"
-            label="单价">
-          </el-table-column>
-          <el-table-column
-            prop="revisedUnitPrice"
-            label="修正后单价">
-          </el-table-column>
-          <!--<el-table-column
-            prop="state"
-            label="状态">
-          </el-table-column>-->
-        </el-table>
+  <div class="app">
+    <div class="labour-filter-container content">
+      <p>待筛选项目列表：</p>
+      <el-table
+        border
+        :data="tableData1"
+        style="width: 100%">
+        <el-table-column
+          prop="number"
+          label="编号"
+          width="50">
+        </el-table-column>
+        <el-table-column
+          prop="name"
+          label="项目名称">
+        </el-table-column>
+        <el-table-column
+          prop="buildingNum"
+          label="楼栋数量">
+        </el-table-column>
+        <el-table-column
+          prop="houseNum"
+          label="总户数">
+        </el-table-column>
+        <el-table-column
+          prop="tradingTime"
+          label="竣工日期">
+        </el-table-column>
+        <el-table-column
+          prop="parcel"
+          label="宗地号">
+        </el-table-column>
+        <el-table-column
+          prop="group"
+          label="组别">
+        </el-table-column>
+        <el-table-column
+          prop="processState"
+          label="处理状态">
+        </el-table-column>
+        <el-table-column
+          prop="caseNum"
+          label="待筛选案例数">
+        </el-table-column>
+      </el-table>
+      <p><span>待筛选案例列表：</span><el-button type="primary" size="small">提交成果</el-button></p>
+      <div>
+        <div class="filterList" style="width: 59%;float: left">
+          <el-table
+            border
+            :data="tableData2"
+            style="width: 100%">
+            <el-table-column
+              prop="building"
+              label="楼栋">
+            </el-table-column>
+            <el-table-column
+              prop="house"
+              label="户">
+            </el-table-column>
+            <el-table-column
+              prop="area"
+              label="建筑面积">
+            </el-table-column>
+            <el-table-column
+              prop="tradingTime"
+              label="交易日期">
+            </el-table-column>
+            <el-table-column
+              prop="layer"
+              label="所在层">
+            </el-table-column>
+            <!--<el-table-column
+              prop="source"
+              label="来源">
+            </el-table-column>-->
+            <el-table-column
+              prop="price"
+              label="单价">
+            </el-table-column>
+            <el-table-column
+              prop="revisedUnitPrice"
+              label="修正后单价">
+            </el-table-column>
+            <!--<el-table-column
+              prop="state"
+              label="状态">
+            </el-table-column>-->
+          </el-table>
+        </div>
+        <div id="echarts" style="width: 40%;height:350px;float: left;margin-left: 1%"></div>
       </div>
-      <div id="echarts" style="width: 40%;height:350px;float: left;margin-left: 1%"></div>
-    </div>
-    <div class="map">
-      <bd-map :center="center"></bd-map>
+      <div class="map">
+        <bd-map :center="center"></bd-map>
+      </div>
     </div>
   </div>
 </template>
 
 <script>
-  import BdMap from '@/components/BdMap'
+  import BdMap from '../components/BdMap'
   import echarts from 'echarts'
   
   export default {
@@ -302,11 +304,12 @@
   }
 </script>
 <style rel="stylesheet/scss" lang="scss" scoped>
+  @import "src/styles/background.scss";
   .labour-filter-container {
     padding: 10px;
     p {
-      margin: 5px 0;
-    }
+        margin: 5px 0;
+      }
     .map {
       margin-top: 10px;
     }

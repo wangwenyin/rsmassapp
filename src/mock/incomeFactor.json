@@ -1,0 +1,98 @@
+{
+    "status":"0",
+    "data":[
+          {
+            "xmmc": "空置率",
+            "jsjg": "",
+            "fybl": 0.1,
+            "jssm": "区域或项目内部的平均出租空置率",
+            "used": true,
+             "type":"annualRent"
+          }, {
+            "xmmc": "租赁押金月份",
+            "jsjg": 15000,
+            "fybl": "2月",
+            "jssm": "以两个月的租赁押金 × 一年期存款利率",
+            "used": true,
+            "type":"annualRent"
+          },
+          {
+            "xmmc": "租赁押金收益",
+            "jsjg": 225,
+            "fybl": 0.015,
+            "jssm": "",
+            "used": true,
+            "type":"annualRent"
+          },
+          {
+            "xmmc": "房产税",
+            "jsjg": 10800,
+            "fybl": 0.012,
+            "jssm": "经营自用：房产原值 × 70% × 1.2%；出租房屋：房产租金收入 × 12%",
+            "used": true,
+            "type":"annualRent"
+          },
+          {
+            "xmmc": "增值税",
+            "jsjg": 4286,
+            "fybl": 0.05,
+            "jssm": "含税销售额/(1 + 5%)]×5%",
+            "used": true,
+            "type":"annualRent"
+          },
+          {
+            "xmmc": "城建维护税",
+            "jsjg": 300,
+            "fybl": 0.07,
+            "jssm": "增值税 × 7%",
+            "used": true,
+            "type":"annualRent"
+          },
+          {
+            "xmmc": "教育费附加",
+            "jsjg": 214,
+            "fybl": 0.05,
+            "jssm": "增值税 × 5%",
+            "used": true,
+            "type":"annualRent"
+          },
+          {
+            "xmmc": "印花税",
+            "jsjg": 900,
+            "fybl": 0.01,
+            "jssm": "年收入 × 0.1%",
+            "used": true,
+            "type":"annualRent"
+          },
+          {
+            "xmmc": "维修费",
+            "jsjg": 1800,
+            "fybl": 0.02,
+            "jssm": "年收入 × 2%",
+            "used": true,
+            "type":"annualRent"
+          },
+          {
+            "xmmc": "管理费",
+            "jsjg": 2700,
+            "fybl": 0.03,
+            "jssm": "年收入 × 3%",
+            "used": true,
+            "type":"annualRent"
+          },
+          {
+            "xmmc": "保险费",
+            "jsjg": 180,
+            "fybl": 0.02,
+            "jssm": "房屋重置成本或房屋原值 × 0.2%",
+            "used": true,
+            "type":"annualRent"
+          }
+        ]
+      }
+    
+             
+            
+  
+  
+              

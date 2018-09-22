@@ -10,13 +10,14 @@
 
 <script>
 import { Navbar, Sidebar, AppMain } from '@/views/layout/components'
-
+import Breadcrumb from '@/components/Breadcrumb'
 export default {
   name: 'layout',
   components: {
     Navbar,
     Sidebar,
-    AppMain
+    AppMain,
+    Breadcrumb
   },
   computed: {
     sidebar() {

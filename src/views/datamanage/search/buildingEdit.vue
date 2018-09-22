@@ -1,204 +1,193 @@
 <template>
- <div>
-  <el-tabs type="border-card">
-  <el-tab-pane label="基本信息">
-      <div class="margin60"  style="height:100%">
-    <el-form ref="form" :model="form" label-width="100px" label-position="right">
-     <el-row> 
-          <el-col :span="12"> 
-             <el-form-item label="楼栋名称">
-                <el-input v-model="form.ldmc" ></el-input>
-         </el-form-item>
-  </el-col>
-  <el-col :span="12"> 
-             <el-form-item label="楼栋别名">
-                <el-input v-model="form.ldbm" ></el-input>
-         </el-form-item>
-  </el-col>
-     </el-row>
-  <el-form-item label="楼栋坐落">
-    <el-input v-model="form.ldzl"></el-input>
-  </el-form-item>
- <el-row> 
-    <el-col :span="8">
-   <el-form-item label="建筑物高度">
-    <el-input v-model="form.jzwgd"></el-input>
-  </el-form-item>
-  </el-col>
-   <el-col :span="8">
-   <el-form-item label="竣工日期">
-   
-      <el-date-picker type="date" value-format="yyyy-MM-dd" placeholder="选择日期" v-model="form.jgrq" style="width: 100%;"></el-date-picker>
-    
-  </el-form-item>
-   </el-col>
-    </el-row>
-   <el-row> 
-    <el-col :span="8">
-   <el-form-item label="建筑面积">
-    <el-input v-model="form.jzmj"></el-input>
-  </el-form-item>
-   </el-col>
-    <el-col :span="8">
-   <el-form-item label="占地面积">
-    <el-input v-model="form.zdmj"></el-input>
-  </el-form-item>
-   </el-col>
-    <el-col :span="8">
-     <el-form-item label="用地面积">
-    <el-input v-model="form.ydmj"></el-input>
-  </el-form-item>
-   </el-col>
-    </el-row>
-   <el-row> 
-  <el-col :span="8">
-   <el-form-item label="总层数">
-    <el-input v-model="form.zcs"></el-input>
-  </el-form-item>
-   </el-col>
-  <el-col :span="8">
-   <el-form-item label="地上层数">
-    <el-input v-model="form.dscs"></el-input>
-  </el-form-item>
-   </el-col>
-   <el-col :span="8">
-     <el-form-item label="地下层数">
-    <el-input v-model="form.dxcs"></el-input>
-  </el-form-item>
-   </el-col>
-    </el-row>
-   <el-row> 
-    <el-col :span="8">
-   <el-form-item label="总户数">
-    <el-input v-model="form.zhs"></el-input>
-  </el-form-item>
-   </el-col>
-  <el-col :span="8">
-   <el-form-item label="楼栋性质">
-    <el-input v-model="form.ldxz"></el-input>
-  </el-form-item>
-  </el-col>
-  <el-col :span="8">
-   <el-form-item label="楼栋结构">
-    <el-input v-model="form.ldjg"></el-input>
-  </el-form-item>
-   </el-col>
-   </el-row>
-    <el-form-item label="备注">
-    <el-input type="textarea" v-model="form.bz"></el-input>
-  </el-form-item>
- 
-  <el-form-item>
-    <el-button type="primary" @click="onSubmit">保存</el-button>
-  </el-form-item>
-</el-form>
-      </div>
-  </el-tab-pane>
-  <el-tab-pane label="配套和指标因素">
-    
-      <el-tabs   tab-position="left">
-  <el-tab-pane label="住宅" v-if="building.hgyt.indexOf('住宅') !== -1">
-      <el-form ref="factor" label-width="130px"  :model="factor" label-position="right">
-        <el-row>
-           <el-col :span="12">
-           <el-form-item label="建筑类型">
-     <el-select v-model="factor.jzlx" placeholder="建筑类型">
-      <el-option label="高层" value="高层"></el-option>
-      <el-option label="中高层" value="中高层"></el-option>
-      <el-option label="中层" value="中层"></el-option>
-      <el-option label="中低层" value="中低层"></el-option>
-      <el-option label="低层" value="低层"></el-option>
-    </el-select>
-  </el-form-item>
-        </el-col>
-         <el-col :span="12">
-               <el-form-item label="是否有电梯">
-         <el-select v-model="factor.sfydt" placeholder="是否有电梯">
-         <el-option label="有" value="有"></el-option>
-         <el-option label="无" value="无"></el-option>
-    </el-select>
-     </el-form-item>
-        </el-col>
-        </el-row>
-        <el-row >
-  <el-col :span="12">
-   <el-form-item label="梯户比">
-       <el-input v-model="factor.thb" style="width:200px"></el-input>
-  </el-form-item>
-  </el-col>
-   <el-col :span="12">
-<el-form-item label="相对位置">
-     <el-select v-model="factor.xdwz" placeholder="相对位置">
-      <el-option label="好" value="好"></el-option>
-      <el-option label="较好" value="较好"></el-option>
-      <el-option label="一般" value="一般"></el-option>
-      <el-option label="较差" value="较差"></el-option>
-      <el-option label="差" value="差"></el-option>
-    </el-select>
-  </el-form-item>
-     </el-col>
-  </el-row>
- <el-form-item>
-    <el-button type="primary" @click="SubmitFactor">保存</el-button>
-  </el-form-item>
-</el-form>
-  </el-tab-pane>
-  <el-tab-pane label="办公" v-if="building.hgyt.indexOf('办公') !== -1"></el-tab-pane>
-  <el-tab-pane label="商业" v-if="building.hgyt.indexOf('商业') !== -1"></el-tab-pane>
-</el-tabs>
-  </el-tab-pane>
-  <el-tab-pane label="项目图片">
-    <div>
-        <div class="title-mini">项目缩略图</div>
-      <el-row>
-        <div>
-      <template>
-<div class="components-container">
-<div class="editor-container">
-<dropzone
-v-on:dropzone-success="UploadFile" id="myVueDropzone" url="http://211.154.135.29:88/v1/thumbnails" :fdcdm='building.lddm' fdclx="楼栋" maxFiles=1 :defaultImg="building.img"></dropzone>
-</div>
-</div>
-</template>
-</div>
-</el-row>
- <div class="title-mini">项目轮播图</div>
-      <el-row>
-      <template>
-<div class="components-container">
-<div class="editor-container">
-<dropzone v-on:dropzone-removedFile="DelFile" 
-v-on:dropzone-success="UploadFile" id="myVueDropzone1" url="http://211.154.135.29:88/v1/imgs" :fdcdm='building.lddm' fdclx="楼栋" zylx="户型图" :defaultImg="img"></dropzone>
-</div>
-</div>
-</template>
-</el-row>
+  <div class="app">
+    <div class="margin10">
+      <el-tabs type="border-card">
+        <el-tab-pane label="基本信息">
+          <div class="margin60" style="height:100%">
+            <el-form ref="form" :model="form" label-width="100px" label-position="right">
+              <el-row>
+                <el-col :span="12">
+                  <el-form-item label="楼栋名称">
+                    <el-input size="small" v-model="form.ldmc"></el-input>
+                  </el-form-item>
+                </el-col>
+                <el-col :span="12">
+                  <el-form-item label="楼栋别名">
+                    <el-input size="small" v-model="form.ldbm"></el-input>
+                  </el-form-item>
+                </el-col>
+              </el-row>
+              <el-row>
+                <el-col :span="24">
+                  <el-form-item label="楼栋坐落">
+                    <el-input size="small" v-model="form.ldzl"></el-input>
+                  </el-form-item>
+                </el-col>
+              </el-row>
+              <el-row>
+                <el-col :span="8">
+                  <el-form-item label="建筑物高度">
+                    <el-input size="small" v-model="form.jzwgd"></el-input>
+                  </el-form-item>
+                </el-col>
+                <el-col :span="8">
+                  <el-form-item label="竣工日期">
+                    <el-date-picker size="small" type="date" value-format="yyyy-MM-dd" placeholder="选择日期" v-model="form.jgrq" style="width: 100%;"></el-date-picker>
+                  </el-form-item>
+                </el-col>
+              </el-row>
+              <el-row>
+                <el-col :span="8">
+                  <el-form-item label="建筑面积">
+                    <el-input size="small" v-model="form.jzmj"></el-input>
+                  </el-form-item>
+                </el-col>
+                <el-col :span="8">
+                  <el-form-item label="占地面积">
+                    <el-input size="small" v-model="form.zdmj"></el-input>
+                  </el-form-item>
+                </el-col>
+                <el-col :span="8">
+                  <el-form-item label="用地面积">
+                    <el-input size="small" v-model="form.ydmj"></el-input>
+                  </el-form-item>
+                </el-col>
+              </el-row>
+              <el-row>
+                <el-col :span="8">
+                  <el-form-item label="总层数">
+                    <el-input size="small" v-model="form.zcs"></el-input>
+                  </el-form-item>
+                </el-col>
+                <el-col :span="8">
+                  <el-form-item label="地上层数">
+                    <el-input size="small" v-model="form.dscs"></el-input>
+                  </el-form-item>
+                </el-col>
+                <el-col :span="8">
+                  <el-form-item label="地下层数">
+                    <el-input size="small" v-model="form.dxcs"></el-input>
+                  </el-form-item>
+                </el-col>
+              </el-row>
+              <el-row>
+                <el-col :span="8">
+                  <el-form-item label="总户数">
+                    <el-input size="small" v-model="form.zhs"></el-input>
+                  </el-form-item>
+                </el-col>
+                <el-col :span="8">
+                  <el-form-item label="楼栋性质">
+                    <el-input size="small" v-model="form.ldxz"></el-input>
+                  </el-form-item>
+                </el-col>
+                <el-col :span="8">
+                  <el-form-item label="楼栋结构">
+                    <el-input size="small" v-model="form.ldjg"></el-input>
+                  </el-form-item>
+                </el-col>
+              </el-row>
+              <el-row>
+                <el-col :span="24">
+                  <el-form-item label="备注">
+                    <el-input size="small" type="textarea" v-model="form.bz"></el-input>
+                  </el-form-item>
+                </el-col>
+              </el-row>
+              <el-form-item>
+                <el-button size="small" type="primary" @click="onSubmit">保存</el-button>
+              </el-form-item>
+            </el-form>
+          </div>
+        </el-tab-pane>
+        <el-tab-pane label="配套和指标因素">
+          <el-tabs tab-position="left">
+            <el-tab-pane label="住宅" v-if="building.hgyt?building.hgyt.indexOf('住宅') !== -1:false">
+              <el-form ref="factor" v-if="factor" label-width="130px" :model="factor" label-position="right">
+                <el-row>
+                  <el-col :span="12">
+                    <el-form-item label="建筑类型">
+                      <el-input-number size="small" v-model="factor.jzlx" :min="0" :max="100"></el-input-number>
+                    </el-form-item>
+                  </el-col>
+                  <el-col :span="12">
+                    <el-form-item label="是否有电梯">
+                      <el-input-number size="small" v-model="factor.sfydt" :min="0" :max="100"></el-input-number>
+                    </el-form-item>
+                  </el-col>
+                </el-row>
+                <el-row>
+                  <el-col :span="12">
+                    <el-form-item label="梯户比">
+                      <el-input-number size="small" v-model="factor.thb" :min="0" :max="100"></el-input-number>
+                    </el-form-item>
+                  </el-col>
+                  <el-col :span="12">
+                    <el-form-item label="相对位置">
+                      <el-input-number size="small" v-model="factor.xdwz" :min="0" :max="100"></el-input-number>
+                    </el-form-item>
+                  </el-col>
+                </el-row>
+                <el-form-item>
+                  <el-button size="small" type="primary" @click="SubmitFactor">保存</el-button>
+                </el-form-item>
+              </el-form>
+            </el-tab-pane>
+            <el-tab-pane label="办公" v-if="building.hgyt?building.hgyt.indexOf('办公') !== -1:false"></el-tab-pane>
+            <el-tab-pane label="商业" v-if="building.hgyt?building.hgyt.indexOf('商业') !== -1:false"></el-tab-pane>
+          </el-tabs>
+        </el-tab-pane>
+        <el-tab-pane label="楼栋图片">
+          <div>
+            <div class="title-img">楼栋缩略图</div>
+            <el-row>
+              <div>
+                <template>
+                  <div class="components-container">
+                    <div class="editor-container">
+                      <dropzone v-on:dropzone-success="UploadFile" id="myVueDropzone" :url="url" :fdcdm='building.lddm' fdclx="楼栋" :maxFiles='1' :defaultImg="building.img"></dropzone>
+                    </div>
+                  </div>
+                </template>
+              </div>
+            </el-row>
+            <div class="title-img">楼栋轮播图</div>
+            <el-row>
+              <template>
+                <div class="components-container">
+                  <div class="editor-container">
+                    <dropzone v-on:dropzone-removedFile="DelFile" v-on:dropzone-success="UploadFile" id="myVueDropzone1" :url="urlmuli" :fdcdm='building.lddm' fdclx="楼栋" zylx="户型图" :defaultImg="img"></dropzone>
+                  </div>
+                </div>
+              </template>
+            </el-row>
+          </div>
+        </el-tab-pane>
+      </el-tabs>
     </div>
-  </el-tab-pane>
- 
-</el-tabs>
- </div>
+  </div>
 </template>
 <script>
-import { buildingsFactorsResidential } from '@/api/building'
-import { buildingsInfo } from '@/api/building'
-import { UpdateBuildingInfo } from '@/api/building'
-import { UpdateBuildingFactorsResidential } from '@/api/building'
+import {
+  buildingsFactorsResidential,
+  buildingsInfo,
+  UpdateBuildingInfo,
+  UpdateBuildingFactorsResidential
+} from '@/api/building'
 import Dropzone from '@/components/Dropzone'
-import { imgs } from '@/api/img'
-// import { uploadimgs } from '@/api/img'
-import { deleteimgs } from '@/api/img'
-
+import { imgs, deleteimgs } from '@/api/img'
 export default {
   components: { Dropzone },
   data() {
     return {
-      factor: null,
-      form: null,
-      result: null,
-      building: null,
+      factor: {},
+      form: {},
+      result: {},
+      building: {},
       img: [],
-      imglist: null
+      imglist: {},
+      url: process.env.IMG_URL,
+      urlmuli: process.env.IMG_URL1
     }
   },
   mounted() {
@@ -208,24 +197,25 @@ export default {
   },
   methods: {
     getBuilding() {
-      var param = { lddm: this.$route.query.lddm }
-      buildingsInfo(param).then(response => {
+      buildingsInfo(this.$route.query.lddm).then(response => {
         this.building = response.data
         this.form = this.building
-        console.log('building!')
-        console.log(this.form)
       })
     },
     getBuildingFactorsResidential() {
-      var param = { lddm: this.$route.query.lddm }
-      buildingsFactorsResidential(param).then(response => {
+      const yt = 'residential'
+      buildingsFactorsResidential(yt, this.$route.query.lddm).then(response => {
         this.factor = response.data
       })
     },
     SubmitFactor() {
-      UpdateBuildingFactorsResidential(this.factor).then(response => {
+      const yt = 'residential'
+      UpdateBuildingFactorsResidential(
+        yt,
+        this.$route.query.lddm,
+        this.factor
+      ).then(response => {
         this.result = response
-        console.log('SubmitFactor!')
         if (response.code === 200) {
           this.$message({ message: '保存成功', type: 'success' })
         } else {
@@ -251,13 +241,8 @@ export default {
         ldjg: this.form.ldjg,
         bz: this.form.bz
       }
-      console.log('formform!')
-      console.log(this.form)
-      console.log('datadata!')
-      console.log(data)
       UpdateBuildingInfo(this.building.lddm, data).then(response => {
         this.result = response
-        console.log('submit!')
         if (response.code === 200) {
           this.$message({ message: '保存成功', type: 'success' })
         } else {
@@ -296,12 +281,10 @@ export default {
   }
 }
 </script>
-
 <style rel="stylesheet/scss" lang="scss" scoped>
-  @import 'src/views/datamanage/styles.scss' ;
-
-.el-row{
+@import "../../../styles/app.scss";
+.el-row {
   margin-top: 5px;
-  margin-bottom: 0px
+  margin-bottom: 0px;
 }
 </style>

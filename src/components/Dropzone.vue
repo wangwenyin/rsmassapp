@@ -7,7 +7,7 @@
 <script>
 import Dropzone from 'dropzone'
 import 'dropzone/dist/dropzone.css'
-// import { getToken } from 'api/qiniu';
+import { getToken } from '@/utils/auth'
 
 Dropzone.autoDiscover = false
 
@@ -31,6 +31,7 @@ export default {
       dictRemoveFile: 'Remove',
       addRemoveLinks: this.showRemoveLink,
       acceptedFiles: this.acceptedFiles,
+      headers: { 'x-token': getToken() },
       autoProcessQueue: this.autoProcessQueue,
       dictDefaultMessage: '<i style="margin-top: 3em;display: inline-block" class="material-icons">' + this.defaultMsg + '</i><br>Drop files here to upload',
       dictMaxFilesExceeded: '只能一个图',

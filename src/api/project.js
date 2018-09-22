@@ -20,21 +20,18 @@ export function projectFactorsCommerce(params) {
   })
 }
 // 根据项目代码查询其住宅影响因素数据
-// params = { xmdm: '项目代码'}
-export function projectFactorsResidential(params) {
+export function projectFactorsResidential(yt, xmdm) {
   return request({
-    url: '/data/project/factors/residential',
-    method: 'get',
-    params
+    url: `/data/project/factorQuantification/${yt}/${xmdm}`,
+    method: 'get'
   })
 }
 // 根据项目代码获取项目基本信息
-// params = { xmdm: '项目代码'}
-export function projectInfo(params) {
+//  xmdm: '项目代码'
+export function projectInfo(xmdm) {
   return request({
-    url: `/data/projects/${params.xmdm}`,
-    method: 'get',
-    params
+    url: `/data/projects/${xmdm}`,
+    method: 'get'
   })
 }
 // 根据项目代码查询其历次评估价格
@@ -67,10 +64,10 @@ export function UpdateProjectInfo(xmdm, data) {
 }
 
 // 根据项目代码更新其住宅影响因素数据
-export function UpdateFactorsResidential(data) {
+export function UpdateFactorsResidential(yt, xmdm, data) {
   return request({
-    url: '/data/project/factors/residential',
-    method: 'post',
+    url: `/data/project/factorQuantification/${yt}/${xmdm}`,
+    method: 'put',
     data
   })
 }

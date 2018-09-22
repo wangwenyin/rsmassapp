@@ -1,25 +1,27 @@
 <template> 
-  <div id="app">
+<div class="app">
+  <div id="app" class='margin10 maxdialog'>
       <el-tabs ref="tabs" >
         <el-tab-pane label="数量统计" ref="num">
-            <div id="echarts" :style="{height:height,width:width}" ></div>  
+            <div id="echarts" :style="{height:height,width:width}"  style="margin: 20px auto;"></div>  
         </el-tab-pane>
         <el-tab-pane label="面积统计" ref="area">
-           <div id="echarts1" :style="{height:height,width:width}" ></div> 
+           <div id="echarts1" :style="{height:height,width:width}"  style="margin: 20px auto;" ></div> 
         </el-tab-pane>
         <el-tab-pane label="地图模式">
-           <baidu-map class="bm-view1" ref="baiduMap" :center="center" :zoom="12" :map-click="false" :scroll-wheel-zoom="true">
+           <baidu-map class="bm-view1" ref="baiduMap" :center="center" :zoom="12" :map-click="false" :scroll-wheel-zoom="true" style="margin: 0px auto;">
                <bm-map-type :map-types="['BMAP_NORMAL_MAP', 'BMAP_HYBRID_MAP']" anchor="BMAP_ANCHOR_TOP_LEFT"></bm-map-type>
                <CountOverlay v-for="item in communities" :key="item.id" :position="{lng: item.lng, lat: item.lat}" :data="item"></CountOverlay>
            </baidu-map>
         </el-tab-pane>
       </el-tabs> 
  </div>
+ </div>
 </template>
 <script>
 import echarts from 'echarts'
 import BaiduMap from 'vue-baidu-map/components/Map/Map'
-import CountOverlay from '@/components/MapOverlay/CountOverlay'
+import CountOverlay from '@/views/statistic/components/CountOverlay'
 export default {
   components: { echarts, BaiduMap, CountOverlay },
   data() {
@@ -386,7 +388,8 @@ export default {
   }
 }
 </script>
-<style>
+<style rel="stylesheet/scss" lang="scss" scoped>
+@import '../../styles/app.scss';
 .el-col-7{
   padding-top: 5px;
 }
@@ -403,6 +406,6 @@ export default {
     margin-left: 60px;
     margin-right: 60px;
 
-  width: 90%;
+  width: 100%;
   height: 700px;}
 </style>

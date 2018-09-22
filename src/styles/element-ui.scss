@@ -8,7 +8,9 @@
 .el-upload__input {
   display: none;
 }
-
+.el-input__inner{
+  border: 1px solid #b2b2b2;
+}
 //暂时性解决diolag 问题 https://github.com/ElemeFE/element/issues/2461
 .el-dialog {
   transform: none;
@@ -29,7 +31,7 @@
 }
 
  .el-table {
-  border: 1px solid #808080;
+  border: 1px solid rgb(230, 228, 228);
   .cell {
     padding: 0 5px;
   }
@@ -40,9 +42,13 @@
   }
   th.is-leaf{
     padding: 7px 0;
-    color: #fff;
-    background-color: #585858;
+    color: #424242;
+    background-color: rgb(245, 247, 250);
   }
+}
+
+.el-popover .el-button {
+  width: 80px;
 }
 
  .el-dialog {
@@ -67,16 +73,12 @@
      right: 12px;
    }
  }
- //wing 20180627
- 
  .card .el-card__body{
   width: 100%;
   height: 100%;
   padding: 10px
 }
-
-//wing 20180703
-.margin60  .el-dialog{
+.maxdialog  .el-dialog{
   width: 80% ;
   margin-top: 3vh !important;
 

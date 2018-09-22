@@ -1,6 +1,13 @@
 <template>
-  <div style="margin-top:40px">
-    <el-row :gutter="10" style="margin-left:60px;margin-right:20px">
+<div class="app">
+  <div class="margin10">
+    <el-row class="el-row-title"> 
+        <el-col :span="24" >
+            <div class="title">导出数据</div> 
+                <div class="border"></div> 
+        </el-col>
+    </el-row>
+    <el-row :gutter="10" style="margin-left:36px;margin-right:20px">
   <el-col :xs="4" :sm="4" :md="4" :lg="4" :xl="4">
    <span>1.选择导出对象 :</span>
   </el-col>
@@ -13,12 +20,12 @@
    </template>
   </el-col>
 </el-row>
-   <el-row :gutter="10" style="margin-left:60px;margin-right:20px">
-  <el-col :xs="4" :sm="4" :md="4" :lg="4" :xl="4">
+   <el-row :gutter="10" style="margin-left:36px;margin-right:20px">
+  <el-col :xs="4" :sm="4" :md="4" :lg="4" :xl="4" style="margin-top: 7px;">
    <span>2.选择导出路径 :</span>
   </el-col>
   <el-col :xs="4" :sm="4" :md="4" :lg="4" :xl="4">
-   <el-input v-model="input" placeholder=" "></el-input>
+   <el-input size="small" v-model="input" placeholder=" "></el-input>
   </el-col>
   <el-col :xs="8" :sm="8" :md="8" :lg="8" :xl="8">
    <el-upload
@@ -36,23 +43,23 @@
 </el-upload>
   </el-col>
 </el-row>
-<el-row :gutter="10" style="margin-left:60px;margin-right:20px">
-  <el-col :xs="4" :sm="4" :md="4" :lg="4" :xl="4">
+<el-row :gutter="10" style="margin-left:36px;margin-right:20px">
+  <el-col :xs="4" :sm="4" :md="4" :lg="4" :xl="4" style="margin-top: 7px;">
    <span>3.导出条件设置 :</span> 
   </el-col>
   <el-col :xs="4" :sm="4" :md="4" :lg="4" :xl="4">
-    <el-button>条件设置</el-button>
+    <el-button size="small" >条件设置</el-button>
   </el-col>
 </el-row>
-<el-row style="margin-left:60px;margin-right:60px;">
+<el-row style="margin-left:36px;margin-right:60px;">
 <el-input
   type="textarea"
-  :rows="3"
+  :rows="3" style="width: 98%;"
   placeholder="请输入内容"
   v-model="textarea">
 </el-input>
 </el-row>
-<el-row :gutter="10" style="margin-left:60px;margin-right:20px">
+<el-row :gutter="10" style="margin-left:36px;margin-right:20px">
   <el-col :xs="4" :sm="4" :md="4" :lg="4" :xl="4">
    <span>4.导出预览 :</span>
   </el-col>
@@ -60,7 +67,7 @@
 <el-row>
 <el-table
     :data="tableData2"
-    style="width: 90%;margin-left:60px;"  border
+    style="width: 94%;margin-left:19px;margin-right:40px"  border
     :row-class-name="tableRowClassName">
     <el-table-column 
       prop="buildingId"
@@ -80,18 +87,16 @@
     </el-table-column>
   </el-table>
 </el-row>
-<el-row :gutter="10" style="margin-left:60px;margin-right:20px;margin-top:40px;margin-bottom:40px;">
-   <el-button type="primary">开始导出</el-button>
+<el-row >
+   <el-button type="primary" size="small" class="btn_l" >开始导出</el-button>
 </el-row>
 
 
   </div>
+</div>
 </template>
 <script>
-import Carousel from '@/components/Carousel/index'
-
 export default {
-  components: { Carousel },
   data() {
     return {
       textarea: '导出字段：编号、项目名称、楼栋名称，户名称，占地面积，建筑年代，面积导出条件：建筑面积 > 90 and 项目名称 = “绿海湾花园”'
@@ -99,59 +104,34 @@ export default {
   }
 }
 </script>
-<style>
-  .area{
-   margin-left: auto ;
-   float: right;
-  }
-  .con {
-     margin-top: 13px;
-     margin-bottom: 13px;
+<style rel="stylesheet/scss" lang="scss" scoped>
+  @import '../../../styles/app.scss';
+ .title{
+     font-size: 17px;
+     font-weight:bold;
+     margin-top: 10px;
      margin-left:20px;
-     color:#7b7676;
+      margin-bottom: 10px;
+   }
+   .border{
+     border:0.5px solid #c0c4cc;
+     margin-bottom: 20px;
+   }
+   .el-row {
+    margin-bottom:7px;
+    margin-top: 20px;
+    height:100%;
+    margin-left: 20px;
+    margin-right: 10px;
   }
-  .val {
-     margin-top: 13px;
-     margin-bottom: 13px;
-     margin-left:20px;
-    font-weight:bold;
-  }
-  .el-row {
-      margin-left: 0;
-      margin-right: 0;
-  }
-
-  .el-card {
-      height: 150px;
-  }
-
-  .el-card__body {
-      height: 100%;
-      padding: 10px;
-      overflow: hidden;
-  }
-
-  .el-col-offset-2 {
-      margin-left: 0;
-      margin-top: 10px
-  }
-
-  .text {
-    width: 60%;
-    height: 100%;
-    box-sizing: border-box;
-    padding: 10px;
-    float: left;
-    font-size: 12px;
-  }
-
-  .project_d {
-    font-size: 23px;
-    font-weight: bold;
-  }
-  .el-tag--mini
-  {
-    padding:0 4.8px;
-    margin-left: 3px
+   .btn_l{
+     float: right;
+     margin-left: -7%;
+     margin-top: 3px;
+     margin-right: 4.5%;
+     margin-bottom: 20px;
+   }
+    .el-row-title {
+    margin-top: 0px !important;
   }
 </style>

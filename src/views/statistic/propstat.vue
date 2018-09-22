@@ -1,12 +1,13 @@
 <template> 
-  <div id="app">
+<div class="app">
+  <div id="app" class='margin10 maxdialog'>
       <el-tabs ref="tabs" >
         <el-tab-pane label="数量统计" ref="num">
-          <el-row :gutter="10" style="margin-left:1px">
+          <el-row :gutter="10" style="margin-left:53px;margin-top:5px">
             <el-col :xs="1" :sm="1" :md="1" :lg="1" :xl="1">
               <span>用途 :</span>
             </el-col>
-            <el-col :xs="6" :sm="6" :md="6" :lg="6" :xl="6">
+            <el-col :xs="8" :sm="8" :md="8" :lg="8" :xl="8">
               <template>
                 <el-radio v-model="radio"   @click.native="searchNum(0)"  label="0">全部</el-radio>
                 <el-radio v-model="radio"   @click.native="searchNum(1)"  label="1">办公</el-radio>
@@ -16,15 +17,15 @@
               </template>
             </el-col>
           </el-row>
-            <div id="echartsNum" :style="{height:height,width:width}" >  
+            <div id="echartsNum"  style="margin: 20px auto;"   :style="{height:height,width:width}" >  
             </div>  
         </el-tab-pane>
         <el-tab-pane label="面积统计" ref="area">
-          <el-row :gutter="10" style="margin-left:1px">
+          <el-row :gutter="10" style="margin-left:53px;margin-top:5px">
             <el-col :xs="1" :sm="1" :md="1" :lg="1" :xl="1">
               <span>用途 :</span>
             </el-col>
-            <el-col :xs="6" :sm="6" :md="6" :lg="6" :xl="6">
+            <el-col :xs="8" :sm="8" :md="8" :lg="8" :xl="8">
               <template>
                 <el-radio v-model="radio"   @click.native="searchArea(0)"  label="0">全部</el-radio>
                 <el-radio v-model="radio"   @click.native="searchArea(1)"  label="1">办公</el-radio>
@@ -34,21 +35,22 @@
               </template>
              </el-col>
            </el-row>
-           <div id="echartsArea" :style="{height:height,width:width}" ></div> 
+           <div id="echartsArea"  style="margin: 20px auto;"  :style="{height:height,width:width}" ></div> 
         </el-tab-pane>
         <el-tab-pane label="地图模式">
-           <baidu-map class="bm-view1" ref="baiduMap" :center="center" :zoom="12" :map-click="false" :scroll-wheel-zoom="true">
+           <baidu-map class="bm-view1" ref="baiduMap" :center="center" :zoom="12" :map-click="false" :scroll-wheel-zoom="true" style="margin: 0px auto;">
                <bm-map-type :map-types="['BMAP_NORMAL_MAP', 'BMAP_HYBRID_MAP']" anchor="BMAP_ANCHOR_TOP_LEFT"></bm-map-type>
                <CountOverlayEcharts v-for="item in communities" :key="item.id" :position="{lng: item.lng, lat: item.lat}" :data="item"></CountOverlayEcharts>
            </baidu-map>
         </el-tab-pane>
       </el-tabs> 
   </div>
+   </div>
 </template>
 <script>
 import echarts from 'echarts'
 import BaiduMap from 'vue-baidu-map/components/Map/Map'
-import CountOverlayEcharts from '@/components/MapOverlay/CountOverlayEcharts'
+import CountOverlayEcharts from '@/views/statistic/components/CountOverlayEcharts'
 export default {
   components: { echarts, BaiduMap, CountOverlayEcharts },
   data() {
@@ -196,11 +198,11 @@ export default {
   props: {
     height: {
       type: String,
-      'default': '800px'
+      'default': '650px'
     },
     width: {
       type: String,
-      'default': '1300px'
+      'default': '1200px'
     }
   },
   mounted() {
@@ -376,8 +378,8 @@ export default {
           formatter: '{a} <br/>{b}: {c} ({d}%)'
         },
         legend: {
-          orient: 'vertical',
-          left: 'left',
+          bottom: 10,
+          left: 'center',
           data: [this.communities[0].name, this.communities[1].name, this.communities[2].name, this.communities[3].name, this.communities[4].name, this.communities[5].name, this.communities[6].name, this.communities[7].name, this.communities[8].name, this.communities[9].name]
         },
         toolbox: {
@@ -574,8 +576,8 @@ export default {
           formatter: '{a} <br/>{b}: {c} ({d}%)'
         },
         legend: {
-          orient: 'vertical',
-          left: 'left',
+          bottom: 10,
+          left: 'center',
           data: [this.communities[0].name, this.communities[1].name, this.communities[2].name, this.communities[3].name, this.communities[4].name, this.communities[5].name, this.communities[6].name, this.communities[7].name, this.communities[8].name, this.communities[9].name]
         },
         toolbox: {
@@ -608,7 +610,8 @@ export default {
   }
 }
 </script>
-<style>
+<style rel="stylesheet/scss" lang="scss" scoped>
+@import '../../styles/app.scss';
 .el-col-7{
   padding-top: 5px;
 }
@@ -625,6 +628,6 @@ export default {
     margin-left: 60px;
     margin-right: 60px;
 
-  width: 90%;
+  width: 100%;
   height: 700px;}
 </style>

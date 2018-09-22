@@ -8,22 +8,20 @@ export function units(params) {
     params
   })
 }
-// 根据户代码获取其影响因素数据
+// 查询户的影响因素量化信息(9.17)
 // param={hdm:"户代码"}
-export function unitFactors(params) {
+export function unitFactors(hdm) {
   return request({
-    url: '/data/unit/factors',
-    method: 'get',
-    params
+    url: `/data/unit/factorQuantification/${hdm}`,
+    method: 'get'
   })
 }
 // 根据户代码获取户基本信息
 // param={hdm:"户代码"}
-export function unitInfo(params) {
+export function unitInfo(hdm) {
   return request({
-    url: `/data/units/${params.hdm}`,
-    method: 'get',
-    params
+    url: `/data/units/${hdm}`,
+    method: 'get'
   })
 }
 
@@ -46,11 +44,12 @@ export function UpdateHouseInfo(hdm, data) {
   })
 }
 
-// 更新户的影响因素数据（以住宅为例）
-export function UpdateUnitFactors(data) {
+// 更新户的影响因素量化信息（以住宅为例）（9.17）
+export function UpdateUnitFactors(hdm, data) {
   return request({
-    url: 'data/unit/factors',
-    method: 'post',
+    url: `/data/unit/factorQuantification/${hdm}`,
+    method: 'put',
     data
   })
 }
+
