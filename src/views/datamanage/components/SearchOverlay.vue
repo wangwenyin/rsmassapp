@@ -11,7 +11,7 @@
 </template>
 <script>
   export default {
-    props: ['data', 'position', 'tableData', 'type'],
+    props: ['data', 'position', 'tableData', 'type', 'activeValue', 'use'],
     data() {
       return {
         active: false,
@@ -24,19 +24,19 @@
         if (this.type === 'house') {
           const routerData = this.$router.resolve({
             name: 'house',
-            query: { hdm: this.data.id }
+            query: { hdm: this.data.id, use: this.use }
           })
           window.open(routerData.href, '_blank')
         } else if (this.type === 'building') {
           const routerData = this.$router.resolve({
             name: 'building',
-            query: { lddm: this.data.id }
+            query: { lddm: this.data.id, use: this.use }
           })
           window.open(routerData.href, '_blank')
         } else {
           const routerData = this.$router.resolve({
             name: 'project',
-            query: { xmdm: this.data.id }
+            query: { xmdm: this.data.id, use: this.use }
           })
           window.open(routerData.href, '_blank')
         }
@@ -61,6 +61,9 @@
     },
     computed: {
       getText() {
+        if (this.activeValue !== '') {
+          this.change(this.activeValue)
+        }
         return this.data.name + ' ' + (this.data.price / 10000).toFixed(1) + '万'
       }
     },
@@ -72,6 +75,11 @@
         deep: true
       }
     }
+    // ,
+    // activeValue(value) {
+    //   console.log(value)
+    //   this.data.xmmc.indexOf(value) > -1 ? this.active = true : this.active = false
+    // }
   }
 </script>
 
@@ -92,5 +100,6 @@
   .sample.active {
     background: #B00000;
     color: #fff;
+    z-index: 9999;
   }
 </style>

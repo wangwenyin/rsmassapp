@@ -1,8 +1,8 @@
 <template>
 <div class="scroll card" ref="scroll">
   <el-row>
- <el-col :span="24" v-for='(o , index) in houselist ' :key="o.id" v-if="index>=pagesize*(currentpage-1) && index<pagesize*currentpage" class="col">
-     <router-link :to="{ name:'house' ,query: { hdm: o.hdm }}" target="_blank" >
+ <el-col :span="24" v-for='(o , index) in houselist ' :key="o.id" v-if="index>=pagesize*(currentpage-1) && index<pagesize*currentpage" class="col" @click.native="onCardCilck(o)">
+   
     <el-card>
       <img :src= "o.img" class="card-r">
       <div class="text">
@@ -26,12 +26,15 @@
           </div>
         
             <useTag :tags="o.fwyt1"></useTag>
+            <router-link :to="{ name:'house' ,query: { hdm: o.hdm }}" target="_blank" >
+             <span ><el-button size="mini" type="text" >详情</el-button></span>
+                     </router-link>
               <div class="z-index" v-if="selectable===true">
                     <span>  <el-button size="mini"  type="text" @click.prevent="select(o)">选择</el-button></span>
                        </div>
        </div>
     </el-card>
-     </router-link>
+
  </el-col>
  </el-row>
  <el-row>
@@ -64,19 +67,19 @@ export default {
     selectable: {
       type: Boolean,
       default: false
+    },
+    currentpage: {
+      type: Number,
+      default: 1
+    },
+    pagesize: {
+      type: Number,
+      default: 10
     }
   },
   data() {
     return {
-      currentpage: 1,
-      pagesize: 10
-    }
-  },
-  mounted() {
-    this.setHeight()
-    // 屏幕适应大小
-    window.onresize = () => {
-      this.setHeight()
+
     }
   },
   methods: {
@@ -86,8 +89,8 @@ export default {
     select(val) {
       this.$emit('select', val)
     },
-    setHeight() {
-      this.$refs.scroll.style.height = document.documentElement.clientHeight - 260 + 'px'
+    onCardCilck(val) {
+      this.$emit('loacte', val)
     }
   },
   filters: {

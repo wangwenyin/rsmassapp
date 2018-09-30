@@ -15,7 +15,7 @@
   //  }
   
    .el-row {
-    margin-bottom:7px;
+    // margin-bottom:7px;
     margin-top: 1px;
     height:100%;
     margin-left: 20px;
@@ -46,10 +46,12 @@
      width: 392px;
      z-index: 999;
    }
-  .title {
-    font-size: 23px;
-    font-weight: bold;
-    margin-left: 20px;
+   .title{
+    font-size: 14px;
+    font-weight:bold;
+    margin-top: 10px;
+    margin-left:25px;
+     margin-bottom: 10px;
   }
   .title-small {
     font-size: 20px;
@@ -58,7 +60,7 @@
     margin-bottom: 10px;
   }
   .title-mini {
-    font-size: 16px;
+    font-size: 14px;
     font-weight: bold;
     margin-left: 20px;
     margin-bottom: 10px;
@@ -83,7 +85,7 @@
      margin-left:20px;
      color:#7b7676;
      text-align: left;
-     font-size: 15px;
+     font-size: 12px;
    }
    .con13{
       display: inline-block;
@@ -91,8 +93,8 @@
      margin-left:20px;
      color:#7b7676;
      text-align: left;
-     font-size: 15px;
-     margin-top: 3px;
+     font-size: 12px;
+     margin-top: 10px;
    }
   .val {
     display: inline-block;
@@ -100,8 +102,7 @@
     margin-left:13px;
     margin-right:13px;
     color:#7b7676;
-    font-weight:bold;
-    font-size: 15px;
+    font-size: 12px;
   }
   .row-t{
     margin-top: 20px;
@@ -124,13 +125,7 @@
     margin-top: 10px;
     width: 96%;   
  }
-   .title{
-  font-size: 17px;
-  font-weight:bold;
-  margin-top: 10px;
-  margin-left:25px;
-   margin-bottom: 10px;
-}
+
 .title-small {
    margin-left: 20px;
   font-size: 15px;

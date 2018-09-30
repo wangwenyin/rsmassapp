@@ -173,7 +173,7 @@
             type: 'success'
           })
           setTimeout(() => {
-            this.$router.push({ path: 'task' })
+            this.$router.push({ path: 'PriceTask' })
           }, 1000)
         })
       },
@@ -212,7 +212,7 @@
             type: 'success'
           })
           setTimeout(() => {
-            this.$router.push({ path: 'task' })
+            this.$router.push({ path: 'PriceTask' })
           }, 1000)
         })
       },
@@ -245,7 +245,7 @@
             })
             this.keepPriceReason = ''
             setTimeout(() => {
-              this.$router.push({ path: 'Task' })
+              this.$router.push({ path: 'PriceTask' })
             }, 1000)
           }
         })

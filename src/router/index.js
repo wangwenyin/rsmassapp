@@ -125,11 +125,11 @@ export const constantRouterMap = [
     path: '/case',
     component: Layout,
     redirect: '/case/search',
-    name: 'Case',
+    name: 'CaseManage',
     meta: { title: '案例管理', icon: 'casemanage' },
     children: [{
       path: 'imp',
-      name: 'Import',
+      name: 'CaseImp',
       component: () =>
         import('@/views/casemanage/imp'),
       meta: { title: '案例导入', icon: 'dataimp' }
@@ -142,8 +142,16 @@ export const constantRouterMap = [
       meta: { title: '案例查询', icon: 'datasearch' }
     },
     {
+      path: 'detail',
+      name: 'CaseDetail',
+      hidden: true,
+      component: () =>
+          import('@/views/casemanage/detail/Detail'),
+      meta: { title: '案例详情', icon: 'datasearch' }
+    },
+    {
       path: '/case/filter',
-      name: 'Filter',
+      name: 'CaseFilter',
       // 三级菜单对应的路由出口 router-view
       component: () =>
           import('@/views/casemanage/index'),
@@ -152,14 +160,14 @@ export const constantRouterMap = [
       meta: { title: '案例筛选', icon: 'filter' },
       children: [{
         path: 'auto',
-        name: 'Auto',
+        name: 'AutoFilter',
         component: () =>
             import('@/views/casemanage/filter/auto'),
         meta: { title: '自动筛选', icon: 'datasearch' }
       },
       {
         path: 'labour',
-        name: 'Labour',
+        name: 'LabourFilter',
         component: () =>
               import('@/views/casemanage/filter/labour'),
         meta: { title: '人工筛选', icon: 'datasearch' }
@@ -168,21 +176,21 @@ export const constantRouterMap = [
     },
     {
       path: '/case/match',
-      name: 'Match',
+      name: 'CaseMatch',
       component: () =>
           import('@/views/casemanage/index'),
       redirect: '/case/match/auto',
       meta: { title: '案例匹配', icon: 'filter' },
       children: [{
         path: 'auto',
-        name: 'auto',
+        name: 'AutoMatch',
         component: () =>
             import('@/views/casemanage/match/auto'),
         meta: { title: '自动匹配', icon: 'datasearch' }
       },
       {
         path: 'labour',
-        name: 'labour',
+        name: 'labourMatch',
         component: () =>
               import('@/views/casemanage/match/labour'),
         meta: { title: '人工匹配', icon: 'datasearch' }
@@ -191,7 +199,7 @@ export const constantRouterMap = [
     },
     {
       path: 'create',
-      name: 'Create',
+      name: 'CreateTask',
       hidden: true,
       component: () =>
           import('@/views/casemanage/create'),
@@ -240,38 +248,22 @@ export const constantRouterMap = [
     meta: { title: '争议处理', icon: 'task' },
     children: [{
       path: 'task',
-      name: 'Task',
+      name: 'PriceTask',
       component: () =>
         import('@/views/pricereassess/Task'),
       meta: { title: '价格复核', icon: 'recheck' }
     },
     {
       path: 'process',
-      name: 'Process',
+      name: 'ProcessCheck',
       hidden: true,
       component: () =>
           import('@/views/pricereassess/Process'),
       meta: { title: '流程查看', icon: 'process' }
     },
     {
-      path: 'detail',
-      name: 'Detail',
-      hidden: true,
-      component: () =>
-      import('@/views/pricereassess/process/Detail'),
-      meta: { title: '详细流程' }
-    },
-    {
-      path: 'log',
-      name: 'Log',
-      hidden: true,
-      component: () =>
-      import('@/views/pricereassess/process/Log'),
-      meta: { title: '操作日志' }
-    },
-    {
       path: 'audit',
-      name: 'Audit',
+      name: 'DataAudit',
       hidden: true,
       component: () =>
           import('@/views/pricereassess/Audit'),
@@ -279,7 +271,7 @@ export const constantRouterMap = [
     },
     {
       path: 'appraise',
-      name: 'Appraise',
+      name: 'PriceAppraise',
       hidden: true,
       component: () =>
           import('@/views/pricereassess/Appraise'),
@@ -287,7 +279,7 @@ export const constantRouterMap = [
     },
     {
       path: 'result',
-      name: 'Result',
+      name: 'ResultAudit',
       hidden: true,
       component: () =>
           import('@/views/pricereassess/Result'),
@@ -499,6 +491,20 @@ export const constantRouterMap = [
         hidden: true,
         component: () => import('@/views/resultaudit/detail.vue'),
         meta: { title: '任务详情', icon: 'allcondition' }
+      }
+    ]
+  },
+  {
+    path: '/spatialdata',
+    component: Layout,
+    name: 'SpatialData',
+    meta: { title: '空间数据', icon: 'space' },
+    children: [
+      {
+        path: 'index',
+        name: 'SpaceIndex',
+        component: () => import('@/views/spatialdata/index'),
+        meta: { title: '空间数据', icon: 'space' }
       }
     ]
   },

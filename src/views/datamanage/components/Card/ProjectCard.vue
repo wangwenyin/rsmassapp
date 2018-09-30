@@ -1,14 +1,15 @@
 <template>
 <div class="scroll card"  ref="scroll">
  <el-row >
-     <el-col :span="24" v-for="(o, index) in projectlist" :key="o.id" v-if="index>=pagesize*(currentpage-1) && index<pagesize*currentpage" class="col">
-       <router-link :to="{ name:'project' ,query: { xmdm: o.xmdm }}" target="_blank" >
-            <el-card shadow="hover">
+     <el-col :span="24" v-for="(o, index) in projectlist" :key="o.id" v-if="index>=pagesize*(currentpage-1) && index<pagesize*currentpage" class="col" @click.native="onCardCilck(o)">
+           <el-card shadow="hover" >
                 <img :src= "o.img" class="card-r">
                 <div class="crad-l">
+                    <!-- <router-link :to="{ name:'project' ,query: { xmdm: o.xmdm,use:use }}" target="_blank" > -->
                      <div>
                          <span class="title-small">{{ o.xmmc }} </span>
                      </div>
+                      <!-- </router-link> -->
                       <div>                        
                          <span :class="{'text-r': !selectable, 'text-r-s': selectable}">评估价：<b class="text-red">{{ o.pgdj }}</b></span>
                           <span :class="{'text-t': !selectable, 'text-t-s': selectable}"><time>{{ o.jzsd | formatDate}}</time></span>
@@ -23,12 +24,18 @@
                         <span>{{ o.jgrq  | formatYear}}建成</span>
                      </div>
                     <span > <useTag :tags="o.hgyt"></useTag></span>
-                    <div class="z-index" v-if="selectable===true">
+                     <div class="z-index" >
+                    <span style="margin-right: 40px">  
+                        <router-link :to="{ name:'project' ,query: { xmdm: o.xmdm,use:use }}" target="_blank" >
+                       <el-button size="mini" type="text" >详情</el-button>
+                      </router-link>
+                      </span>
+                       </div>
+                    <div class="z-index" >
                     <span style="margin-right: 10px">   <el-button size="mini" type="text" @click.prevent="building(o)">楼栋</el-button></span>
                        </div>
                  </div>
              </el-card>
-     </router-link>
      </el-col>
    </el-row>
    <el-row>
@@ -62,19 +69,23 @@ export default {
     selectable: {
       type: Boolean,
       default: false
+    },
+    use: {
+      type: String,
+      default: '住宅'
+    },
+    currentpage: {
+      type: Number,
+      default: 1
+    },
+    pagesize: {
+      type: Number,
+      default: 10
     }
   },
   data() {
     return {
-      currentpage: 1,
-      pagesize: 10
-    }
-  },
-  mounted() {
-    this.setHeight()
-    // 屏幕适应大小
-    window.onresize = () => {
-      this.setHeight()
+
     }
   },
   methods: {
@@ -90,8 +101,8 @@ export default {
     building(val) {
       this.$emit('building', val)
     },
-    setHeight() {
-      this.$refs.scroll.style.height = document.documentElement.clientHeight - 260 + 'px'
+    onCardCilck(val) {
+      this.$emit('loacte', val)
     }
   },
   filters: {

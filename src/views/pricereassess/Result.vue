@@ -174,7 +174,7 @@
               type: 'success'
             })
             setTimeout(() => {
-              this.$router.push({ path: 'Task' })
+              this.$router.push({ path: 'PriceTask' })
             }, 1000)
           }
         }).catch(err => {

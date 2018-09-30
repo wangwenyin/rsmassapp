@@ -5,8 +5,7 @@
       border
       stripe
       style="width: 100%"
-      id="el-table"
-    >
+      id="el-table">
       <el-table-column
         prop="xmmc"
         label="项目名称">

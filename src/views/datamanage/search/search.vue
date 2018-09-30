@@ -1,29 +1,29 @@
 <template>
-  <div class="app">
-    <el-row :gutter="10" class="search-row" style=" margin-left:10px; margin-right: 7px;margin-top: 12px;">
-      <el-col :span="2">
-        <AreaSelect :value="xzq" @update="onAreaSelect"></AreaSelect>
-      </el-col>
+  <div>
+    <el-row :gutter="10" class="search-row" style=" margin-left:10px; margin-right: 7px;margin-top: 12px;height:50px">
       <el-col :span="2" v-if="!selectable">
-        <PurposeSelect :value="yt1" @update="onPurposeSelect"></PurposeSelect>
-      </el-col>
-      <el-col :span="3">
-        <el-input v-model="zbdm" size='small' placeholder="组别"></el-input>
-      </el-col>
-      <el-col :span="3">
-        <el-input v-model="zddm" size='small' placeholder="宗地号"></el-input>
-      </el-col>
-      <el-col :span="3">
-        <el-input v-model="xmmc" size='small' placeholder="项目名称"></el-input>
-      </el-col>
-      <el-col :span="3">
-        <el-input v-model="ldmc" size='small' placeholder="楼栋名称"></el-input>
+        <PurposeSelect :value="yt1" @update="onPurposeSelectChange" @keyup.enter.native="onSearchBtnClick"></PurposeSelect>
       </el-col>
       <el-col :span="2">
-        <el-input v-model="hh" size='small' placeholder="户名称"></el-input>
+        <AreaSelect :value="xzq" @update="onAreaSelectChange" @keyup.enter.native="onSearchBtnClick"></AreaSelect>
       </el-col>
       <el-col :span="3">
-        <el-input v-model="cqzh" size='small' placeholder="产权证号"></el-input>
+        <el-input v-model="zbdm" size='small' placeholder="组别" @keyup.enter.native="onSearchBtnClick"></el-input>
+      </el-col>
+      <el-col :span="3">
+        <el-input v-model="zddm" size='small' placeholder="宗地号" @keyup.enter.native="onSearchBtnClick"></el-input>
+      </el-col>
+      <el-col :span="3">
+        <el-input v-model="xmmc" size='small' @keyup.enter.native="onSearchBtnClick" placeholder="项目名称"></el-input>
+      </el-col>
+      <el-col :span="3">
+        <el-input v-model="ldmc" size='small' placeholder="楼栋名称" @keyup.enter.native="onSearchBtnClick"></el-input>
+      </el-col>
+      <el-col :span="2">
+        <el-input v-model="hh" size='small' placeholder="户名称" @keyup.enter.native="onSearchBtnClick"></el-input>
+      </el-col>
+      <el-col :span="3">
+        <el-input v-model="cqzh" size='small' placeholder="产权证号" @keyup.enter.native="onSearchBtnClick"></el-input>
       </el-col>
       <el-col :span="1.2">
         <el-button type="primary" size='small' v-on:click="onSearchBtnClick">查询</el-button>
@@ -40,33 +40,44 @@
         </el-popover>
       </el-col>
     </el-row>
-    <el-row :gutter="10" style="margin-top: -5px;margin-right: -5px;margin-left: 7px;">
-      <el-col :xs="15" :sm="15" :md="15" :lg="15" :xl="15">
-        <SearchMap :searchValue="xmmc" :zoom="zoom" :type="type" :list="communities" :center="center"></SearchMap>
+    <!-- <div class="project-list" :class="{ active: cardOpen }">
+        <div class="proControl" @click="handleCardClick" >
+          <span><svg-icon :icon-class="cardOpen ? 'icon_open' : 'icon_close'"></svg-icon></span>
+        </div>
+        <project-list ref="proList" :projectInfo="projectInfo" @cardClick="handleCardClick"></project-list>
+      </div> -->
+    <div class="btn">
+      <!-- <el-button  icon="el-icon-d-arrow-right"  type="text" class="btn-topz" v-if="cardOpen"  @click="onSetWidthClick(false)"></el-button> -->
+      <el-button icon="el-icon-arrow-left" class="btn-topz" v-if="!cardOpen" @click="onSetWidthClick(true)"></el-button>
+    </div>
+    <el-row ref="row">
+      <el-col :span="mapWidth" ref="map" style="height: 100%">
+        <SearchMap :searchValue="searchValue" :zoom="zoom" :type="type" :list="communities" :center="center" :use="yt1"></SearchMap>
       </el-col>
-      <el-col :xs="9" :sm="9" :md="9" :lg="9" :xl="9">
+      <el-col :span="cardWidth" ref="card" class="card">
+        <el-button icon="el-icon-arrow-right" class="btn-topzR" v-if="cardOpen" @click="onSetWidthClick(false)"></el-button>
         <el-tabs type="border-card" v-if="type === 'house'">
           <el-tab-pane label="卡片模式">
-            <HouseCard :houselist="houseList" :selectable="selectable" @select="select"></HouseCard>
+            <HouseCard :houselist="houseList" :selectable="selectable" @select="select" :currentpage='1' @loacte="loacte"></HouseCard>
           </el-tab-pane>
           <el-tab-pane label="列表模式">
-            <HouseList :houselist="houseList" :selectable="selectable" @select="select"></HouseList>
+            <HouseList :houselist="houseList" :selectable="selectable" @select="select" :currentpage='1'></HouseList>
           </el-tab-pane>
         </el-tabs>
         <el-tabs type="border-card" v-if="type === 'building'">
           <el-tab-pane label="卡片模式">
-            <BuildingCard :buildinglist="buildingList" :selectable="selectable" @select="select" @house="house"></BuildingCard>
+            <BuildingCard :buildinglist="buildingList" :selectable="selectable" @select="select" @house="house" :currentpage='1' @loacte="loacte"></BuildingCard>
           </el-tab-pane>
           <el-tab-pane label="列表模式">
-            <BuildingList :buildinglist="buildingList" :selectable="selectable" @select="select" @house="house"></BuildingList>
+            <BuildingList :buildinglist="buildingList" :selectable="selectable" @select="select" @house="house" :currentpage='1'></BuildingList>
           </el-tab-pane>
         </el-tabs>
         <el-tabs type="border-card" v-if="type === 'project'">
           <el-tab-pane label="卡片模式">
-            <ProjectCard :projectlist="projectList" :selectable="selectable" @select="select" @building="building"></ProjectCard>
+            <ProjectCard :projectlist="projectList" :selectable="selectable" @select="select" @building="building" @loacte="loacte" :use="yt1" :currentpage='1'></ProjectCard>
           </el-tab-pane>
           <el-tab-pane label="列表模式">
-            <ProjectList :projectlist="projectList" :selectable="selectable" @select="select" @building="building"></ProjectList>
+            <ProjectList :projectlist="projectList" :selectable="selectable" @select="select" @building="building" :currentpage='1'></ProjectList>
           </el-tab-pane>
         </el-tabs>
       </el-col>
@@ -117,11 +128,12 @@ export default {
   },
   data() {
     return {
+      searchValue: '',
       center: { lng: 113.93965, lat: 22.518122 },
       type: 'project',
       zoom: 18,
       xzq: '',
-      yt1: '',
+      yt1: '住宅',
       zbdm: '',
       zddm: '',
       xmmc: '',
@@ -131,17 +143,28 @@ export default {
       buildingList: [],
       houseList: [],
       projectList: [],
-      communities: []
+      communities: [],
+      cardOpen: true,
+      mapWidth: 15,
+      cardWidth: 9
     }
   },
   mounted() {
+    this.setHeight()
+    window.onresize = () => {
+      this.setHeight()
+    }
     this.getProject()
   },
   methods: {
-    onAreaSelect(value) {
+    setHeight() {
+      this.$refs.row.$el.style.height = this.$refs.card.$el.style.height =
+        document.documentElement.clientHeight - 122 + 'px'
+    },
+    onAreaSelectChange(value) {
       this.xzq = value
     },
-    onPurposeSelect(value) {
+    onPurposeSelectChange(value) {
       this.yt1 = value
     },
     select(val) {
@@ -176,6 +199,7 @@ export default {
         } else {
           this.type = 'house'
           this.zoom = 20
+          this.searchValue = this.hh
           this.getHouse()
         }
       } else if (this.ldmc !== '') {
@@ -184,18 +208,20 @@ export default {
         } else {
           this.type = 'building'
           this.zoom = 19
+          this.searchValue = this.ldmc
           this.getBuilding()
         }
       } else {
         this.zoom = 18
         this.type = 'project'
+        this.searchValue = this.xmmc
         this.getProject()
       }
     },
     onClearBtnClick: function() {
       this.type = 'project'
       this.xzq = ''
-      this.yt1 = ''
+      this.yt1 = '住宅'
       this.zbdm = ''
       this.zddm = ''
       this.xmmc = ''
@@ -320,6 +346,31 @@ export default {
           lat: this.communities[0].y
         }
       })
+    },
+    loacte(val) {
+      this.center = {
+        lng: val.x,
+        lat: val.y
+      }
+      if (val.hasOwnProperty('hh')) {
+        // this.searchValue = val.hh
+        this.searchValue = val.ldmc
+      } else if (val.hasOwnProperty('ldmc')) {
+        this.searchValue = val.ldmc
+      } else {
+        this.searchValue = val.xmmc
+      }
+    },
+    onSetWidthClick(value) {
+      this.cardOpen = value
+      if (value) {
+        this.mapWidth = 15
+        this.cardWidth = 9
+      } else {
+        this.mapWidth = 24
+        this.cardWidth = 0
+      }
+      //  this.$refs.map.style.width = document.documentElement.clientWidth - 220 + 'px'
     }
   }
 }
@@ -333,8 +384,32 @@ export default {
   background: white;
 }
 .el-row {
-  margin-bottom: 20px;
   margin-top: 10px;
   height: 100%;
+}
+.btn-topz {
+  float: right;
+  margin-right: 20px;
+  position: relative;
+  z-index: 999;
+  transform: translateY(-60%);
+}
+.btn-topzR {
+  position: absolute;
+  // left: 0px;
+  top: 50%;
+  z-index: 999;
+  transform: translateY(-50%);
+  left: -15px;
+  width: 9px;
+}
+.btn {
+  position: absolute;
+  right: 10px;
+  top: 50%;
+}
+.card {
+  position: relative;
+  overflow-y: auto;
 }
 </style>

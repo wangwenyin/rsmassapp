@@ -1,22 +1,30 @@
 <template>
-  <div class="margin10" style="padding: 30px;" v-if="building">
+  <div class="margin10" style="padding: 30px;overflow: auto" v-if="building">
     <el-row>
       <el-col :span="24">
         <span class="title">{{ building.ldmc }} </span>
         <span class="title-small">{{ building.xmmc }} </span>
-        <template>
-          <el-radio v-model="radio" label="1">面积</el-radio>
-          <el-radio v-model="radio" label="2">房屋性质</el-radio>
-          <el-radio v-model="radio" label="3">户型</el-radio>
-          <el-radio v-model="radio" label="4">户型结构</el-radio>
-          <el-radio v-model="radio" label="5">户号</el-radio>
-        </template>
+        <el-radio-group v-model="gridType" size="small" class="right" @change="onGridTypeClick">
+          <el-radio-button label="网格"></el-radio-button>
+          <el-radio-button label="表格"></el-radio-button>
+        </el-radio-group>
       </el-col>
     </el-row>
-    <table class="table">
+    <table class="table" v-if="gridType==='网格'">
+      <tr style="height:40px">
+        <td colspan="100">
+        <template>
+          <el-radio v-model="radio" label="面积"></el-radio>
+          <el-radio v-model="radio" label="房屋性质"></el-radio>
+          <el-radio v-model="radio" label="户型"></el-radio>
+          <el-radio v-model="radio" label="户型结构"></el-radio>
+          <el-radio v-model="radio" label="户号"></el-radio>
+        </template>
+        </td>
+      </tr>
       <tr class="tr_title">
         <td class="td">
-          <div class="text">楼层\户型代码</div>
+          <div class="text">楼层</div>
         </td>
         <td class="td" v-for="o in (hxdmList)" :key="o">
           <span class="text">{{o}}</span>
@@ -28,15 +36,35 @@
         </td>
         <td class="td" style="height:35px" v-for="x in hxdmList" :key="x">
           <router-link v-for="(o,index) in item" :key="index" v-if="o.hxdm === x" :to="{ name:'house' ,query: { hdm: o.hdm }}" target="_blank">
-            <div class="text-n" v-show="radio==='1'">{{ o.jzmj }}</div>
-            <div class="text-n" v-show="radio==='2'">{{ o.fwxz }}</div>
-            <div class="text-n" v-show="radio==='3'">{{ o.hx }}</div>
-            <div class="text-n" v-show="radio==='4'">{{ o.hxjg }}</div>
-            <div class="text-n" v-show="radio==='5'">{{ o.hh }}</div>
+            <div class="text-n" v-show="radio==='面积'">{{ o.jzmj }}</div>
+            <div class="text-n" v-show="radio==='房屋性质'">{{ o.fwxz }}</div>
+            <div class="text-n" v-show="radio==='户型'">{{ o.hx }}</div>
+            <div class="text-n" v-show="radio==='户型结构'">{{ o.hxjg }}</div>
+            <div class="text-n" v-show="radio==='户号'">{{ o.hh }}</div>
           </router-link>
         </td>
       </tr>
     </table>
+    <el-row style="margin-top:20px">
+      <el-table :data="protogrincHouselist" size='mini' border v-if="gridType==='表格'">
+        <el-table-column width="50" type="index" label="编号" align="center"></el-table-column>
+        <el-table-column prop="hh" label="房号"> </el-table-column>
+        <el-table-column prop="hxdm" label="户型代码"></el-table-column>
+        <el-table-column prop="sjc" label="实际层"></el-table-column>
+        <el-table-column prop="jzmj" label="建筑面积"></el-table-column>
+        <el-table-column prop="hx" label="户型"></el-table-column>
+        <el-table-column prop="hxjg" label="户型结构"></el-table-column>
+        <el-table-column prop="fwxz" label="房屋性质"></el-table-column>
+        <el-table-column prop="fwyt2" label="用途细分"></el-table-column>
+        <el-table-column label="操作">
+          <template slot-scope="scope">
+            <router-link :to="{ name:'house' ,query: { hdm: scope.row.hdm }}" target="_blank">
+              <el-button type="text" size="small">详情</el-button>
+            </router-link>
+          </template>
+        </el-table-column>
+      </el-table>
+    </el-row>
   </div>
 </template>
 <script>
@@ -48,9 +76,11 @@ export default {
     return {
       housesList: [],
       building: null,
-      radio: '1',
+      radio: '面积',
       zcs: this.$route.query.zcs,
-      hxdmList: []
+      hxdmList: [],
+      gridType: '网格',
+      protogrincHouselist: []
     }
   },
   mounted() {
@@ -61,12 +91,12 @@ export default {
     getHouse() {
       var param = { lddm: this.$route.query.lddm }
       buildingsUnits(param).then(response => {
-        var houselist = response.data
+        this.protogrincHouselist = response.data
         var arr = new Array(this.zcs)
         for (var i = 0; i < this.zcs; i++) {
           arr[i] = []
-          houselist.forEach(element => {
-            if (element.sjc === i.toString()) {
+          this.protogrincHouselist.forEach(element => {
+            if (element.sjc === i.toString() && element.hxdm !== '' && element.hxdm !== null) {
               arr[i].push(element)
             }
             if (
@@ -133,6 +163,7 @@ export default {
   text-align: center;
 }
 .td {
-  width: 80px;
+ // width: 80px;
+  min-width: 120px;
 }
 </style>

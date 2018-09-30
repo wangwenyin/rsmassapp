@@ -1,15 +1,16 @@
 <template>
-<div class="Map" ref="Map" >
+<!-- <div class="Map" ref="Map" > -->
 <baidu-map class="baiduMap" ref="baiduMap" :center="center" :zoom="zoom" :map-click="false" :scroll-wheel-zoom="true">
       <bm-map-type :map-types="['BMAP_NORMAL_MAP', 'BMAP_HYBRID_MAP','BMAP_PERSPECTIVE_MAP']" anchor="BMAP_ANCHOR_TOP_LEFT"></bm-map-type>
       <SearchOverlay v-for="item in list" :key="item.id"
                    :position="{lng: item.x, lat: item.y}"
                    :data="item"
                    :type="type"
-                   :active="searchValue"
+                   :use="use"
+                   :activeValue="searchValue"
       ></SearchOverlay>
     </baidu-map>
-</div>
+<!-- </div> -->
 </template>
 <script>
 import BaiduMap from 'vue-baidu-map/components/Map/Map'
@@ -20,6 +21,10 @@ export default {
     type: {
       type: String,
       default: 'project'
+    },
+    use: {
+      type: String,
+      default: '住宅'
     },
     list: {
       type: Array,
@@ -37,7 +42,7 @@ export default {
     },
     searchValue: {
       type: String,
-      default: null
+      default: ''
     }
   },
   data() {
@@ -46,15 +51,16 @@ export default {
     }
   },
   mounted() {
-    this.setHeight()
-    // 屏幕适应大小
-    window.onresize = () => {
-      this.setHeight()
-    }
+    // this.setHeight()
+    // // 屏幕适应大小
+    // window.onresize = () => {
+    //   this.setHeight()
+    // }
   },
   methods: {
     setHeight() {
-      this.$refs.Map.style.height = document.documentElement.clientHeight - 190 + 'px'
+    //  this.$refs.Map.style.height = document.documentElement.clientHeight - 150 + 'px'
+      this.$refs.baiduMap.$el.style.height = document.documentElement.clientHeight - 132 + 'px'
     }
   }
 }

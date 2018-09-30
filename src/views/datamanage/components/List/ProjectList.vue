@@ -2,7 +2,7 @@
 <div class="scroll">
   <el-table
     :data="projectlist.slice((currentpage-1)*pagesize,currentpage*pagesize)"
-    style="width: 100%"  border height="500"
+    style="width: 100%"  border
     @row-click="openLink"
     :row-class-name="tableRowClassName">
     <el-table-column width="50"
@@ -56,10 +56,10 @@
       <p> {{ scope.row.jzsd | formatDate}}</p>
        </template>
     </el-table-column>
-       <el-table-column label="操作"  fixed="right" v-if="selectable===true">
+       <el-table-column label="操作"  fixed="right">
           <template slot-scope="scope">
             <el-button size="mini" type="text" @click.stop="building(scope.row)">楼栋</el-button>
-            <el-button size="mini" type="text" @click.stop="select(scope.row)">选择</el-button>
+            <el-button size="mini" type="text"  v-if="selectable===true" @click.stop="select(scope.row)">选择</el-button>
           </template>
         </el-table-column>
   </el-table>
@@ -88,18 +88,20 @@ export default {
     },
     pagesize: {
       type: Number,
-      default: 10
+      default: 20
     },
     selectable: {
       type: Boolean,
       default: false
+    },
+    currentpage: {
+      type: Number,
+      default: 1
     }
   },
-  mounted() {
-    this.setHeight()
-    // 屏幕适应大小
-    window.onresize = () => {
-      this.setHeight()
+  data() {
+    return {
+      listHight: 1000
     }
   },
   methods: {
@@ -127,16 +129,9 @@ export default {
         query: { xmdm: row.xmdm }
       })
       window.open(routerData.href, '_blank')
-    },
-    setHeight() {
-      this.$refs.scroll.style.height = document.documentElement.clientHeight - 260 + 'px'
     }
   },
-  data() {
-    return {
-      currentpage: 1
-    }
-  },
+
   filters: {
     formatDate(currentDate) {
       var date = new Date(currentDate)
@@ -151,7 +146,9 @@ export default {
 </script>
 <style rel="stylesheet/scss" lang="scss" scoped>
  .scroll{
-    overflow-y: auto;
-    overflow-x: auto
+   height:  100%;
+   // overflow-y: auto;
+    overflow-x: auto;
+    overflow-y: hidden;
   }
 </style>

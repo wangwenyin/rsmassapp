@@ -1,9 +1,9 @@
 <template>
-<div style="margin-left: -3px;">
-  <el-tag v-for="t in tagslist" :key="t" v-if="t!==''" :size="size" :type="setType(t)">
+<span style="margin-left: -3px;">
+     <el-tag v-for="t in this.tags.split(';')" :key="t" v-if="t!==''"  :size="size"  :type="setType(t)"> 
        {{t}}
   </el-tag> 
-</div> 
+</span> 
 </template>
 <style>
  .el-tag--mini
@@ -17,7 +17,7 @@
     props: {
       tags: {
         type: String,
-        default: null
+        default: ''
       },
       size:
       {
@@ -27,11 +27,8 @@
     },
     data() {
       return {
-        tagslist: null
+  
       }
-    },
-    mounted() {
-      this.converData()
     },
     methods: {
       setType(t) {
@@ -45,9 +42,6 @@
           return 'warning'
         }
         return null
-      },
-      converData() {
-        this.tagslist = this.tags.split(';')
       }
     }
   }

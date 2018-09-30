@@ -3,7 +3,7 @@
     <div class="caseSearch content" @click="isShowMating=false">
       <div class="search-top" ref="searchTop">
         <el-row :gutter="10" style="padding: 10px">
-          <el-col :span="4">
+          <el-col :span="3">
             <el-select v-model="usageValue" @change="handleUsageChange" placeholder="请选择物业用途" size="small">
               <el-option
                 v-for="item in usages"
@@ -12,7 +12,7 @@
               </el-option>
             </el-select>
           </el-col>
-          <el-col :span="4">
+          <el-col :span="3">
             <el-select v-model="typeValue" @change="handleTypeValueChange" placeholder="请选择类型值" size="small">
               <el-option
                 v-for="item in typeValues"
@@ -21,7 +21,7 @@
               </el-option>
             </el-select>
           </el-col>
-          <el-col :span="4">
+          <el-col :span="3">
             <el-select v-model="caseTypeList" multiple @change="handleTypeChange" placeholder="请选择案列类型" size="small">
               <el-option
                 v-for="item in caseTypes"
@@ -33,10 +33,7 @@
           <el-col :span="6">
             <date-picker @dateChange="handleDateChange" :noDefaultValue="noDefaultValue" ref="datePicker"></date-picker>
           </el-col>
-          <el-col :span="1.2" class="fr">
-            <el-button type="primary" size="small" @click="searchCase">查询</el-button>
-          </el-col>
-          <el-col :span="4" class="fr">
+          <el-col :span="4" style="margin-left: 10px">
             <el-input
               placeholder="请输入项目名称"
               size="small"
@@ -44,6 +41,9 @@
               @keyup.enter.native="searchCase"
               clearable>
             </el-input>
+          </el-col>
+          <el-col :span="1.2">
+            <el-button type="primary" size="small" @click="searchCase">查询</el-button>
           </el-col>
         </el-row>
       </div>
@@ -155,7 +155,6 @@
             <el-tab-pane label="娱乐"></el-tab-pane>
           </el-tabs>
         </bm-control>
-        <bm-local-search :keyword="keyword" :auto-viewport="true"></bm-local-search>
         <div v-if="isShowBoundary" v-for="regionName in regionList" :key="regionName.id">
           <bm-boundary :name="regionName" :strokeWeight="2" strokeColor="#409EFF" :strokeOpacity="0.9" :fillOpacity="0.1" fillColor="#409EFF"></bm-boundary>
         </div>
@@ -163,6 +162,8 @@
         <case-overlay v-for="item in communities" :key="item.xmdm"
           :position="{lng: item.x, lat: item.y}"
           :data="item"
+          :keyword="keyword"
+          :typeValue="typeValue"
           :zoom="zoom"
           @over="showBoundary"
           @out="hideBoundary"
@@ -171,18 +172,25 @@
           ref="caseOverlay"
         ></case-overlay>
       </baidu-map>
-      <div class="project-detail-list" :class="{ active: isActive }" >
+      <div class="project-list" :class="{ active: isProActive }">
+        <div class="proControl" @click="handleProControlClick" v-if="projectInfo.length">
+          <span><svg-icon :icon-class="isProActive ? 'icon_open' : 'icon_close'"></svg-icon></span>
+        </div>
+        <project-list ref="proList" :projectInfo="projectInfo" @cardClick="handleCardClick"></project-list>
+      </div>
+      <div ref="proDetailList" class="project-detail-list" :class="{ active: isCaseActive }">
         <div class="control" @click="handleControlClick" v-if="projectDetailList.length">
-          <span><svg-icon :icon-class="isActive ? 'icon_open' : 'icon_close'"></svg-icon></span>
+          <span><svg-icon :icon-class="isCaseActive ? 'icon_open' : 'icon_close'"></svg-icon></span>
         </div>
         <div class="base_info" v-if="projectDetailList.length">
           <router-link :to="{ name: 'project', query: { xmdm: projectData.xmdm } }" target="_blank">
             <div class="name">
-              <span>{{projectData.xmmc}}</span><span>{{projectDetailList[0].sj.slice(0, 4)}}年</span>
+              <span>{{projectData.xmmc}}</span><span>{{projectData.avg_price}}元/㎡</span>
             </div>
           </router-link>
-          <div class="price">
-            {{projectData.avg_price}}元/平
+          <div class="year" style="overflow: hidden">
+            <span>{{projectDetailList[0].sj.slice(0, 4)}}年</span>
+            <span @click="onDetailClick">详情</span>
           </div>
         </div>
         <div class="detail-containner" ref="detailContainner">
@@ -190,19 +198,18 @@
             <div class="detail_item" v-for="item in projectDetailList" :key="item.aldm">
               <div class="detail-top">
                 <span></span>
-                <span>{{item.sj}}</span>
-                <span>{{item.ally}}</span>
+                <span>{{item.hh}}</span>
+                <span>{{item.ldmc}}</span>
+                <span>{{item.dj}}元/㎡</span>
               </div>
               <div class="detail-bottom">
                 <div>
-                  <span>{{item.ldmc}}</span>
-                  <span>{{item.hh}}</span>
                   <span>{{item.lc}}楼</span>
-                  <span>{{item.hx}}</span>
-                </div>
-                <div>
-                  <span>{{item.dj}}元/㎡</span>
+                  <span>|</span>
                   <span>{{item.jzmj}}㎡</span>
+                  <span>|</span>
+                  <span>{{item.hx}}</span>
+                  <span>{{item.sj}}</span>
                 </div>
               </div>
             </div>
@@ -214,13 +221,14 @@
 </template>
 
 <script>
-  import { getXzqs, getProjects, getJdbs, getCases } from '@/api/caseSearch'
+  import { getXzqs, getProjects, getProjectList, getJdbs, getCases } from '@/api/caseSearch'
   import BaiduMap from 'vue-baidu-map/components/Map/Map'
   import CaseOverlay from '../components/caseOverlay'
+  import ProjectList from '../components/ProjectList'
   import DatePicker from '@/views/pricereassess/components/DateTimePicker'
 
   export default {
-    components: { BaiduMap, CaseOverlay, DatePicker },
+    components: { BaiduMap, CaseOverlay, ProjectList, DatePicker },
     data() {
       return {
         center: { lng: 113.940981, lat: 22.518324 },
@@ -243,11 +251,13 @@
         keyword: '',
         searchValue: '',
         projectList: [],
+        projectInfo: [],
         searchedProList: [],
         communities: [],
         projectDetailList: [],
         projectData: null,
-        isActive: false,
+        isCaseActive: false,
+        isProActive: false,
         // 需要后台给对应评估分区的pathList,处理成pathLists
         pathList: [
           { lng: 113.933404, lat: 22.526177 },
@@ -312,7 +322,8 @@
     methods: {
       getParams() {
         const params = {
-          allx: this.caseTypeList.join('') + this.typeValue,
+          allx: this.caseTypeList.join(','),
+          jglx: this.typeValue,
           yt: this.usageValue,
           qssj: this.$refs.datePicker.value[0],
           zzsj: this.$refs.datePicker.value[1]
@@ -357,8 +368,10 @@
       },
       // 获取项目数据详情
       getCaseDetailList(xmdm) {
+        this.getParams()
         const params = Object.assign({ xmdm }, this.params)
         getCases(params).then(res => {
+          console.log(res.data)
           this.projectDetailList = res.data
         })
       },
@@ -374,29 +387,64 @@
         this.getProjects()
       },
       handleSearchCase() {
-        const value = this.searchValue
-        const caseOverlayList = this.$refs.caseOverlay
-        // 点击搜索后让对应marker高亮
-        for (let i = 0; i < caseOverlayList.length; i++) {
-          caseOverlayList[i].change(value)
-        }
+        // marker高亮
+        this.keyword = this.searchValue
         // 过滤
         this.searchedProList = this.projectList.filter(item => {
-          return item.xmmc.includes(value)
+          return item.xmmc.includes(this.searchValue)
         })
-        // 显示案例信息卡
+
+        // 以查询到的marker为中心点
+        if (this.searchedProList.length) {
+          this.center = { lng: this.searchedProList[0].x, lat: this.searchedProList[0].y }
+        } else {
+          this.$message('很遗憾, 未能查询到案例！')
+          return
+        }
+
         if (this.searchedProList.length === 1) {
+          // 显示案例信息卡
           this.handleMarkerClick(...this.searchedProList)
         } else {
-          this.isActive = false
+          // 显示项目信息卡
+          this.isCaseActive = false
+          this.isProActive = true
+          this.projectDetailList = []
+          getProjectList({ xmmc: this.searchValue }).then(res => {
+            const data = res.data
+            const projectData = this.handleAssignData(data)
+            this.projectInfo = projectData
+          })
         }
-        // 以查询到的marker为中心点
-        this.searchedProList.length ? (this.center = { lng: this.searchedProList[0].x, lat: this.searchedProList[0].y }) : this.$message('很遗憾, 未能查询到案例！')
+      },
+      // 合并project数据(dataproject缺少均价和案例数)
+      handleAssignData(data) {
+        const projectData = []
+        const serchedData = this.searchedProList
+        for (let i = 0; i < data.length; i++) {
+          let isSameName = false
+          for (let j = 0; j < serchedData.length; j++) {
+            if (data[i].xmmc === serchedData[j].xmmc) {
+              const newData = Object.assign({}, data[i], serchedData[j])
+              projectData.push(newData)
+              isSameName = true
+            }
+          }
+          if (!isSameName) {
+            projectData.push(data[i])
+          }
+        }
+        return projectData
+      },
+      // 点击card
+      handleCardClick(item) {
+        this.handleMarkerClick(item)
       },
       // 点击marker
       handleMarkerClick(item) {
         if (this.zoom > 15) {
-          this.isActive = true
+          this.isCaseActive = true
+          this.isProActive = false
           this.projectData = item
           this.getCaseDetailList(item.xmdm)
         } else if (this.zoom > 13 && this.zoom < 16) {
@@ -420,12 +468,16 @@
         } else {
           this.caseTypes = ['交易', '挂牌', '调查']
         }
-        this.typeValue = value
-        this.getProjects()
+        this.getDataByZoom()
       },
+      // 复选框
       handleTypeChange(value) {
-        this.caseType = value
-        this.getProjects()
+        if (!value.length) {
+          return
+        } else {
+          this.caseTypeList = value
+        }
+        this.getDataByZoom()
       },
       handleUsageChange(value) {
         this.usageValue = value
@@ -435,7 +487,27 @@
         this.getProjects()
       },
       handleControlClick() {
-        this.isActive = !this.isActive
+        this.isCaseActive = !this.isCaseActive
+      },
+      handleProControlClick() {
+        this.isProActive = !this.isProActive
+      },
+      onDetailClick() {
+        let proData, params
+        // 获取最新params
+        this.getParams()
+        if (this.projectData) {
+          params = Object.assign({}, this.params, {
+            xmdm: this.projectData.xmdm
+          })
+          proData = Object.assign({}, this.projectData, {
+            typeValue: this.typeValue,
+            caseTypeList: this.caseTypeList,
+            params: params
+          })
+          localStorage.setItem('proData', JSON.stringify(proData))
+        }
+        this.$router.push({ name: 'CaseDetail' })
       },
       addId(list) {
         list = list.map((item, index) => {
@@ -465,6 +537,15 @@
       mapReady() {
         // this.setMapCenter()
       },
+      getDataByZoom() {
+        if (this.zoom > 15) {
+          this.getProjects()
+        } else if (this.zoom > 13 && this.zoom < 16) {
+          this.getJdbs()
+        } else {
+          this.getXzqs()
+        }
+      },
       // 根据zoom的改变,请求不同的数据
       zoomChange({ type, target }) {
         this.zoom = target.Oa
@@ -482,7 +563,7 @@
         const clientHeight = document.documentElement.clientHeight
         const topHeight = this.$refs.searchTop.offsetHeight + 50
         if (this.$refs.baiduMap) {
-          this.$refs.baiduMap.$el.style.height = clientHeight - topHeight + 'px'
+          this.$refs.baiduMap.$el.style.height = this.$refs.proList.$el.style.height = this.$refs.proDetailList.style.height = clientHeight - topHeight + 'px'
         }
       },
       // 设置地图中心点
@@ -566,16 +647,42 @@
         }
       }
     }
-    .project-detail-list {
+    .project-list {
       position: absolute;
-      right: -335px;
-      top: 20%;
-      width: 335px;
-      height: 413px;
-      padding: 15px 0 15px 15px;
+      right: -30%;
+      bottom: 0;
+      width: 30%;
+      min-width: 400px;
       transition: right .5s;
       background: #fff;
       border-radius: 25px 0px 0px 25px;
+      &.active {
+        right: 0;
+      }
+      .proControl {
+        position: absolute;
+        left: -30px;
+        top: 50%;
+        width: 30px;
+        height: 50px;
+        background-color: #fff;
+        border-top-left-radius: 4px;
+        border-bottom-left-radius: 4px;
+        box-shadow: 0 0 2px rgba(0,0,0,0.3);
+        line-height: 50px;
+        text-align: center;
+        transform: translateY(-25px);
+      }
+    }
+    .project-detail-list {
+      position: absolute;
+      right: -400px;
+      bottom: 0;
+      width: 400px;
+      height: 728px;
+      padding: 15px 0 15px 15px;
+      transition: right .5s;
+      background: #fff;
       &.active {
         right: 0;
       }
@@ -597,25 +704,33 @@
         padding: 10px 22px;
         border-bottom: 1px solid #eee;
         .name {
-          margin-bottom: 10px;
+          font-size: 24px;
           span:first-child {
-            margin-right: 10px;
             color: #011938;
-            font-size: 24px;
           }
           span:last-child {
-            color: #011938;
-            font-size: 14px;
+            float: right;
+            color: red;
           }
         }
-        .price {
-          color: #011938;
-          font-size: 18px;
+        .year {
+          margin-top: 20px;
+          font-size: 14px;
+          span:first-child {
+            float: left;
+            color: #011938;
+          } 
+          span:last-child {
+            float: right;
+            color: #409EFF;
+            cursor: pointer;
+          }
         }
       }
       .detail-containner {
         width: 100%;
-        height: 80%;
+        height: 90%;
+        margin-top: 20px;
         overflow: auto;
         .detail_item {
           margin: 15px 0 20px 0;
@@ -634,20 +749,33 @@
               border-radius: 50%;
               background-color: #409EFF;
             }
+            span:nth-child(2) {
+              font-size: 20px
+            }
+            span:nth-child(3) {
+              font-weight: bold;
+            }
+            span:nth-child(4) {
+              float: right;
+              color: red
+            }
           }
           .detail-bottom {
             float: right;
             width: 96%;
-            padding: 10px 0 10px 15px;
+            padding: 10px 15px;
             border-radius: 20px 0px 0px 20px;
             background-color: #eef5f9;
-            div:first-child {
+            div {
               margin-bottom: 5px
-            }
-            span {
-              margin-right: 15px;
-              color: #011938;
-              font-size: 16px;
+              span {
+                margin-right: 15px;
+                color: #011938;
+                font-size: 16px;
+              }
+              span:last-child {
+                float: right;
+              }
             }
           }
         }

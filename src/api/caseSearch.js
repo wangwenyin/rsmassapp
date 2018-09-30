@@ -44,3 +44,22 @@ export function getUsers(params) {
     params
   })
 }
+
+// 根据项目代码查询其历次评估价格(折线图数据)
+export function getBasePrice(params) {
+  return request({
+    url: '/data/project/value',
+    method: 'get',
+    params
+  })
+}
+
+// 查询项目列表信息(ProjectList数据)
+export function getProjectList(params) {
+  return request({
+    url: '/data/projects',
+    method: 'get',
+    params
+  })
+}
+

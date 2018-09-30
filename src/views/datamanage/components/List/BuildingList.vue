@@ -2,7 +2,7 @@
 <div class="scroll">
   <el-table
     :data="buildinglist.slice((currentpage-1)*pagesize,currentpage*pagesize)"
-    style="width: 100%"  border height="500"
+    style="width: 100%"  border 
     @row-click="openLink"
     :row-class-name="tableRowClassName">
     <el-table-column width="50"
@@ -57,10 +57,10 @@
       <p> {{ scope.row.jzsd | formatDate}}</p>
        </template>
     </el-table-column>
-      <el-table-column label="操作"  fixed="right" v-if="selectable===true">
+      <el-table-column label="操作"  fixed="right">
           <template slot-scope="scope">
             <el-button size="mini" type="text" @click.stop="house(scope.row)">户</el-button>
-            <el-button size="mini" type="text" @click.stop="select(scope.row)">选择</el-button>
+            <el-button size="mini" type="text"  v-if="selectable===true" @click.stop="select(scope.row)">选择</el-button>
           </template>
         </el-table-column>
   </el-table>
@@ -83,25 +83,22 @@ export default {
       type: Array,
       default: []
     },
-    pagesize: {
-      type: Number,
-      default: 10
-    },
     selectable: {
       type: Boolean,
       default: false
+    },
+    currentpage: {
+      type: Number,
+      default: 1
+    },
+    pagesize: {
+      type: Number,
+      default: 20
     }
   },
   data() {
     return {
-      currentpage: 1
-    }
-  },
-  mounted() {
-    this.setHeight()
-    // 屏幕适应大小
-    window.onresize = () => {
-      this.setHeight()
+
     }
   },
   methods: {
@@ -129,9 +126,6 @@ export default {
         query: { lddm: row.lddm }
       })
       window.open(routerData.href, '_blank')
-    },
-    setHeight() {
-      this.$refs.scroll.style.height = document.documentElement.clientHeight - 260 + 'px'
     }
   },
   filters: {

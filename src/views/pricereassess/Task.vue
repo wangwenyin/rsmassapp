@@ -290,7 +290,7 @@ export default {
       console.log(row, index)
       switch (row.dqjd) {
         case '0':
-          this.$router.push({ name: 'Audit' })
+          this.$router.push({ name: 'DataAudit' })
           break
         case '1':
           this.$router.push({ name: 'Survey' })
@@ -299,10 +299,10 @@ export default {
           this.$router.push({ name: 'Survey' })
           break
         case '3':
-          this.$router.push({ name: 'Appraise' })
+          this.$router.push({ name: 'PriceAppraise' })
           break
         default:
-          this.$router.push({ name: 'Result' })
+          this.$router.push({ name: 'ResultAudit' })
       }
       this.storeData(index)
     },

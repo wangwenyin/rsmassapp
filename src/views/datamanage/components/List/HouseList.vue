@@ -2,7 +2,7 @@
 <div class="scroll">
   <el-table
     :data="houselist.slice((currentpage-1)*pagesize,currentpage*pagesize)"
-    style="width: 100%"  border height="500"  @row-click="openLink"
+    style="width: 100%"  border   @row-click="openLink"
     :row-class-name="tableRowClassName">
     <el-table-column width="50"
       type="index"
@@ -86,23 +86,19 @@ export default {
     },
     pagesize: {
       type: Number,
-      default: 10
+      default: 20
     },
     selectable: {
       type: Boolean,
       default: false
+    }, currentpage: {
+      type: Number,
+      default: 1
     }
   },
   data() {
     return {
-      currentpage: 1
-    }
-  },
-  mounted() {
-    this.setHeight()
-    // 屏幕适应大小
-    window.onresize = () => {
-      this.setHeight()
+
     }
   },
   methods: {

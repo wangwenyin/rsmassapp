@@ -25,6 +25,14 @@
         type: Number,
         default: 12
       },
+      keyword: {
+        type: String,
+        default: ''
+      },
+      typeValue: {
+        type: String,
+        default: ''
+      },
       selectable: {
         type: Boolean,
         default: false
@@ -36,30 +44,13 @@
         hasClick: false
       }
     },
-    watch: {
-      position: {
-        handler() {
-          if (this.$refs.customOverlay !== null) {
-            this.$refs.customOverlay.reload()
-          }
-        },
-        // 深度监视
-        deep: true
-      }
-    },
-    created() {
-      // this.tableData = this.caseList.filter(item => {
-      //   return this.data.xmmc === item.xmmc
-      // })
-      // 处理caseNum和平均单价
-      // this.getPriceAndNum()
-    },
     computed: {
       getText() {
         if (this.zoom > 15) {
-          return this.data.xmmc + ' ' + (this.data.avg_price / 10000).toFixed(1) + '万' + ' ' + this.data.alsl + '个'
+          // 租金的值在1000以内
+          return this.data.xmmc + ' ' + (this.typeValue === '价格' ? ((this.data.avg_price / 10000).toFixed(1) + '万') : (this.data.avg_price + '元')) + ' ' + this.data.alsl + '个'
         } else {
-          return this.data.name + '<br>' + (this.data.avg_price / 10000).toFixed(1) + '万' + '<br>' + this.data.alsl + '套'
+          return this.data.name + '<br>' + (this.typeValue === '价格' ? ((this.data.avg_price / 10000).toFixed(1) + '万') : (this.data.avg_price + '元')) + '<br>' + this.data.alsl + '套'
         }
       },
       xzqMarkerClass() {
@@ -123,9 +114,20 @@
         const pixel = map.pointToOverlayPixel(point)
         el.style.left = pixel.x - 60 + 'px'
         el.style.top = pixel.y - 20 + 'px'
+      }
+    },
+    watch: {
+      position: {
+        handler() {
+          if (this.$refs.customOverlay !== null) {
+            this.$refs.customOverlay.reload()
+          }
+        },
+        // 深度监视
+        deep: true
       },
-      change(value) {
-        this.data.xmmc.indexOf(value) > -1 ? this.active = true : this.active = false
+      keyword(value) {
+        this.data.xmmc.includes(value) ? this.active = true : this.active = false
       }
     }
   }

@@ -10,7 +10,9 @@
           <div>
             <div class="bottom30">
               <span class="title">{{ project.xmmc }} </span>
-              <span class="val">{{ project.xzq }}&nbsp;&nbsp;|&nbsp;&nbsp;{{ project.jdb}}</span>
+              <el-radio-group v-model="use" size="mini">
+                <el-radio class="useradio" v-for="item in options" v-if="item!==''" :label="item" :key="item"></el-radio>
+              </el-radio-group>
               <span>
                 <router-link :to="{ name:'3DMap' ,query: { id: project.xmdm } }" target="_blank">
                   <svg-icon icon-class="谷歌地球"></svg-icon>
@@ -23,67 +25,61 @@
               </div>
             </div>
             <div>
-              <el-row>
+              <el-row class="high">
                 <el-col :span="24">
-                  <span class="con">项目编号</span>
-                  <span class="val">{{project.xmdm}}</span>
+                  <span class="con">行&nbsp;政&nbsp;区</span>
+                  <span class="val">{{ project.xzq }}&nbsp;&nbsp;|&nbsp;&nbsp;{{ project.jdb}}</span>
                 </el-col>
               </el-row>
-              <el-row>
+              <el-row class="high">
                 <el-col :span="24">
                   <span class="con">坐 &nbsp;&nbsp; &nbsp;&nbsp; 落</span>
                   <span class="val">{{project.xmzl}}</span>
                 </el-col>
               </el-row>
-              <el-row>
-                <el-col :span="24">
+              <el-row class="high">
+                <el-col :span="14">
+                  <span class="con">竣工日期</span>
+                  <span class="val">{{project.jgrq| formatDate}}</span>
+                </el-col>
+                <el-col :span="10">
                   <span class="con">宗 &nbsp;地 &nbsp;号</span>
                   <span class="val">{{project.zddm}}</span>
                 </el-col>
               </el-row>
-              <el-row>
-                <el-col :span="24">
-                  <span class="con">竣工日期</span>
-                  <span class="val">{{project.jgrq| formatDate}}</span>
-                </el-col>
-              </el-row>
-              <el-row>
-                <el-col :span="15">
+              <el-row class="high">
+                <el-col :span="14">
                   <span class="con">占地面积</span>
                   <span class="val">{{project.zdmj}}</span>
                 </el-col>
-                <el-col :span="9">
-                  <span class="con">用地面积</span>
-                  <span class="val">{{project.ydmj}}</span>
-                </el-col>
-              </el-row>
-              <el-row>
-                <el-col :span="15">
+                <el-col :span="10">
                   <span class="con">建筑面积</span>
                   <span class="val">{{project.jzmj}}</span>
                 </el-col>
-                <el-col :span="9">
-                  <span class="con">总停车位</span>
-                  <span class="val">{{project.zcws}}</span>
-                </el-col>
               </el-row>
-              <el-row>
-                <el-col :span="15">
-                  <span class="con">总&nbsp;栋&nbsp;数</span>
+              <el-row class="high">
+                <el-col :span="14">
+                  <span class="con">楼栋数量</span>
                   <span class="val">{{project.zlds}}</span>
                 </el-col>
-                <el-col :span="9">
-                  <span class="con">总&nbsp;户&nbsp;数</span>
+                <el-col :span="10">
+                  <span class="con">房屋数量</span>
                   <span class="val">{{project.zhs}}</span>
                 </el-col>
               </el-row>
-              <el-row>
+              <el-row class="high">
+                <el-col :span="24">
+                  <span class="con">停&nbsp;车&nbsp;位</span>
+                  <span class="val">{{project.zcws}}</span>
+                </el-col>
+              </el-row>
+              <el-row class="high">
                 <el-col :span="24">
                   <span class="con">开&nbsp;发&nbsp;商</span>
                   <span class="val">{{project.kfsmc}}</span>
                 </el-col>
               </el-row>
-              <el-row>
+              <el-row class="high">
                 <el-col :span="24">
                   <span class="con">物业公司</span>
                   <span class="val">{{project.wygsmc}}</span>
@@ -96,24 +92,32 @@
       <div id="2f"></div>
       <el-row class="row-t">
         <span class="title-small">楼栋列表 </span>
+        <el-radio-group v-model="isalluse" size="small" class="right" @change="onIsAllUseClick">
+          <el-radio-button label="部分"></el-radio-button>
+          <el-radio-button label="全部"></el-radio-button>
+        </el-radio-group>
       </el-row>
       <el-row>
-        <el-table :data="bulidingsList" border max-height="350">
+        <el-table :data="showBulidingsList" border max-height="350" size='mini'>
           <el-table-column width="50" type="index" label="序号" align="center"></el-table-column>
-          <el-table-column prop="ldmc" label="名称"></el-table-column>
-          <el-table-column prop="jzmj" label="建筑面积"></el-table-column>
+          <el-table-column prop="ldmc" min-width="150" label="楼栋名称"></el-table-column>
           <el-table-column prop="zcs" label="总层数"></el-table-column>
-          <el-table-column prop="zhs" label="总户数"></el-table-column>
           <el-table-column prop="ldxz" label="楼栋性质"></el-table-column>
           <el-table-column prop="hgyt" label="涵盖用途">
             <template slot-scope="scope">
               <useTag :tags="scope.row.hgyt"></useTag>
             </template>
           </el-table-column>
-          <el-table-column label="备注">
+           <el-table-column prop="jgrq" label="竣工日期"></el-table-column>
+          <el-table-column prop="jzmj" label="建筑面积"></el-table-column>
+          <el-table-column prop="zddm" label="宗地号"></el-table-column>
+          <el-table-column label="操作">
             <template slot-scope="scope">
               <router-link :to="{ name:'building' ,query: { lddm: scope.row.lddm } }" target="_blank">
                 <el-button type="text" size="small">详情</el-button>
+              </router-link>
+              <router-link :to="{ name:'housegrid' ,query: { lddm: scope.row.lddm,zcs:scope.row.zcs }}" target="_blank">
+                <el-button type="text" size="small">房屋</el-button>
               </router-link>
             </template>
           </el-table-column>
@@ -125,164 +129,137 @@
       </el-row>
       <el-row>
         <el-tabs type="border-card" v-if="factor!==null">
-          <el-tab-pane label="住宅" v-if="project.hgyt.indexOf('住宅') !== -1">
+          <el-tab-pane label="指标因素">
             <el-row :gutter="10">
               <el-col :span="8">
-                <div class="title-mini">地理位置</div>
+                <div class="title-mini">区位因素</div>
                 <p>
-                  <span class="con13">区域中心距离:</span>
+                  <span class="con13">功能聚集程度:</span>
                   <span class="val1">
-                    <factors-rate :value="factor.qyzxjl"></factors-rate>
+                    <factors-rate :value="factor.gnjjcd"></factors-rate>
                   </span>
                 </p>
-                <p>
+                <p v-if="use.indexOf('商业') !== -1||use.indexOf('办公') !== -1||use.indexOf('工业') !== -1">
                   <span class="con13">区域繁华程度:</span>
                   <span class="val1">
                     <factors-rate :value="factor.qyfhcd"></factors-rate>
                   </span>
                 </p>
-                <p>
-                  <span class="con13">规划合理程度:</span>
+                <p v-if="use.indexOf('工业') !== -1">
+                  <span class="con13">道路通达程度:</span>
                   <span class="val1">
-                    <factors-rate :value="factor.ghhlcd"></factors-rate>
+                    <factors-rate :value="factor.qyfhcd"></factors-rate>
                   </span>
                 </p>
-              </el-col>
-              <el-col :span="8">
-                <p class="title-mini">交通条件</p>
-                <p>
+                <p v-if="use.indexOf('商业') !== -1||use.indexOf('办公') !== -1||use.indexOf('住宅') !== -1">
                   <span class="con13">地铁便捷程度:</span>
                   <span class="val1">
                     <factors-rate :value="factor.dtbjcd"></factors-rate>
                   </span>
                 </p>
-                <p>
+                <p v-if="use.indexOf('商业') !== -1||use.indexOf('办公') !== -1||use.indexOf('住宅') !== -1">
                   <span class="con13">公交便捷程度:</span>
                   <span class="val1">
                     <factors-rate :value="factor.gjbjcd"></factors-rate>
                   </span>
                 </p>
-                <p>
-                  <span class="con13">道路通达程度:</span>
+                <p v-if="use.indexOf('工业') !== -1">
+                  <span class="con13">对外交通便捷程度:</span>
                   <span class="val1">
-                    <factors-rate :value="factor.dltdcd"></factors-rate>
+                    <factors-rate :value="factor.dwjtbjcd"></factors-rate>
                   </span>
                 </p>
-              </el-col>
-              <el-col :span="8">
-                <p class="title-mini">环境景观</p>
-                <p>
+                <p v-if="use.indexOf('住宅') !== -1||use.indexOf('办公') !== -1">
                   <span class="con13">周边景观:</span>
                   <span class="val1">
                     <factors-rate :value="factor.zbjg"></factors-rate>
                   </span>
                 </p>
-                <p>
-                  <span class="con13">环境质量:</span>
-                  <span class="val1">
-                    <factors-rate :value="factor.hjzl"></factors-rate>
-                  </span>
-                </p>
               </el-col>
-            </el-row>
-            <el-row :gutter="10">
-              <el-col :span="8">
-                <p class="title-mini">教育水平</p>
-                <p>
-                  <span class="con13">教育设施完备度:</span>
-                  <span class="val1">
-                    <factors-rate :value="factor.jyptsswbcd"></factors-rate>
-                  </span>
-                </p>
-                <p>
-                  <span class="con13">小学学区学位:</span>
-                  <span class="val1">
-                    <factors-rate :value="factor.xxxqxw"></factors-rate>
-                  </span>
-                </p>
-                <p>
-                  <span class="con13">初中学区学位:</span>
-                  <span class="val1">
-                    <factors-rate :value="factor.czxqxw"></factors-rate>
-                  </span>
-                </p>
+              <el-col :span="8" v-if="use.indexOf('住宅') !== -1">
+                <p style="margin-top:30px">
+                  <p>
+                    <span class="con13">小学学位水平:</span>
+                    <span class="val1">
+                      <factors-rate :value="factor.xxxqxw"></factors-rate>
+                    </span>
+                  </p>
+                  <p>
+                    <span class="con13">初中学位水平:</span>
+                    <span class="val1">
+                      <factors-rate :value="factor.czxqxw"></factors-rate>
+                    </span>
+                  </p>
+                  <p>
+                    <span class="con13">生活设施完备程度:</span>
+                    <span class="val1">
+                      <factors-rate :value="factor.shptsswbcd"></factors-rate>
+                    </span>
+                  </p>
+                  <p>
+                    <span class="con13">娱乐设施完备程度:</span>
+                    <span class="val1">
+                      <factors-rate :value="factor.xxylsswbcd"></factors-rate>
+                    </span>
+                  </p>
               </el-col>
               <el-col :span="8">
-                <p class="title-mini">配套设施</p>
-                <p>
-                  <span class="con13">基础设施完备程度:</span>
-                  <span class="val1">
-                    <factors-rate :value="factor.jcptsswbcd"></factors-rate>
-                  </span>
-                </p>
-                <p>
-                  <span class="con13">生活设施完备程度:</span>
-                  <span class="val1">
-                    <factors-rate :value="factor.shptsswbcd"></factors-rate>
-                  </span>
-                </p>
-                <p>
-                  <span class="con13">休闲娱乐完备程度:</span>
-                  <span class="val1">
-                    <factors-rate :value="factor.xxylsswbcd"></factors-rate>
-                  </span>
-                </p>
-              </el-col>
-              <el-col :span="8">
-                <p class="title-mini">小区品质</p>
+                <p class="title-mini">实物因素</p>
                 <p>
                   <span class="con13">新旧程度:</span>
                   <span class="val1">
                     <factors-rate :value="factor.xjcd"></factors-rate>
                   </span>
                 </p>
-                <p>
+                <p v-if="use.indexOf('住宅') !== -1">
+                  <span class="con13">内部环境质量:</span>
+                  <span class="val1">
+                    <factors-rate :value="factor.nbhjzl"></factors-rate>
+                  </span>
+                </p>
+                <p v-if="use.indexOf('住宅') !== -1||use.indexOf('办公') !== -1||use.indexOf('工业') !== -1">
                   <span class="con13">物业管理水平:</span>
                   <span class="val1">
                     <factors-rate :value="factor.wyglsp"></factors-rate>
                   </span>
                 </p>
                 <p>
-                  <span class="con13">建筑容积率:</span>
+                  <span class="con13">项目规模:</span>
                   <span class="val1">
-                    <factors-rate :value="factor.jzrjl"></factors-rate>
+                    <factors-rate :value="factor.xmgm"></factors-rate>
                   </span>
                 </p>
-                <p>
-                  <span class="con13">内部环境质量:</span>
+                <p v-if="use.indexOf('办公') !== -1">
+                  <span class="con13">写字楼等级:</span>
                   <span class="val1">
-                    <factors-rate :value="factor.nbhjzl"></factors-rate>
-                  </span>
-                </p>
-                <p>
-                  <span class="con13">内部设施完备程度:</span>
-                  <span class="val1">
-                    <factors-rate :value="factor.nbsswbcd"></factors-rate>
-                  </span>
-                </p>
-                <p>
-                  <span class="con13">停车便捷程度:</span>
-                  <span class="val1">
-                    <factors-rate :value="factor.tcbjcd"></factors-rate>
+                    <factors-rate :value="factor.xzldj"></factors-rate>
                   </span>
                 </p>
               </el-col>
             </el-row>
           </el-tab-pane>
-          <el-tab-pane label="办公" v-if="project.hgyt.indexOf('办公') !== -1"></el-tab-pane>
-          <el-tab-pane label="商业" v-if="project.hgyt.indexOf('商业') !== -1">
-            <el-row style="height:287px">
-              <p class="con13" style="margin-top: 13%;margin-left: 50%;">暂无数据</p>
-            </el-row>
-          </el-tab-pane>
         </el-tabs>
       </el-row>
       <el-row class="row-t">
-        <div class="title-small">评估价格 </div>
+        <div class="title-small">价格信息 </div>
       </el-row>
-      <el-row v-if="tjsj.length">
+        <el-row v-if="tjsj.length">
         <PriceChart :hgyt="project.hgyt" :tjsj="tjsj"></PriceChart>
       </el-row>
+      <el-row>
+        <!-- <price-rent v-if="project && basePriceData" :proData="project" :tableData="project" :basePriceData="basePriceData" @getCase="handleGetCase">
+        </price-rent> -->
+      </el-row>
+      <el-row class="row-t">
+        <div class="title-small">租金信息 </div>
+      </el-row>
+         <el-row v-if="tjsj.length">
+        <PriceChart :hgyt="project.hgyt" :tjsj="tjsj"></PriceChart>
+      </el-row>
+      <el-row class="row-t">
+        <div class="title-small">配套设施 </div>
+      </el-row>
+    
       <div class="topmenu" ref="topmenu">
         <a href="#1f">
           <el-button type="info">基础信息</el-button>
@@ -302,23 +279,31 @@ import PriceChart from '@/views/datamanage/components/PriceChart'
 import Carousel from '@/views/datamanage/components/Carousel'
 import FactorsRate from '@/views/datamanage/components/FactorsRate'
 import useTag from '@/views/datamanage/components/UseTag'
+import PriceRent from '@/views/casemanage/components/PriceRent'
 import {
   projectInfo,
   projectFactorsResidential,
   projectBuildings,
   projectValue
 } from '@/api/project'
+// import { getCases, getBasePrice } from '@/api/caseSearch'
 import { imgs } from '@/api/img'
 import { formatDate } from '@/utils/date'
 export default {
-  components: { Carousel, useTag, PriceChart, FactorsRate },
+  components: { Carousel, useTag, PriceChart, FactorsRate, PriceRent },
   data() {
     return {
       project: {},
       bulidingsList: [],
+      showBulidingsList: [],
       img: {},
       tjsj: [],
-      factor: {}
+      factor: {},
+      options: [],
+      use: this.$route.query.use,
+      isalluse: '全部'
+      // basePriceData: [],
+      // tableData: []
     }
   },
   mounted() {
@@ -327,6 +312,7 @@ export default {
     this.getImg()
     this.getProjectFactorsResidential()
     this.getProjectValue()
+    //  this.getBasePrice(this.$route.query.xmdm)
     this.$nextTick(function() {
       window.addEventListener('scroll', this.onScroll)
     })
@@ -350,17 +336,36 @@ export default {
     getProject() {
       projectInfo(this.$route.query.xmdm).then(response => {
         this.project = response.data
+        this.options = this.project.hgyt.split(';')
       })
     },
     getBuilding() {
       var param = { xmdm: this.$route.query.xmdm }
       projectBuildings(param).then(response => {
         this.bulidingsList = response.data
+        this.onIsAllUseClick()
       })
     },
     getProjectFactorsResidential() {
+      let yt = ''
+      switch (this.use) {
+        case '住宅':
+          yt = 'residential'
+          break
+        case '商业':
+          yt = 'commercial'
+          break
+        case '办公':
+          yt = 'office'
+          break
+        case '工业':
+          yt = 'industry'
+          break
+        default:
+          break
+      }
       // 2018-09-17 yt 先写死，后面需修改
-      const yt = 'residential'
+      //   const yt = 'residential'
       projectFactorsResidential(yt, this.$route.query.xmdm).then(response => {
         this.factor = response.data
       })
@@ -370,6 +375,30 @@ export default {
       projectValue(param).then(response => {
         this.tjsj = response.data
       })
+    },
+    // getBasePrice(xmdm) {
+    //   getBasePrice({ xmdm: xmdm }).then(res => {
+    //     this.basePriceData = res.data
+    //   })
+    // },
+    // // 获取项目案例数据
+    // getCaseDetailList(params) {
+    //   getCases(params).then(res => {
+    //     this.tableData = res.data
+    //   })
+    // },
+    onIsAllUseClick() {
+      if (this.isalluse === '全部') {
+        this.showBulidingsList = this.bulidingsList
+      } else {
+        const tempList = []
+        this.bulidingsList.forEach(element => {
+          if (element.hgyt.indexOf(this.use) !== -1) {
+            tempList.push(element)
+          }
+        })
+        this.showBulidingsList = tempList
+      }
     }
   },
   filters: {
@@ -377,9 +406,25 @@ export default {
       var date = new Date(currentDate)
       return formatDate(date, 'yyyy-MM-dd')
     }
+  },
+  watch: {
+    use(val) {
+      this.getProjectFactorsResidential()
+      this.onIsAllUseClick()
+    }
   }
 }
 </script>
-<style rel="stylesheet/scss" lang="scss" scoped>
+<style rel="stylesheet/scss" lang="scss" >
 @import "../../../styles/app.scss";
+.high.el-row{
+  margin-top: 2%
+}
+.el-radio__inner {
+    visibility: hidden
+  
+}
+.el-radio+.el-radio{
+  margin-left: -7px
+}
 </style>
