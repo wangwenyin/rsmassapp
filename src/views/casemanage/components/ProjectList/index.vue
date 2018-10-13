@@ -10,7 +10,6 @@
         <div class="unitPrice" v-if="o.avg_price">                        
             <span>{{o.avg_price}}元/㎡</span><span style="margin-left: 10px">{{o.alsl}}套</span>
         </div>
-        <div v-else style="height: 15px"></div>
         <div class="text-c1">
           <span>{{o.xzq}}</span>&nbsp;&nbsp;|
           <span>{{o.jdb}}</span>

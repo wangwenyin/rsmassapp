@@ -19,7 +19,7 @@
               <span>共{{ o.zhs }}户</span>
           </div>  
            <useTag :tags="o.hgyt"></useTag>
-            <router-link :to="{ name:'building' ,query: { lddm: o.lddm }}" target="_blank">
+            <router-link :to="{ name:'building' ,query: { lddm: o.lddm,use:use }}" target="_blank">
              <span ><el-button size="mini" type="text" >详情</el-button></span>
                      </router-link>
                <span ><el-button size="mini" type="text" @click.prevent="house(o)">户</el-button></span>
@@ -51,6 +51,10 @@ export default {
     buildinglist: {
       type: Array,
       default: []
+    },
+    use: {
+      type: String,
+      default: '住宅'
     },
     selectable: {
       type: Boolean,

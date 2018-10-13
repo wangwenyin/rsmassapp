@@ -71,3 +71,10 @@ export function UpdateFactorsResidential(yt, xmdm, data) {
     data
   })
 }
+// 跟据项目代码和用途获取组别内其他项目信息
+export function GetSameGroup(yt, xmdm) {
+  return request({
+    url: `/data/project/sameGroup/${yt}/${xmdm}`,
+    method: 'get'
+  })
+}

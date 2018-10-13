@@ -140,11 +140,11 @@ export default {
   font-size: 23px;
   font-weight: bold;
 }
-.title-small {
-  font-size: 18px;
-  font-weight: bold;
-  margin-right: 10%;
-}
+// .title-small {
+//   font-size: 18px;
+//   font-weight: bold;
+//   margin-right: 10%;
+// }
 .el-col-3 {
   margin-bottom: 10px;
 }

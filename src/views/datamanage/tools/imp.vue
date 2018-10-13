@@ -73,7 +73,11 @@
   </el-table>
 </el-row>
 <el-row :gutter="10" >
-<el-col :span="20">
+  <el-col :span="3">
+  
+  <span> <el-button  size="small" class="btn_l">历史记录</el-button></span>
+ </el-col>
+<el-col :span="15">
   
   <span> <el-button type="primary" size="small" class="btn_l">开始导入</el-button></span>
  </el-col>
@@ -81,6 +85,33 @@
     <span><el-button size="small"   class="btn_l1">下载导入报告</el-button></span>
   
  </el-col>
+</el-row>
+<el-row :gutter="10" style="margin-left:37px;margin-right:20px">
+  <el-col :xs="4" :sm="4" :md="4" :lg="4" :xl="4" >
+   <span>4.导入日志 :</span>
+  </el-col>
+</el-row>
+<el-row>
+<el-table
+    :data="tableData2"
+    style="width: 90%;margin-left:24px;"  border
+    :row-class-name="tableRowClassName">
+    <el-table-column 
+      prop="buildingId"
+      label="导入结果"
+     >
+    </el-table-column>
+    <el-table-column 
+      prop="building"
+      label="结果说明"
+     >
+    </el-table-column>
+    <el-table-column label="操作">
+       <template slot-scope="scope">
+        <el-button type="text" size="small">详情</el-button>
+      </template>
+    </el-table-column>
+  </el-table>
 </el-row>
   </div>
   </div>

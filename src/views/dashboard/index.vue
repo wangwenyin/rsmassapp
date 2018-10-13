@@ -93,7 +93,7 @@
             <div slot="header" class="clearfix">
               <span>数据看板</span>
             </div>
-            <panel-group @handleSetLineChartData="handleSetLineChartData"></panel-group>
+            <panel-group ></panel-group>
           </el-card>
           <el-row :gutter="4">
             <el-col :xs="24" :sm="24" :lg="13">

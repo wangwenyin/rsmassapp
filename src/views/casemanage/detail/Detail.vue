@@ -2,22 +2,19 @@
   <div class="app">
     <div class="content">
       <price-rent 
-        v-if="tableData && basePriceData" 
         :name="name"
         :priceType="priceType"
         :dateRange="dateRange"
         :proData="proData"
-        :tableData="tableData" 
-        :basePriceData="basePriceData"
-        @getCase="handleGetCase">
+        @changeDate="handleChangeDate">
       </price-rent>
     </div>
   </div>
 </template>
 
 <script>
-  import { getCases, getBasePrice } from '@/api/caseSearch'
   import PriceRent from '../components/PriceRent'
+  import { parseTime } from '@/utils/index'
 
   export default {
     components: { PriceRent },
@@ -26,9 +23,7 @@
         proData: null,
         name: '',
         priceType: '',
-        dateRange: [],
-        tableData: null,
-        basePriceData: null
+        dateRange: []
       }
     },
     created() {
@@ -40,28 +35,36 @@
       this.priceType = this.proData.typeValue
       // 日期范围
       this.dateRange = [this.proData.params.qssj, this.proData.params.zzsj]
-      // 散点图数据(案例数据)
-      this.getCaseDetailList(this.proData.params)
-      // 折线图数据(项目评估价数据)
-      this.getBasePrice(this.proData.params.xmdm)
     },
     methods: {
-      handleGetCase(value) {
-        this.proData.params.allx = value.join(',')
-        this.getCaseDetailList(this.proData.params)
+      handleChangeDate(tag) {
+        let startDate = this.proData.params.qssj
+        let endDate = this.proData.params.zzsj
+        const now = parseTime(new Date(), '{y}-{m}-{d}')
+        if (tag) {
+          if (endDate !== now) {
+            startDate = this.changeMonth(startDate)
+            endDate = this.changeMonth(endDate)
+          } else {
+            return
+          }
+        } else {
+          startDate = this.changeMonth(startDate, -6)
+          endDate = this.changeMonth(endDate, -6)
+        }
+        this.proData.params.qssj = startDate
+        this.proData.params.zzsj = endDate
+        this.dateRange = [startDate, endDate]
       },
-      // 获取案例数据
-      getCaseDetailList(params) {
-        getCases(params).then(res => {
-          console.log(res.data)
-          this.tableData = res.data
-        })
-      },
-      getBasePrice(xmdm) {
-        getBasePrice({ xmdm: xmdm }).then(res => {
-          console.log(res.data)
-          this.basePriceData = res.data
-        })
+      changeMonth(date, num = 6) {
+        let temp = null
+        if (typeof date === 'string') {
+          temp = new Date(date)
+        } else {
+          temp = date
+        }
+        temp.setMonth(temp.getMonth() + num)
+        return parseTime(temp, '{y}-{m}-{d}')
       }
     }
   }

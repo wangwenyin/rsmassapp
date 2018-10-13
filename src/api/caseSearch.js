@@ -46,9 +46,18 @@ export function getUsers(params) {
 }
 
 // 根据项目代码查询其历次评估价格(折线图数据)
-export function getBasePrice(params) {
+export function getProPrice(params) {
   return request({
     url: '/data/project/value',
+    method: 'get',
+    params
+  })
+}
+
+// 根据楼栋代码查询其历次评估价格(数据管理-折线图数据)
+export function getBudPrice(params) {
+  return request({
+    url: '/data/building/value',
     method: 'get',
     params
   })

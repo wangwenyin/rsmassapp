@@ -113,7 +113,7 @@
           <el-table-column prop="zddm" label="宗地号"></el-table-column>
           <el-table-column label="操作">
             <template slot-scope="scope">
-              <router-link :to="{ name:'building' ,query: { lddm: scope.row.lddm } }" target="_blank">
+              <router-link :to="{ name:'building' ,query: { lddm: scope.row.lddm,use:use } }" target="_blank">
                 <el-button type="text" size="small">详情</el-button>
               </router-link>
               <router-link :to="{ name:'housegrid' ,query: { lddm: scope.row.lddm,zcs:scope.row.zcs }}" target="_blank">
@@ -243,23 +243,23 @@
       <el-row class="row-t">
         <div class="title-small">价格信息 </div>
       </el-row>
-        <el-row v-if="tjsj.length">
-        <PriceChart :hgyt="project.hgyt" :tjsj="tjsj"></PriceChart>
-      </el-row>
       <el-row>
-        <!-- <price-rent v-if="project && basePriceData" :proData="project" :tableData="project" :basePriceData="basePriceData" @getCase="handleGetCase">
-        </price-rent> -->
+        <price-rent v-if="proData" :usage="0" :proData="proData"  :dateRange="dateRange"  priceType="价格" >
+        </price-rent>
       </el-row>
       <el-row class="row-t">
         <div class="title-small">租金信息 </div>
       </el-row>
-         <el-row v-if="tjsj.length">
-        <PriceChart :hgyt="project.hgyt" :tjsj="tjsj"></PriceChart>
+         <el-row >
+       <price-rent id="id1" v-if="zjData " :usage="0" :proData="zjData"  :dateRange="dateRange"  priceType="租金" >
+        </price-rent>
       </el-row>
       <el-row class="row-t">
         <div class="title-small">配套设施 </div>
       </el-row>
-    
+      <el-row>
+        <MatingMap :xmdm="this.$route.query.xmdm" :yt="use" :x="project.x" :y="project.y"></MatingMap>
+      </el-row>
       <div class="topmenu" ref="topmenu">
         <a href="#1f">
           <el-button type="info">基础信息</el-button>
@@ -280,30 +280,31 @@ import Carousel from '@/views/datamanage/components/Carousel'
 import FactorsRate from '@/views/datamanage/components/FactorsRate'
 import useTag from '@/views/datamanage/components/UseTag'
 import PriceRent from '@/views/casemanage/components/PriceRent'
+import MatingMap from '@/views/datamanage/components/MatingMap'
 import {
   projectInfo,
   projectFactorsResidential,
   projectBuildings,
   projectValue
 } from '@/api/project'
-// import { getCases, getBasePrice } from '@/api/caseSearch'
 import { imgs } from '@/api/img'
-import { formatDate } from '@/utils/date'
+import { formatDate, DateAdd } from '@/utils/date'
 export default {
-  components: { Carousel, useTag, PriceChart, FactorsRate, PriceRent },
+  components: { Carousel, useTag, PriceChart, FactorsRate, PriceRent, MatingMap },
   data() {
     return {
+      use: this.$route.query.use,
       project: {},
       bulidingsList: [],
       showBulidingsList: [],
-      img: {},
+      img: [],
       tjsj: [],
       factor: {},
       options: [],
-      use: this.$route.query.use,
-      isalluse: '全部'
-      // basePriceData: [],
-      // tableData: []
+      isalluse: '全部',
+      dateRange: [formatDate(DateAdd('y', -1, new Date()), 'yyyy-MM-dd'), formatDate(new Date(), 'yyyy-MM-dd')],
+      proData: { params: { allx: '交易', jglx: '价格', zzsj: formatDate(new Date(), 'yyyy-MM-dd'), qssj: formatDate(DateAdd('y', -1, new Date()), 'yyyy-MM-dd'), xmdm: this.$route.query.xmdm, yt: this.$route.query.use }, caseTypeList: ['交易'] },
+      zjData: { params: { allx: '交易', jglx: '租金', zzsj: formatDate(new Date(), 'yyyy-MM-dd'), qssj: formatDate(DateAdd('y', -1, new Date()), 'yyyy-MM-dd'), xmdm: this.$route.query.xmdm, yt: this.$route.query.use }, caseTypeList: ['交易'] }
     }
   },
   mounted() {
@@ -312,7 +313,6 @@ export default {
     this.getImg()
     this.getProjectFactorsResidential()
     this.getProjectValue()
-    //  this.getBasePrice(this.$route.query.xmdm)
     this.$nextTick(function() {
       window.addEventListener('scroll', this.onScroll)
     })
@@ -376,17 +376,6 @@ export default {
         this.tjsj = response.data
       })
     },
-    // getBasePrice(xmdm) {
-    //   getBasePrice({ xmdm: xmdm }).then(res => {
-    //     this.basePriceData = res.data
-    //   })
-    // },
-    // // 获取项目案例数据
-    // getCaseDetailList(params) {
-    //   getCases(params).then(res => {
-    //     this.tableData = res.data
-    //   })
-    // },
     onIsAllUseClick() {
       if (this.isalluse === '全部') {
         this.showBulidingsList = this.bulidingsList
@@ -408,9 +397,11 @@ export default {
     }
   },
   watch: {
-    use(val) {
+    use(val, val2) {
       this.getProjectFactorsResidential()
       this.onIsAllUseClick()
+      this.proData = { params: { allx: '交易', jglx: '价格', zzsj: formatDate(new Date(), 'yyyy-MM-dd'), qssj: formatDate(DateAdd('y', -1, new Date()), 'yyyy-MM-dd'), xmdm: this.$route.query.xmdm, yt: this.use }, caseTypeList: ['交易'] }
+      this.zjData = { params: { allx: '交易', jglx: '租金', zzsj: formatDate(new Date(), 'yyyy-MM-dd'), qssj: formatDate(DateAdd('y', -1, new Date()), 'yyyy-MM-dd'), xmdm: this.$route.query.xmdm, yt: this.use }, caseTypeList: ['交易'] }
     }
   }
 }

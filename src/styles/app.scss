@@ -53,12 +53,13 @@
     margin-left:25px;
      margin-bottom: 10px;
   }
-  .title-small {
-    font-size: 20px;
-    font-weight: bold;
-    margin-top: 30px;
-    margin-bottom: 10px;
-  }
+  
+ .title-small {
+  margin-left: 20px;
+  font-size: 12px ;
+ font-weight: bold;
+}
+ 
   .title-mini {
     font-size: 14px;
     font-weight: bold;
@@ -126,11 +127,6 @@
     width: 96%;   
  }
 
-.title-small {
-   margin-left: 20px;
-  font-size: 15px;
-  font-weight: bold;
- }
 .normal {
   display: inline-block;
   width: 130px;

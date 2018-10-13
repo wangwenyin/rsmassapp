@@ -131,8 +131,24 @@ export const constantRouterMap = [
       path: 'imp',
       name: 'CaseImp',
       component: () =>
-        import('@/views/casemanage/imp'),
+        import('@/views/casemanage/import/Imp'),
       meta: { title: '案例导入', icon: 'dataimp' }
+    },
+    {
+      path: 'match',
+      name: 'ImpMatch',
+      hidden: true,
+      component: () =>
+        import('@/views/casemanage/import/Match'),
+      meta: { title: '案例匹配', icon: 'dataimp' }
+    },
+    {
+      path: 'filter',
+      name: 'ImpFilter',
+      hidden: true,
+      component: () =>
+        import('@/views/casemanage/import/Filter'),
+      meta: { title: '案例筛选', icon: 'dataimp' }
     },
     {
       path: 'search',

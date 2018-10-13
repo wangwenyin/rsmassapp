@@ -36,10 +36,9 @@
       if (!this.noDefaultValue) {
         const now = new Date()
         const startDate = new Date(now.getFullYear(), now.getMonth() - 8, now.getDate())
-        const endDate = new Date(now.getFullYear(), now.getMonth(), now.getDate())
         const format = '{y}-{m}-{d}'
         this.value.push(parseTime(startDate, format))
-        this.value.push(parseTime(endDate, format))
+        this.value.push(parseTime(now, format))
 
         this.pickerOptions = {
           shortcuts: [{

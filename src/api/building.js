@@ -27,10 +27,17 @@ export function buildingsUnits(params) {
     params
   })
 }
-// 根据楼栋代码查询其住宅影响因素数据
+// 根据楼栋代码查询其影响因素量化信息
 export function buildingsFactorsResidential(yt, lddm) {
   return request({
     url: `/data/building/factorQuantification/${yt}/${lddm}`,
+    method: 'get'
+  })
+}
+// 根据楼栋代码查询其住宅影响因素信息
+export function buildingsFactorInfo(yt, lddm) {
+  return request({
+    url: `/data/building/factorInfo/${yt}/${lddm}`,
     method: 'get'
   })
 }

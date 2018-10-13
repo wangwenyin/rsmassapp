@@ -77,7 +77,8 @@ export default {
     }
   },
   methods: {
-    setOptions({ actualData } = {}) {
+    initChart() {
+      this.chart = echarts.init(this.$el, 'macarons')
       this.chart.setOption({
         xAxis: {
           data: this.x,
@@ -145,25 +146,16 @@ export default {
         }]
       })
     },
-    initChart() {
-      this.chart = echarts.init(this.$el, 'macarons')
-      this.setOptions(this.chartData)
-    },
     fetchData() {
       const params = {
         id: '1'
       }
       priceIndex(params.id).then(response => {
         this.list = response.data.list
-        console.log(this.list)
-        for (let i = 0; i <= this.list.length; i++) {
-          const item = this.list[i].time
-          console.log(item)
-          this.x.push(item)
-          this.y.push(+this.list[i].value)
+        for (let i = 0; i < this.list.length; i++) {
+          this.x.push(this.list[i].time)
+          this.y.push(this.list[i].value)
         }
-        console.log('000000')
-        console.log(this.x)
         this.initChart()
       })
     }

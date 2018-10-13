@@ -323,11 +323,11 @@
     text-align: center;
     font-size: 15px;
   }
-  .title-small {
-    margin-left: 20px;
-    font-size: 15px;
-    font-weight: bold;
-  }
+  // .title-small {
+  //   margin-left: 20px;
+  //   font-size: 15px;
+  //   font-weight: bold;
+  // }
 </style>
 
 <style>

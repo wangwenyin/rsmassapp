@@ -139,10 +139,10 @@ export default {
   font-size: 23px;
   font-weight: bold;
 }
-.title-small {
-  font-size: 18px;
-  font-weight: bold;
-}
+// .title-small {
+//   font-size: 18px;
+//   font-weight: bold;
+// }
 .title-mini {
   font-size: 14px;
   font-weight: bold;

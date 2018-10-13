@@ -13,7 +13,7 @@
             </el-select>
           </el-col>
           <el-col :span="3">
-            <el-select v-model="typeValue" @change="handleTypeValueChange" placeholder="请选择类型值" size="small">
+            <el-select v-model="typeValue" @change="handleTypeChange" placeholder="请选择价格类型" size="small">
               <el-option
                 v-for="item in typeValues"
                 :key="item"
@@ -22,7 +22,7 @@
             </el-select>
           </el-col>
           <el-col :span="3">
-            <el-select v-model="caseTypeList" multiple @change="handleTypeChange" placeholder="请选择案列类型" size="small">
+            <el-select v-model="caseTypeList" multiple @change="handleTypeValueChange" placeholder="请选择类型值" size="small">
               <el-option
                 v-for="item in caseTypes"
                 :key="item"
@@ -421,17 +421,18 @@
       handleAssignData(data) {
         const projectData = []
         const serchedData = this.searchedProList
-        for (let i = 0; i < data.length; i++) {
+        for (let i = 0; i < serchedData.length; i++) {
           let isSameName = false
-          for (let j = 0; j < serchedData.length; j++) {
-            if (data[i].xmmc === serchedData[j].xmmc) {
-              const newData = Object.assign({}, data[i], serchedData[j])
+          for (let j = 0; j < data.length; j++) {
+            if (serchedData[i].xmmc === data[j].xmmc) {
+              const newData = Object.assign({}, serchedData[i], data[j])
               projectData.push(newData)
               isSameName = true
             }
           }
+          // 没有案例的项目不显示
           if (!isSameName) {
-            projectData.push(data[i])
+            // projectData.push(data[i])
           }
         }
         return projectData
@@ -461,8 +462,10 @@
           item.active = false
         })
       },
-      // 下拉框值改变
-      handleTypeValueChange(value) {
+      // 1. 我觉得实时查询功能没必要去掉-用户切换下拉框选项时能实时看到结果，查询只是用来查询项目的（精确查找或模糊查找）
+      // 2. 另外，marker的显示也可以保留（链家上也是这种效果）-你说的只显示查询到的，当前突出显示（如果是模糊查询，应该不存在当前一说吧）
+      // 价格类型改变
+      handleTypeChange(value) {
         if (value === '价格') {
           this.caseTypes = ['交易', '挂牌', '估价', '调查']
         } else {
@@ -470,8 +473,8 @@
         }
         this.getDataByZoom()
       },
-      // 复选框
-      handleTypeChange(value) {
+      // 价格类型值改变
+      handleTypeValueChange(value) {
         if (!value.length) {
           return
         } else {
@@ -481,17 +484,20 @@
       },
       handleUsageChange(value) {
         this.usageValue = value
-        this.getProjects()
+        this.getDataByZoom()
       },
       handleDateChange(value) {
-        this.getProjects()
+        this.getDataByZoom()
       },
+      // 点击案例信息卡控件
       handleControlClick() {
         this.isCaseActive = !this.isCaseActive
       },
+      // 项目
       handleProControlClick() {
         this.isProActive = !this.isProActive
       },
+      // 点击案例详情
       onDetailClick() {
         let proData, params
         // 获取最新params
